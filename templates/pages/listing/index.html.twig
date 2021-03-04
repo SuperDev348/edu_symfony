@@ -17,7 +17,7 @@
                             <div class="field-select">
                                 <select name="place_cities">
                                     <option value="0">All cities</option>
-                                    <option value="newyork">Paris</option>
+                                    <option value="paris">Paris</option>
                                     <option value="newyork">New York</option>
                                     <option value="chicago">Chicago</option>
                                 </select>
@@ -69,6 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for listing in listings %}
                         <tr>
                             <td data-title="">
                                 <div class="field-check">
@@ -80,110 +81,19 @@
                                     </label>
                                 </div>
                             </td>
-                            <td data-title="ID">01</td>
-                            <td data-title="Thumb"><img src="{{ asset('assets/images/listing/01.jpg') }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>Vago Restaurant</b></td>
-                            <td data-title="City">Paris</td>
-                            <td data-title="Category">Restaurant</td>
-                            <td data-title="Status" class="approved">Approved</td>
+                            <td data-title="ID">{{ listing.getId }}</td>
+                            <td data-title="Thumb"><img src="{{ asset(listing.getCoverImage) }}" alt="Place Thumb"></td>
+                            <td data-title="Place name"><b>{{ listing.getName }}</b></td>
+                            <td data-title="City">{{ listing.city }}</td>
+                            <td data-title="Category">{{ listing.getCategory }}</td>
+                            <td data-title="Status" class="{{ listing.status }}">{{ listing.getStatus }}</td>
                             <td data-title="" class="place-action">
-                                <a href="#" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="#" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="#" class="delete" title="Delete"><i class="la la-trash-alt"></i></a>
+                                <a href="{{ path('listing_edit', {'id': listing.getId}) }}" class="edit" title="Edit"><i class="las la-edit"></i></a>
+                                <a href="{{ path('listing_detail', {'id': listing.getId}) }}" class="view" title="View"><i class="la la-eye"></i></a>
+                                <a href="{{ path('listing_delete', {'id': listing.getId}) }}" class="" title=""><i class="la la-trash-alt"></i></a>
                             </td>
                         </tr>
-                        <tr>
-                            <td data-title="">
-                                <div class="field-check">
-                                    <label for="place01">
-                                        <input id="place01" type="checkbox" value="all">
-                                        <span class="checkmark">
-                                            <i class="la la-check"></i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td data-title="ID">02</td>
-                            <td data-title="Thumb"><img src="{{ asset('assets/images/listing/02.jpg') }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>Retro Fitness</b></td>
-                            <td data-title="City">Paris</td>
-                            <td data-title="Category">Gym</td>
-                            <td data-title="Status" class="approved">Approved</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="#" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="#" class="delete" title="Delete"><i class="la la-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="">
-                                <div class="field-check">
-                                    <label for="place01">
-                                        <input id="place01" type="checkbox" value="all">
-                                        <span class="checkmark">
-                                            <i class="la la-check"></i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td data-title="ID">03</td>
-                            <td data-title="Thumb"><img src="{{ asset('assets/images/listing/03.jpg') }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>Renew Body Spa</b></td>
-                            <td data-title="City">Paris</td>
-                            <td data-title="Category">Beaty & Spa</td>
-                            <td data-title="Status" class="cancel">Cancel</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="#" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="#" class="delete" title="Delete"><i class="la la-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="">
-                                <div class="field-check">
-                                    <label for="place01">
-                                        <input id="place01" type="checkbox" value="all">
-                                        <span class="checkmark">
-                                            <i class="la la-check"></i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td data-title="ID">04</td>
-                            <td data-title="Thumb"><img src="{{ asset('assets/images/listing/04.jpg') }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>Jardin Club</b></td>
-                            <td data-title="City">New York</td>
-                            <td data-title="Category">Nightlife</td>
-                            <td data-title="Status" class="approved">Approved</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="#" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="#" class="delete" title="Delete"><i class="la la-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="">
-                                <div class="field-check">
-                                    <label for="place01">
-                                        <input id="place01" type="checkbox" value="all">
-                                        <span class="checkmark">
-                                            <i class="la la-check"></i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td data-title="ID">05</td>
-                            <td data-title="Thumb"><img src="{{ asset('assets/images/listing/05.jpg') }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>Antoinette</b></td>
-                            <td data-title="City">Chicago</td>
-                            <td data-title="Category">Shopping</td>
-                            <td data-title="Status" class="pending">Pending</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="#" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="#" class="delete" title="Delete"><i class="la la-trash-alt"></i></a>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div class="pagination align-left">

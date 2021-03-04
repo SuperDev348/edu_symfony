@@ -53,57 +53,27 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for booking in bookings %}
                         <tr>
-                            <td data-title="ID">1201</td>
-                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
-                            <td data-title="Booking at">13 March 2020</td>
-                            <td data-title="Status" class="approved">Approved</td>
+                            <td data-title="ID">{{ booking.getId }}</td>
+                            <td data-title="Places"><b>{{ booking.list_name }}</b></td>
+                            <td data-title="Booking at">{{ booking.getDate.format('M d Y') }}</td>
+                            <td data-title="Status" class="{{ booking.getStatus }}">{{ booking.getStatus }}</td>
                             <td data-title="" class="place-action">
-                                <a href="#" class="cancel" title="Cancel">Cancel</a>
-                                <a href="#" class="detail" title="Detail">Detail</a>
+                                {% if booking.getStatus == 'pending' %}
+                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'approved'}) }}" class="approve" title="Approve">Approve</a>
+                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'cancel'}) }}" class="cancel" title="Cancel">Cancel</a>
+                                {% endif %}
+                                {% if booking.getStatus == 'approved' %}
+                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'cancel'}) }}" class="cancel" title="Cancel">Cancel</a>
+                                {% endif %}
+                                {% if booking.getStatus == 'cancel' %}
+                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'approved'}) }}" class="approve" title="Approve">Approve</a>
+                                {% endif %}
+                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'detail'}) }}" class="detail" title="Detail">Detail</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td data-title="ID">1201</td>
-                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
-                            <td data-title="Booking at">13 March 2020</td>
-                            <td data-title="Status" class="pending">Pending</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="approve" title="Approve">Approve</a>
-                                <a href="#" class="cancel" title="Cancel">Cancel</a>
-                                <a href="#" class="detail" title="Detail">Detail</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="ID">1201</td>
-                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
-                            <td data-title="Booking at">13 March 2020</td>
-                            <td data-title="Status" class="cancel">Cancel</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="approve" title="Approve">Approve</a>
-                                <a href="#" class="detail" title="Detail">Detail</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="ID">1201</td>
-                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
-                            <td data-title="Booking at">13 March 2020</td>
-                            <td data-title="Status" class="approved">Approved</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="cancel" title="Cancel">Cancel</a>
-                                <a href="#" class="detail" title="Detail">Detail</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-title="ID">1201</td>
-                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
-                            <td data-title="Booking at">13 March 2020</td>
-                            <td data-title="Status" class="approved">Approved</td>
-                            <td data-title="" class="place-action">
-                                <a href="#" class="cancel" title="Cancel">Cancel</a>
-                                <a href="#" class="detail" title="Detail">Detail</a>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div class="pagination align-left">

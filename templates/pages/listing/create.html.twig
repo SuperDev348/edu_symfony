@@ -1,0 +1,844 @@
+{% extends 'layout/app.html.twig' %}
+
+{% block title %}
+<title>Add New Listing</title>
+{% endblock %}
+
+{% block body %}
+{% if request is defined %}
+{% endif %}
+<main id="main" class="site-main listing-main">
+    <div class="listing-nav">
+        <div class="listing-menu nav-scroll">
+            <ul>
+                <li class="active"><a href="#Informations générales" title="Genaral"><span class="icon"><i class="la la-cog"></i></span><span>Informations générales</span></a></li>
+                <li><a href="#hightlight" title="Points forts"><span class="icon"><i class="la la-wifi"></i></span><span>Points forts</span></a></li>
+                <li><a href="#location" title="Localisation"><span class="icon"><i class="la la-map-marker"></i></span><span>Localisation</span></a></li>
+                <li><a href="#contact" title="Contact info"><span class="icon"><i class="la la-phone"></i></span><span>Contact info</span></a></li>
+                <li><a href="#social" title="Réseaux sociaux"><span class="icon"><i class="la la-link"></i></span><span>Réseaux sociaux</span></a></li>
+                <li><a href="#open" title="Horaires"><span class="icon"><i class="la la-business-time"></i></span><span>Horaires</span></a></li>
+                <li><a href="#media" title="Photos/Videos"><span class="icon"><i class="la la-image"></i></span><span>Photos/Videos</span></a></li>
+            </ul>
+        </div>
+    </div><!-- .listing-nav -->
+    <div class="listing-content">
+        <h2>Ajouter une annonce</h2>
+        <form action="{{ path('listing_store') }}" class="upload-form" id="add_listng_from" method="POST" enctype="multipart/form-data">
+            <div class="listing-box" id="genaral">
+                <h3>Informations générales</h3>
+                <div class="field-inline">
+                    <div class="field-group field-input">
+                        <label for="name">Nom de l'annonce</label>
+                        <input type="text" id="name" placeholder="Le nom de votre annonce" name="name">
+                    </div>
+                    <div class="field-group field-select">
+                        <label for="price_range">les prix</label>
+                        <select name="price_range" id="price_range">
+                            <option value="0">None</option>
+                            <option value="1">$</option>
+                            <option value="2">$$</option>
+                            <option value="3">$$$</option>
+                            <option value="4">$$$$</option>
+                        </select>
+                        <i class="la la-angle-down"></i>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <h4 class="label">Description</h4>
+                    <textarea name="description" rows="6" style="width: 100%;"></textarea>
+                    <!-- <div id="editor"></div> -->
+                </div>
+                <div class="field-group field-select">
+                    <label for="category">catégorie</label>
+                    <select data-placeholder="Veuillez choisir une catégorie" name="category" id="category">
+                        <option value="See & Do">See & Do</option>
+                        <option value="Food & Drink">Food & Drink</option>
+                        <option value="Stay">Stay</option>
+                        <option value="Shop">Shop</option>
+                    </select>
+                    <i class="la la-angle-down"></i>
+                </div>
+                <div class="field-group field-select">
+                    <label for="place_type">Type d'annonce</label>
+                    <select data-placeholder="Veuillez choisir un type" name="place_type" id="place_type">
+                        <option value="Bar">Bar</option>
+                        <option value="Sea Food">Sea Food</option>
+                    </select>
+                    <i class="la la-angle-down"></i>
+                </div>
+                <div class="field-group field-select">
+                    <label for="city">City</label>
+                    <select data-placeholder="" name="city" id="city">
+                        <option value="paris">Paris</option>
+                        <option value="newyork">New York</option>
+                        <option value="chicago">Chicago</option>
+                    </select>
+                    <i class="la la-angle-down"></i>
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="hightlight">
+                <h3>Points forts</h3>
+                <div class="field-group field-check">
+                    <label for="wifi">
+                        <input type="checkbox" name="wifi" id="wifi" value=true>Wifi gratuit
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="accept_card">
+                        <input type="checkbox" name="accept_card" id="accept_card" value=true>Accepte les cartes
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="airport_taxi">
+                        <input type="checkbox" name="airport_taxi" id="airport_taxi" value=true>Airport taxi
+                        <span class="checkmark">
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="toilet">
+                        <input type="checkbox" name="toilet" id="toilet" value=true>Toilettes
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="parking">
+                        <input type="checkbox" name="parking" id="parking" value=true>Parking gratuit
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="garden">
+                        <input type="checkbox" name="garden" id="garden" value=true>Jardin
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="terrace">
+                        <input type="checkbox" name="terrace" id="terrace" value=true>Terrace
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                    <label for="air_conditioner">
+                        <input type="checkbox" name="air_conditioner" id="air_conditioner" value=true>Climatisation
+                        <span class="checkmark">																
+                            <i class="la la-check"></i>
+                        </span>
+                    </label>
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="location">
+                <h3>Localisation exact</h3>
+                <div class="field-group">
+                    <label for="address">Addresse</label>
+                    <input type="text" id="address" placeholder="Full Address" name="address">
+                </div>
+                <div class="field-group field-maps">
+                    <div class="field-inline">
+                        <label for="pac-input">Place Location at Google Map</label>
+                        <div class="field-button field-pin">
+                            <a href="#" id="drop" onclick="drop()">
+                                <i class="la la-lock"></i>
+                                Unlock Pin Location
+                            </a>
+                            <a href="#" id="clear" onclick="clearMarkers()">					
+                                <?xml version="1.0" encoding="UTF-8"?>
+                                <i class="la la-lock-open"></i>
+                                Lock Pin Location
+                            </a>
+                        </div>
+                    </div>
+                    <div class="field-map">
+                        <input id="pac-input" class="address-input" type="text" placeholder="Search Box">
+                        <div id="location-map"></div>
+                    </div>
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="contact">
+                <h3>Contact Info</h3>
+                <div class="field-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Your email address" name="email">
+                </div>
+                <div class="field-group">
+                    <label for="phone">Phone number (optional)</label>
+                    <input type="tel" id="phone" placeholder="Your phone number" name="phone">
+                </div>
+                <div class="field-group">
+                    <label for="website">Website (optional)</label>
+                    <input type="url" id="website" placeholder="Your website url" name="website">
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="social">
+                <h3>Social Networks</h3>
+                <div class="field-group">
+                    <label for="place_socials">Social Networks (optional)</label>
+                    <div class="field-accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="facebook">
+                                    <input type="checkbox" name="facebook" id="facebook" value=true>facebook
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="facebook_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="instagram">
+                                    <input type="checkbox" name="instagram" id="instagram" value=true>instagram
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="instagram_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="youtube">
+                                    <input type="checkbox" name="youtube" id="youtube" value=true>youtube
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="youtube_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="twitter">
+                                    <input type="checkbox" name="twitter" id="twitter" value=true>twitter
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="twitter_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="google">
+                                    <input type="checkbox" name="google" id="google" value=true>google
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="google_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="pinterest">
+                                    <input type="checkbox" name="pinterest" id="pinterest" value=true>pinterest
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="pinterest_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="snapchat">
+                                    <input type="checkbox" name="snapchat" id="snapchat" value=true>snapchat
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-group field-input">
+                                    <input type="url" name="snapchat_url" placeholder="Enter Url" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="open">
+                <h3>Opening Hours</h3>
+                <div class="field-group">
+                    <label for="place_email">Select days to add hours</label>
+                    <div class="field-accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="monday">
+                                    <input type="checkbox" name="monday" id="monday" value=true>Monday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="monday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="monday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="tuesday">
+                                    <input type="checkbox" name="tuesday" id="tuesday" value=true>Tuesday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="tuesday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="tuesday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="wednesday">
+                                    <input type="checkbox" name="wednesday" id="wednesday" value=true>Wednesday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="wednesday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="wednesday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="thursday">
+                                    <input type="checkbox" name="thursday" id="thursday" value=true>Thursday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="thursday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="thursday_close_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="friday">
+                                    <input type="checkbox" name="friday" id="friday" value=true>Friday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="friday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="friday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="saturday">
+                                    <input type="checkbox" name="saturday" id="saturday" value=true>Saturday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="saturday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="saturday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check">
+                                <label for="sunday">
+                                    <input type="checkbox" name="sunday" id="sunday" value=true>Sunday
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                </label>
+                                <span>Closed</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="field-inline">
+                                    <div class="field-group field-select">
+                                        <select name="sunday_start_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                    <div class="field-group field-select">
+                                        <select name="sunday_end_time">
+                                            <option value="0">00:00 AM</option>
+                                            <option value="1">01:00 AM</option>
+                                            <option value="2">02:00 AM</option>
+                                            <option value="3">03:00 AM</option>
+                                            <option value="4">04:00 AM</option>
+                                            <option value="5">05:00 AM</option>
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8">08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                            <option value="12">12:00 PM</option>
+                                            <option value="13">01:00 PM</option>
+                                            <option value="14">02:00 PM</option>
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18">06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                            <option value="23">11:00 PM</option>
+                                        </select>
+                                        <i class="la la-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- .listing-box -->
+            <div class="listing-box" id="media">
+                <h3>Media</h3>
+                <div class="field-group field-file">
+                    <label for="cover_image">Cover image</label>
+                    <label for="cover_image" class="preview">
+                        <input type="file" id="cover_image" name="cover_image" class="upload-file" data-max-size="1024000">
+                        <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                        <i class="la la-cloud-upload-alt"></i>
+                    </label>
+                    <div class="field-note">Maximum file size: 1 MB.</div>
+                </div>
+                <div class="field-group field-file">
+                    <label for="gallery_image">Gallery Images (optional)</label>
+                    <label for="gallery_image" class="preview">
+                        <input type="file" id="gallery_image" name="gallery_image" class="upload-file" data-max-size="1024000">
+                        <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                        <i class="la la-cloud-upload-alt"></i>
+                    </label>
+                    <div class="field-note">Maximum file size: 1 MB.</div>
+                </div>
+                <div class="field-group">
+                    <label for="video">Video (optional)</label>
+                    <input type="url" id="video" placeholder="Youtube video url" name="video">
+                </div>
+            </div><!-- .listing-box -->
+            <div class="field-group field-submit">
+                <input type="submit" name="submit" value="Submit" class="btn">
+            </div>
+        </form>
+    </div><!-- .listing-content -->
+</main><!-- .site-main -->
+{% endblock %}
