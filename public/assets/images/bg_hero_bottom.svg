@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440px" height="40px" viewBox="0 0 1440 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <g id="Business-Listing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01_Home_Business" transform="translate(0.000000, -640.000000)" fill="#FFFFFF">
+            <g id="Sidebar">
+                <g id="content" transform="translate(0.000000, 180.000000)">
+                    <path d="M0,460 L1440,460 L1440,460.841857 L823.624,460.829 L828.030777,460.9 C1029.63388,464.26 1231.22389,477.028 1432.80083,499.204 L1440,500 L0,500 L7.20027969,499.204 C208.808111,477.028 410.415917,464.26 612.023698,460.9 L616.679,460.825 L0,460.813962 L0,460 Z M720.027865,460 C686.426569,460 652.825273,460.261333 619.223976,460.784 L616.679,460.825 L823.624,460.829 L820.830661,460.784 C787.230092,460.261333 753.62916,460 720.027865,460 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

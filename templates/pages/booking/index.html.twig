@@ -1,0 +1,136 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>Owner - Bookings</title>
+{% endblock %}
+{% block body %}
+<main id="main" class="site-main">
+    <div class="site-content owner-content">
+        <div class="member-menu">
+            <div class="container">
+                <ul>
+                    <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
+                    <li class="active"><a href="{{ path('booking') }}">Bookings</a></li>
+                    <li><a href="{{ path('listing') }}">Listings</a></li>
+                    <li><a href="{{ path('wishlist') }}">Wishlist</a></li>
+                    <li><a href="{{ path('profile') }}">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="member-place-wrap">
+                <div class="member-wrap-top">
+                    <h2>Bookings</h2>
+                    <p>You are current FREE plan. <a href="pricing-plan.html">Upgrade now</a></p>
+                </div><!-- .member-wrap-top -->
+                <div class="member-filter">
+                    <div class="mf-left">
+                        <form action="#" method="GET">
+                            <div class="field-select">
+                                <select name="place_cities">
+                                    <option value="20">Show 20</option>
+                                    <option value="40">Show 40</option>
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                            <div class="field-select">
+                                <select name="place_cities">
+                                    <option value="0">All status</option>
+                                    <option value="approve">Approve</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="cancel">Cancel</option>
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                        </form>
+                    </div><!-- .mf-left -->
+                    <div class="mf-right">
+                        <form action="#" class="site__search__form" method="GET">
+                            <div class="site__search__field">
+                                <span class="site__search__icon">
+                                    <i class="la la-search"></i>
+                                </span><!-- .site__search__icon -->
+                                <input class="site__search__input" type="text" name="s" placeholder="Search">
+                            </div><!-- .search__input -->
+                        </form><!-- .search__form -->
+                    </div><!-- .mf-right -->
+                </div><!-- .member-filter -->
+                <table class="member-place-list owner-booking table-responsive">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Listings</th>
+                            <th>Booking at</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-title="ID">1201</td>
+                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
+                            <td data-title="Booking at">13 March 2020</td>
+                            <td data-title="Status" class="approved">Approved</td>
+                            <td data-title="" class="place-action">
+                                <a href="#" class="cancel" title="Cancel">Cancel</a>
+                                <a href="#" class="detail" title="Detail">Detail</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-title="ID">1201</td>
+                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
+                            <td data-title="Booking at">13 March 2020</td>
+                            <td data-title="Status" class="pending">Pending</td>
+                            <td data-title="" class="place-action">
+                                <a href="#" class="approve" title="Approve">Approve</a>
+                                <a href="#" class="cancel" title="Cancel">Cancel</a>
+                                <a href="#" class="detail" title="Detail">Detail</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-title="ID">1201</td>
+                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
+                            <td data-title="Booking at">13 March 2020</td>
+                            <td data-title="Status" class="cancel">Cancel</td>
+                            <td data-title="" class="place-action">
+                                <a href="#" class="approve" title="Approve">Approve</a>
+                                <a href="#" class="detail" title="Detail">Detail</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-title="ID">1201</td>
+                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
+                            <td data-title="Booking at">13 March 2020</td>
+                            <td data-title="Status" class="approved">Approved</td>
+                            <td data-title="" class="place-action">
+                                <a href="#" class="cancel" title="Cancel">Cancel</a>
+                                <a href="#" class="detail" title="Detail">Detail</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-title="ID">1201</td>
+                            <td data-title="Places"><b>Supanniga Eating Room</b></td>
+                            <td data-title="Booking at">13 March 2020</td>
+                            <td data-title="Status" class="approved">Approved</td>
+                            <td data-title="" class="place-action">
+                                <a href="#" class="cancel" title="Cancel">Cancel</a>
+                                <a href="#" class="detail" title="Detail">Detail</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination align-left">
+                    <div class="pagination__numbers">
+                        <span>1</span>
+                        <a title="2" href="#">2</a>
+                        <a title="3" href="#">3</a>
+                        <a title="Next" href="#">
+                            <i class="la la-angle-right"></i>
+                        </a>
+                    </div>
+                </div><!-- .pagination -->
+            </div><!-- .member-place-wrap -->
+        </div>
+    </div><!-- .site-content -->
+</main><!-- .site-main -->
+{% endblock %}

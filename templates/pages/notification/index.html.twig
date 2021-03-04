@@ -1,0 +1,35 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>Notification</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main">
+    <div class="site-content site-notification">
+        <div class="container">
+            <div class="alert alert-success">
+                <h2>Successful :)</h2>
+                <p>
+                    <i class="la la-check-circle"></i>
+                    Your registration is done. Now you can <a href="#" title="Login here">Login here</a>
+                </p>
+            </div>
+            <div class="alert alert-error">
+                <h2>Error :(</h2>
+                <p>
+                    <i class="la la-times-circle"></i>
+                    An error occurred. Please try again.
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <h2>Warning !!!</h2>
+                <p>
+                    <i class="la la-exclamation-circle"></i>
+                    You are now a Premium Member.
+                </p>
+            </div>
+        </div>
+    </div><!-- .site-content -->
+</main><!-- .site-main -->
+{% endblock %}
