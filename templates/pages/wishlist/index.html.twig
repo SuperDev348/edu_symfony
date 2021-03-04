@@ -7,23 +7,10 @@
 {% block body %}
 <main id="main" class="site-main">
     <div class="site-content owner-content">
-        <div class="member-menu">
-            <div class="container">
-                <ul>
-                    <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ path('booking') }}">Bookings</a></li>
-                    <li><a href="{{ path('listing') }}">Listings</a></li>
-                    <li class="active"><a href="{{ path('wishlist') }}">Wishlist</a></li>
-                    <li><a href="{{ path('profile') }}">Profile</a></li>
-                </ul>
-            </div>
-        </div>
+        {{ include('nav/owner.top.html.twig') }}
         <div class="container">
             <div class="member-wishlist-wrap">
-                    <div class="member-wrap-top">
-                    <h2>Wishlish</h2>
-                    <p>You are current FREE plan. <a href="pricing-plan.html">Upgrade now</a></p>
-                </div><!-- .member-wrap-top -->
+                {{ include('nav/owner.subtitle.html.twig') }}
                 <div class="mw-box">
                     <h2>Paris</h2>
                     <div class="row">

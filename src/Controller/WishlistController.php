@@ -13,6 +13,8 @@ class WishlistController extends AbstractController
     public function index(): Response
     {
         return $this->render('pages/wishlist/index.html.twig', [
+            'page' => 'wishlist',
+            'subtitle' => 'Wishlish',
         ]);
     }
 }

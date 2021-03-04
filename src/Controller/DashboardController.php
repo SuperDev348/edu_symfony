@@ -13,6 +13,8 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         return $this->render('pages/dashboard/index.html.twig', [
+            'page' => 'dashboard',
+            'subtitle' => 'Welcome back! Kevin',
         ]);
     }
 }

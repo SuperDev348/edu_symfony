@@ -1,0 +1,31 @@
+<div class="member-menu">
+    <div class="container">
+        <ul>
+            {% if page == 'dashboard' %}
+            <li class="active"><a href="{{ path('dashboard') }}">Dashboard</a></li>
+            {% else %}
+            <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
+            {% endif %}
+            {% if page == 'booking' %}
+            <li class="active"><a href="{{ path('booking') }}">Bookings</a></li>
+            {% else %}
+            <li><a href="{{ path('booking') }}">Bookings</a></li>
+            {% endif %}
+            {% if page == 'listing' %}
+            <li class="active"><a href="{{ path('listing') }}">Listings</a></li>
+            {% else %}
+            <li><a href="{{ path('listing') }}">Listings</a></li>
+            {% endif %}
+            {% if page == 'wishlist' %}
+            <li class="active"><a href="{{ path('wishlist') }}">Wishlist</a></li>
+            {% else %}
+            <li><a href="{{ path('wishlist') }}">Wishlist</a></li>
+            {% endif %}
+            {% if page == 'profile' %}
+            <li class="active"><a href="{{ path('profile') }}">Profile</a></li>
+            {% else %}
+            <li><a href="{{ path('profile') }}">Profile</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

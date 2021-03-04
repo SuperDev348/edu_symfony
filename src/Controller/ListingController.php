@@ -13,6 +13,8 @@ class ListingController extends AbstractController
     public function index(): Response
     {
         return $this->render('pages/listing/index.html.twig', [
+            'page' => 'listing',
+            'subtitle' => 'My Listings',
         ]);
     }
 }
