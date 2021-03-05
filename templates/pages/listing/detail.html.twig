@@ -56,7 +56,7 @@
                                     </span>
                                     <span class="place__places-item__count reviews_count">({{ reviews|length }} reviews)</span>
                                 </div>
-                                <div class="place__currency">$$</div>
+                                <div class="place__currency">{{ listing.getPriceRange }}</div>
                                 <div class="place__category">
                                     <a title="{{ listing.getCategory }}" href="#">{{ listing.getCategory }}</a>
                                 </div>
@@ -317,7 +317,7 @@
                                     </div>
                                     <div class="field-textarea">
                                         <img class="author-avatar" src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt="">
-                                        <textarea name="description" placeholder="Write a review"></textarea>
+                                        <textarea name="description" placeholder="Write a review" required></textarea>
                                         <input type="hidden" name="rate" value="5">
                                         <input type="hidden" name="user_id" value="1">
                                         <input type="hidden" name="listing_id" value="{{ listing.getId }}">
@@ -374,12 +374,12 @@
                                 </div>
                                 <div class="field-select field-date">
                                     <span class="sl-icon"><i class="la la-calendar-alt"></i></span>
-                                    <input type="text" placeholder="Date" class="datepicker" name="date">
+                                    <input type="text" placeholder="Date" class="datepicker" name="date" required>
                                     <i class="la la-angle-down"></i>
                                 </div>
                                 <div class="field-select has-sub field-time">
                                     <span class="sl-icon"><i class="la la-clock"></i></span>
-                                    <input type="text" placeholder="Time" readonly name="time">
+                                    <input type="text" placeholder="Time" name="time" required>
                                     <i class="la la-angle-down"></i>
                                     <div class="field-sub">
                                         <ul>

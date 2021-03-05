@@ -24,7 +24,7 @@ class ReviewController extends AbstractController
         }
         return $this->render('pages/review/index.html.twig', [
             'page' => 'review',
-            'subtitle' => 'Bookings',
+            'subtitle' => 'Reviews',
             'reviews' => $reviews
         ]);
     }
@@ -113,7 +113,7 @@ class ReviewController extends AbstractController
     public function delete($id): Response
     {
         $doct = $this->getDoctrine()->getManager();
-        $review = $doct->getRepository(Booking::class)->find($id);
+        $review = $doct->getRepository(Review::class)->find($id);
         $doct->remove($review);
         $doct->flush();
         return $this->redirectToRoute('review', [

@@ -23,6 +23,11 @@ class Listing
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $price_range;
+
+    /**
      * @ORM\Column(type="text", length=500)
      */
     private $description;
@@ -310,6 +315,18 @@ class Listing
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getPriceRange(): ?string
+    {
+        return $this->price_range;
+    }
+
+    public function setPriceRange(string $price_range): self
+    {
+        $this->price_range = $price_range;
 
         return $this;
     }

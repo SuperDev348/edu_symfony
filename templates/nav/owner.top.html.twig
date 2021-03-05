@@ -26,6 +26,11 @@
             {% else %}
             <li><a href="{{ path('profile') }}">Profile</a></li>
             {% endif %}
+            {% if page == 'review' %}
+            <li class="active"><a href="{{ path('review') }}">Review</a></li>
+            {% else %}
+            <li><a href="{{ path('review') }}">Review</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>

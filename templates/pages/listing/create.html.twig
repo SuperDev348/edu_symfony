@@ -29,23 +29,22 @@
                 <div class="field-inline">
                     <div class="field-group field-input">
                         <label for="name">Nom de l'annonce</label>
-                        <input type="text" id="name" placeholder="Le nom de votre annonce" name="name">
+                        <input type="text" id="name" placeholder="Le nom de votre annonce" name="name" required>
                     </div>
                     <div class="field-group field-select">
                         <label for="price_range">les prix</label>
                         <select name="price_range" id="price_range">
-                            <option value="0">None</option>
-                            <option value="1">$</option>
-                            <option value="2">$$</option>
-                            <option value="3">$$$</option>
-                            <option value="4">$$$$</option>
+                            <option value="$">$</option>
+                            <option value="$$">$$</option>
+                            <option value="$$$">$$$</option>
+                            <option value="$$$$">$$$$</option>
                         </select>
                         <i class="la la-angle-down"></i>
                     </div>
                 </div>
                 <div class="field-group">
                     <h4 class="label">Description</h4>
-                    <textarea name="description" rows="6" style="width: 100%;"></textarea>
+                    <textarea name="description" rows="6" style="width: 100%;" required></textarea>
                     <!-- <div id="editor"></div> -->
                 </div>
                 <div class="field-group field-select">
@@ -133,7 +132,7 @@
                 <h3>Localisation exact</h3>
                 <div class="field-group">
                     <label for="address">Addresse</label>
-                    <input type="text" id="address" placeholder="Full Address" name="address">
+                    <input type="text" id="address" placeholder="Full Address" name="address" required>
                 </div>
                 <div class="field-group field-maps">
                     <div class="field-inline">
@@ -160,7 +159,7 @@
                 <h3>Contact Info</h3>
                 <div class="field-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Your email address" name="email">
+                    <input type="email" id="email" placeholder="Your email address" name="email" required>
                 </div>
                 <div class="field-group">
                     <label for="phone">Phone number (optional)</label>

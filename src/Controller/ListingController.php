@@ -44,6 +44,8 @@ class ListingController extends AbstractController
         $listing = new Listing();
         $name = $request->request->get('name');
         $listing->setName($name);
+        $price_range = $request->request->get('price_range');
+        $listing->setPriceRange($price_range);
         $description = $request->request->get('description');
         $listing->setDescription($description);
         $category = $request->request->get('category');
@@ -229,6 +231,8 @@ class ListingController extends AbstractController
         $listing = $doct->getRepository(Listing::class)->find($id);
         $name = $request->request->get('name');
         $listing->setName($name);
+        $price_range = $request->request->get('price_range');
+        $listing->setPriceRange($price_range);
         $description = $request->request->get('description');
         $listing->setDescription($description);
         $category = $request->request->get('category');
