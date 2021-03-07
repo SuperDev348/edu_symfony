@@ -141,4 +141,189 @@ class BookingController extends AbstractController
             'id' => $booking->getId()
         ]);
     }
+
+    private function getStatusList() {
+        $res = [
+            "approved",
+            "pending",
+            "cancel"
+        ];
+        return $res;
+    }
+
+    private function getTimeList() {
+        $res = [
+            "12:00 AM",
+            "12:30 AM",
+            "1:00 AM",
+            "1:30 AM",
+            "2:00 AM",
+            "2:30 AM",
+            "3:00 AM",
+            "3:30 AM",
+            "4:00 AM",
+            "4:30 AM",
+            "5:00 AM",
+            "5:30 AM",
+            "6:00 AM",
+            "6:30 AM",
+            "7:00 AM",
+            "7:30 AM",
+            "8:00 AM",
+            "8:30 AM",
+            "9:00 AM",
+            "9:30 AM",
+            "10:00 AM",
+            "10:30 AM",
+            "11:00 AM",
+            "11:30 AM",
+            "12:00 PM",
+            "12:30 PM",
+            "1:00 PM",
+            "1:30 PM",
+            "2:00 PM",
+            "2:30 PM",
+            "3:00 PM",
+            "3:30 PM",
+            "4:00 PM",
+            "4:30 PM",
+            "5:00 PM",
+            "5:30 PM",
+            "6:00 PM",
+            "6:30 PM",
+            "7:00 PM",
+            "7:30 PM",
+            "8:00 PM",
+            "8:30 PM",
+            "9:00 PM",
+            "9:30 PM",
+            "10:00 PM",
+            "10:30 PM",
+            "11:00 PM",
+            "11:30 PM"
+        ];
+        return $res;
+    }
+
+    /**
+     * @Route("/admin/booking", name="admin_booking")
+     */
+    public function admin_index(): Response
+    {
+        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        foreach ($bookings as $booking) {
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($booking->getListingId());
+            $booking->list_name = $listing->getName();
+        }
+        return $this->render('pages/admin/booking/index.html.twig', [
+            'bookings' => $bookings,
+            'listings' => $listings
+        ]);
+    }
+
+    /**
+     * @Route("/admin/booking/create", name="admin_booking_create")
+     */
+    public function admin_create(): Response
+    {
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $statuslist = $this->getStatusList();
+        $timelist = $this->getTimeList();
+        return $this->render('pages/admin/booking/create.html.twig', [
+            'listings' => $listings,
+            'statuslist' => $statuslist,
+            'timelist' => $timelist
+        ]);
+    }
+
+    /**
+     * @Route("/admin/booking/store", name="admin_booking_store")
+     */
+    public function admin_store(Request $request, ValidatorInterface $validator): Response
+    {
+        $booking = new Booking();
+        $booking->setStatus('pending');
+        $adult_number = $request->request->get('adult_number');
+        $booking->setAdultNumber($adult_number);
+        $children_number = $request->request->get('children_number');
+        $booking->setChildrenNumber($children_number);
+        $listing_id = $request->request->get('listing_id');
+        $booking->setListingId($listing_id);
+        $time = $request->request->get('time');
+        $booking->setTime($time);
+        $date = $request->request->get('date');
+        $booking->setDate(\DateTime::createFromFormat("d/m/Y", $date));
+        
+        // validate
+        $errors = $validator->validate($booking);
+        if (count($errors) > 0) {
+            return new Response((string) $errors, 400);
+        }
+        // save
+        $doct = $this->getDoctrine()->getManager();
+        $doct->persist($booking);
+        $doct->flush();
+        return $this->redirectToRoute('admin_booking');
+    }
+
+    /**
+     * @Route("/admin/booking/edit/{id}", name="admin_booking_edit")
+     */
+    public function admin_edit($id): Response
+    {
+        $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $statuslist = $this->getStatusList();
+        $timelist = $this->getTimeList();
+        return $this->render('pages/admin/booking/edit.html.twig', [
+            'booking' => $booking,
+            'listings' => $listings,
+            'statuslist' => $statuslist,
+            'timelist' => $timelist
+        ]);
+    }
+
+    /**
+     * @Route("/admin/booking/update/{id}", name="admin_booking_update")
+     */
+    public function admin_update($id, Request $request, ValidatorInterface $validator): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $booking = $doct->getRepository(Booking::class)->find($id);
+        $adult_number = $request->request->get('adult_number');
+        $booking->setAdultNumber($adult_number);
+        $children_number = $request->request->get('children_number');
+        $booking->setChildrenNumber($children_number);
+        $listing_id = $request->request->get('listing_id');
+        $booking->setListingId($listing_id);
+        $time = $request->request->get('time');
+        $booking->setTime($time);
+        $status = $request->request->get('status');
+        $booking->setStatus($status);
+        // validate
+        $errors = $validator->validate($booking);
+        if (count($errors) > 0) {
+            return new Response((string) $errors, 400);
+        }
+        // update
+        $doct->flush();
+        return $this->redirectToRoute('admin_booking', [
+            'id' => $booking->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/booking/delete/{id}", name="admin_booking_delete")
+     */
+    public function admin_delete($id): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $booking = $doct->getRepository(Booking::class)->find($id);
+        $doct->remove($booking);
+        $doct->flush();
+        return $this->redirectToRoute('admin_booking', [
+            'id' => $booking->getId()
+        ]);
+    }
 }

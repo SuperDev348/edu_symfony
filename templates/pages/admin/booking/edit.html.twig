@@ -1,0 +1,116 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin Bookings Edit</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Bookings Edit</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Bookings Edit</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Edit Booking</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_booking_update', {'id': booking.getId}) }}" method="POST">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Listing</label>
+                <select class="form-control select2" name="listing_id" style="width: 100%;" value="{{ booking.getListingId }}">
+                  {% for listing in listings %}
+                    {% if listing.getId == booking.getListingId %}
+                    <option value="{{ listing.getId }}" selected>{{ listing.getName }}</option>
+                    {% else %}
+                    <option value="{{ listing.getId }}">{{ listing.getName }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="adult-number">Adult number</label>
+                <input type="number" class="form-control" name="adult_number" id="adult-number" value="{{ booking.getAdultNumber }}" required>
+              </div>
+              <div class="form-group">
+                <label for="children-number">Children number</label>
+                <input type="number" class="form-control" name="children_number" id="children-number" value="{{ booking.getChildrenNumber }}" required>
+              </div>
+              <div class="form-group">
+                <label>Date:</label>
+                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                  <input type="text" name="date" class="form-control datetimepicker-input" data-target="#reservationdate" value="{{ booking.getDate.format('d/m/Y') }}" required/>
+                  <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Minimal</label>
+                <select class="form-control select2" name="time" style="width: 100%;" value="{{ booking.getTime }}">
+                  {% for time in timelist %}
+                    {% if time == booking.getTime %}
+                    <option value="{{ time }}" selected>{{ time }}</option>
+                    {% else %}
+                    <option value="{{ time }}">{{ time }}</option>
+                    {% endif %}
+                  {% endfor %}
+                  
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control select2" name="status" style="width: 100%;" value="{{ booking.getStatus }}">
+                  {% for status in statuslist %}
+                    {% if status == booking.getStatus %}
+                    <option value="{{ status }}" selected>{{ status }}</option>
+                    {% else %}
+                    <option value="{{ status }}">{{ status }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="{{ path('admin_booking') }}" class="btn btn-info">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+//Date range picker
+$('#reservationdate').datetimepicker({
+    format: 'L'
+});
+</script>
+{% endblock %}

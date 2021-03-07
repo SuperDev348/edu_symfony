@@ -1,0 +1,107 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>Owner - Listings</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main">
+    <div class="site-content owner-content">
+        {{ include('nav/owner.top.html.twig') }}
+        <div class="container">
+            <div class="member-place-wrap">
+                {{ include('nav/owner.subtitle.html.twig') }}
+                <div class="member-filter">
+                    <div class="mf-left">
+                        <form action="#" method="GET">
+                            <div class="field-select">
+                                <select name="place_cities">
+                                    <option value="0">All cities</option>
+                                    <option value="paris">Paris</option>
+                                    <option value="newyork">New York</option>
+                                    <option value="chicago">Chicago</option>
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                            <div class="field-select">
+                                <select name="place_cities">
+                                    <option value="0">All categories</option>
+                                    <option value="Restaurant">Restaurant</option>
+                                    <option value="Gym">Gym</option>
+                                    <option value="Beaty">Beaty & Spa</option>
+                                    <option value="Shopping">Shopping</option>
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                        </form>
+                    </div><!-- .mf-left -->
+                    <div class="mf-right">
+                        <form action="#" class="site__search__form" method="GET">
+                            <div class="site__search__field">
+                                <span class="site__search__icon">
+                                    <i class="la la-search"></i>
+                                </span><!-- .site__search__icon -->
+                                <input class="site__search__input" type="text" name="s" placeholder="Search">
+                            </div><!-- .search__input -->
+                        </form><!-- .search__form -->
+                    </div><!-- .mf-right -->
+                </div><!-- .member-filter -->
+                <table class="member-place-list table-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="field-check">
+                                    <label for="all">
+                                        <input id="all" type="checkbox" value="all">
+                                        <span class="checkmark">
+                                            <i class="la la-check"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th>ID</th>
+                            <th>Listing Name</th>
+                            <th>Description</th>
+                            <th>Rate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td data-title="">
+                                <div class="field-check">
+                                    <label for="place01">
+                                        <input id="place01" type="checkbox" value="all">
+                                        <span class="checkmark">
+                                            <i class="la la-check"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td data-title="ID">{{ review.getId }}</td>
+                            <td data-title="Place name"><b>{{ review.list_name }}</b></td>
+                            <td data-title="City">{{ review.getDescription }}</td>
+                            <td data-title="City">{{ review.getRate }}</td>
+                            <td data-title="" class="place-action">
+                                <a href="{{ path('review_delete', {'id': review.getId}) }}" class="" title="Delete"><i class="la la-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination align-left">
+                    <div class="pagination__numbers">
+                        <span>1</span>
+                        <a title="2" href="#">2</a>
+                        <a title="3" href="#">3</a>
+                        <a title="Next" href="#">
+                            <i class="la la-angle-right"></i>
+                        </a>
+                    </div>
+                </div><!-- .pagination -->
+            </div><!-- .member-place-wrap -->
+        </div>
+    </div><!-- .site-content -->
+</main><!-- .site-main -->
+{% endblock %}

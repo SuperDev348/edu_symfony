@@ -425,6 +425,28 @@ class ListingController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/listing/status/{id}", name="listing_status")
+     */
+    public function setStatus($id, Request $request, ValidatorInterface $validator): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $listing = $doct->getRepository(Listing::class)->find($id);
+        $status = $request->request->get('status');
+        $listing->setStatus($status);
+        
+        // validate
+        $errors = $validator->validate($listing);
+        if (count($errors) > 0) {
+            return new Response((string) $errors, 400);
+        }
+        // update
+        $doct->flush();
+        return $this->redirectToRoute('admin_listing', [
+            'id' => $listing->getId()
+        ]);
+    }
+
     private function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -433,5 +455,52 @@ class ListingController extends AbstractController
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    private function getStatusList() {
+        $res = [
+            "approved",
+            "pending",
+            "cancel"
+        ];
+        return $res;
+    }
+
+    /**
+     * @Route("/admin/listing", name="admin_listing")
+     */
+    public function admin_index(): Response
+    {
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        return $this->render('pages/admin/listing/index.html.twig', [
+            'listings' => $listings
+        ]);
+    }
+
+    /**
+     * @Route("/admin/listing/edit/{id}", name="admin_listing_edit")
+     */
+    public function admin_edit($id): Response
+    {
+        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+        $statuslist = $this->getStatusList();
+        return $this->render('pages/admin/listing/edit.html.twig', [
+            'listing' => $listing,
+            'statuslist' => $statuslist
+        ]);
+    }
+
+    /**
+     * @Route("/admin/listing/delete/{id}", name="admin_listing_delete")
+     */
+    public function admin_delete($id): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $listing = $doct->getRepository(Listing::class)->find($id);
+        $doct->remove($listing);
+        $doct->flush();
+        return $this->redirectToRoute('admin_listing', [
+            'id' => $listing->getId()
+        ]);
     }
 }

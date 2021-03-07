@@ -120,4 +120,116 @@ class ReviewController extends AbstractController
             'id' => $review->getId()
         ]);
     }
+
+    /**
+     * @Route("/admin/review", name="admin_review")
+     */
+    public function admin_index(): Response
+    {
+        $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
+        foreach ($reviews as $review) {
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
+            $review->list_name = $listing->getName();
+        }
+        return $this->render('pages/admin/review/index.html.twig', [
+            'reviews' => $reviews
+        ]);
+    }
+
+    /**
+     * @Route("/admin/review/create", name="admin_review_create")
+     */
+    public function admin_create(): Response
+    {
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        return $this->render('pages/admin/review/create.html.twig', [
+            'listings' => $listings
+        ]);
+    }
+
+    /**
+     * @Route("/admin/review/store", name="admin_review_store")
+     */
+    public function admin_store(Request $request, ValidatorInterface $validator): Response
+    {
+        $review = new Review();
+        $user_id = $request->request->get('user_id');
+        $review->setUserId($user_id);
+        $rate = $request->request->get('rate');
+        $review->setRate($rate);
+        $description = $request->request->get('description');
+        $review->setDescription($description);
+        $listing_id = $request->request->get('listing_id');
+        $review->setListingId($listing_id);
+        $date = new DateTime();
+        $review->setDate($date);
+        
+        // validate
+        $errors = $validator->validate($review);
+        if (count($errors) > 0) {
+            return new Response((string) $errors, 400);
+        }
+        // save
+        $doct = $this->getDoctrine()->getManager();
+        $doct->persist($review);
+        $doct->flush();
+        return $this->redirectToRoute('admin_review', ['id'=> $listing_id]);
+    }
+
+    /**
+     * @Route("/admin/review/edit/{id}", name="admin_review_edit")
+     */
+    public function admin_edit($id): Response
+    {
+        $review = $this->getDoctrine()->getRepository(Review::class)->find($id);
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        return $this->render('pages/admin/review/edit.html.twig', [
+            'review' => $review,
+            'listings' => $listings
+        ]);
+    }
+
+    /**
+     * @Route("/admin/review/update/{id}", name="admin_review_update")
+     */
+    public function admin_update($id, Request $request, ValidatorInterface $validator): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $review = $doct->getRepository(Review::class)->find($id);
+        $user_id = $request->request->get('user_id');
+        $review->setUserId($user_id);
+        $rate = $request->request->get('rate');
+        $review->setRate($rate);
+        $description = $request->request->get('description');
+        $review->setDescription($description);
+        $listing_id = $request->request->get('listing_id');
+        $review->setListingId($listing_id);
+        // $date = new DateTime();
+        // $review->setDate($date);
+        
+        // validate
+        $errors = $validator->validate($review);
+        if (count($errors) > 0) {
+            return new Response((string) $errors, 400);
+        }
+        // update
+        $doct->flush();
+        return $this->redirectToRoute('admin_review', [
+            'id' => $review->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/review/delete/{id}", name="admin_review_delete")
+     */
+    public function admin_delete($id): Response
+    {
+        $doct = $this->getDoctrine()->getManager();
+        $review = $doct->getRepository(Review::class)->find($id);
+        $doct->remove($review);
+        $doct->flush();
+        return $this->redirectToRoute('admin_review', [
+            'id' => $review->getId()
+        ]);
+    }
 }

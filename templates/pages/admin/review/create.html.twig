@@ -1,0 +1,78 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin Review Create</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Review Add</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Review Add</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Create New Review</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_review_store') }}" method="POST">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Listing</label>
+                <select class="form-control select2" name="listing_id" style="width: 100%;">
+                  {% for listing in listings %}
+                  <option value="{{ listing.getId }}">{{ listing.getName }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="rate">Rate</label>
+                <input type="number" class="form-control" name="rate" id="rate" required>
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" row="8" style="width: 100%;" required></textarea>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <input type="hidden" name="user_id" value="1">
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <div class="btn btn-info">Cancel</div>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+//Date range picker
+$('#reservationdate').datetimepicker({
+    format: 'L'
+});
+</script>
+{% endblock %}
