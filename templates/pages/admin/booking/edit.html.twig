@@ -50,20 +50,29 @@
               </div>
               <div class="form-group">
                 <label for="adult-number">Adult number</label>
-                <input type="number" class="form-control" name="adult_number" id="adult-number" value="{{ booking.getAdultNumber }}" required>
+                <input type="number" class="form-control" name="adult_number" id="adult-number" value="{{ booking.getAdultNumber }}">
+                {% if (errors is defined) and ('adult_number' in errors|keys) %}
+                <span style="color: red;">{{ errors.adult_number }}</span>
+                {% endif %}
               </div>
               <div class="form-group">
                 <label for="children-number">Children number</label>
-                <input type="number" class="form-control" name="children_number" id="children-number" value="{{ booking.getChildrenNumber }}" required>
+                <input type="number" class="form-control" name="children_number" id="children-number" value="{{ booking.getChildrenNumber }}">
+                {% if (errors is defined) and ('children_number' in errors|keys) %}
+                <span style="color: red;">{{ errors.children_number }}</span>
+                {% endif %}
               </div>
               <div class="form-group">
                 <label>Date:</label>
                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                  <input type="text" name="date" class="form-control datetimepicker-input" data-target="#reservationdate" value="{{ booking.getDate.format('d/m/Y') }}" required/>
+                  <input type="text" name="date" class="form-control datetimepicker-input" data-target="#reservationdate" value="{{ booking.getDate.format('d/m/Y') }}"/>
                   <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
                 </div>
+                {% if (errors is defined) and ('date' in errors|keys) %}
+                <span style="color: red;">{{ errors.date }}</span>
+                {% endif %}
               </div>
               <div class="form-group">
                 <label>Minimal</label>

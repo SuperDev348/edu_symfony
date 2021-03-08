@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Review;
 use App\Entity\Listing;
 use \DateTime;
@@ -44,6 +46,36 @@ class ReviewController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
+        $rate = $request->request->get("rate");
+        $description = $request->request->get("description");
+        $listing_id = $request->request->get('listing_id');
+        $input = [
+            'rate' => $rate,
+            'description' => $description
+        ];
+        $constraints = new Assert\Collection([
+            'rate' => [new Assert\NotBlank, new Assert\Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'You must be between {{ min }} and {{ max }} to enter',])],
+            'description' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
+            $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+            return $this->render('pages/listing/detail.html.twig', [
+                'listing' => $listing,
+                'reviews' => $reviews,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $review = new Review();
         $user_id = $request->request->get('user_id');
         $review->setUserId($user_id);
@@ -152,6 +184,33 @@ class ReviewController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        $rate = $request->request->get("rate");
+        $description = $request->request->get("description");
+        $input = [
+            'rate' => $rate,
+            'description' => $description
+        ];
+        $constraints = new Assert\Collection([
+            'rate' => [new Assert\NotBlank, new Assert\Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'You must be between {{ min }} and {{ max }} to enter',])],
+            'description' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+            return $this->render('pages/admin/review/create.html.twig', [
+                'listings' => $listings,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $review = new Review();
         $user_id = $request->request->get('user_id');
         $review->setUserId($user_id);
@@ -194,6 +253,35 @@ class ReviewController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        $rate = $request->request->get("rate");
+        $description = $request->request->get("description");
+        $input = [
+            'rate' => $rate,
+            'description' => $description
+        ];
+        $constraints = new Assert\Collection([
+            'rate' => [new Assert\NotBlank, new Assert\Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'You must be between {{ min }} and {{ max }} to enter',])],
+            'description' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $review = $this->getDoctrine()->getRepository(Review::class)->find($id);
+            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+            return $this->render('pages/admin/review/create.html.twig', [
+                'review' => $review,
+                'listings' => $listings,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $doct = $this->getDoctrine()->getManager();
         $review = $doct->getRepository(Review::class)->find($id);
         $user_id = $request->request->get('user_id');

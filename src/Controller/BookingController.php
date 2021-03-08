@@ -2,12 +2,16 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Booking;
 use App\Entity\Listing;
+use App\Entity\Review;
 
 class BookingController extends AbstractController
 {
@@ -43,6 +47,42 @@ class BookingController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
+        $adult_number = $request->request->get("adult_number");
+        $children_number = $request->request->get("children_number");
+        $date = $request->request->get("date");
+        $time = $request->request->get("time");
+        $listing_id = $request->request->get('listing_id');
+        $input = [
+            'adult_number' => $adult_number,
+            'children_number' => $children_number,
+            'date' => $date,
+            'time' => $time
+        ];
+        $constraints = new Assert\Collection([
+            'adult_number' => [new Assert\NotBlank],
+            'children_number' => [new Assert\NotBlank],
+            'time' => [new Assert\NotBlank],
+            'date' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
+            $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+            return $this->render('pages/listing/detail.html.twig', [
+                'listing' => $listing,
+                'reviews' => $reviews,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $booking = new Booking();
         $booking->setStatus('pending');
         $adult_number = $request->request->get('adult_number');
@@ -242,6 +282,43 @@ class BookingController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        $adult_number = $request->request->get("adult_number");
+        $children_number = $request->request->get("children_number");
+        $time = $request->request->get("time");
+        $date = $request->request->get("date");
+        $input = [
+            'adult_number' => $adult_number,
+            'children_number' => $children_number,
+            'time' => $time,
+            'date' => $date
+        ];
+        $constraints = new Assert\Collection([
+            'adult_number' => [new Assert\NotBlank],
+            'children_number' => [new Assert\NotBlank],
+            'time' => [new Assert\NotBlank],
+            'date' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+            $statuslist = $this->getStatusList();
+            $timelist = $this->getTimeList();
+            return $this->render('pages/admin/booking/create.html.twig', [
+                'listings' => $listings,
+                'statuslist' => $statuslist,
+                'timelist' => $timelist,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        
         $booking = new Booking();
         $booking->setStatus('pending');
         $adult_number = $request->request->get('adult_number');
@@ -255,11 +332,6 @@ class BookingController extends AbstractController
         $date = $request->request->get('date');
         $booking->setDate(\DateTime::createFromFormat("d/m/Y", $date));
         
-        // validate
-        $errors = $validator->validate($booking);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
         // save
         $doct = $this->getDoctrine()->getManager();
         $doct->persist($booking);
@@ -289,6 +361,45 @@ class BookingController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        $adult_number = $request->request->get("adult_number");
+        $children_number = $request->request->get("children_number");
+        $time = $request->request->get("time");
+        $date = $request->request->get("date");
+        $input = [
+            'adult_number' => $adult_number,
+            'children_number' => $children_number,
+            'time' => $time,
+            'date' => $date
+        ];
+        $constraints = new Assert\Collection([
+            'adult_number' => [new Assert\NotBlank],
+            'children_number' => [new Assert\NotBlank],
+            'time' => [new Assert\NotBlank],
+            'date' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
+            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+            $statuslist = $this->getStatusList();
+            $timelist = $this->getTimeList();
+            return $this->render('pages/admin/booking/edit.html.twig', [
+                'booking' => $booking,
+                'listings' => $listings,
+                'statuslist' => $statuslist,
+                'timelist' => $timelist,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $doct = $this->getDoctrine()->getManager();
         $booking = $doct->getRepository(Booking::class)->find($id);
         $adult_number = $request->request->get('adult_number');

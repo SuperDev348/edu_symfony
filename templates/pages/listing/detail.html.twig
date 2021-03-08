@@ -317,11 +317,19 @@
                                     </div>
                                     <div class="field-textarea">
                                         <img class="author-avatar" src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt="">
-                                        <textarea name="description" placeholder="Write a review" required></textarea>
+                                        {% if (old is defined) and ('description' in old|keys) %}
+                                        <textarea name="description" placeholder="Write a review">{{ old.description }}</textarea>
+                                        {% else %}
+                                        <textarea name="description" placeholder="Write a review"></textarea>
+                                        {% endif %}
+                                        
                                         <input type="hidden" name="rate" value="5">
                                         <input type="hidden" name="user_id" value="1">
                                         <input type="hidden" name="listing_id" value="{{ listing.getId }}">
                                     </div>
+                                    {% if (errors is defined) and ('description' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.description }}</span>
+                                    {% endif %}
                                     <div class="field-submit">
                                         <input type="submit" class="btn" value="Submit" name="submit">
                                     </div>
@@ -374,12 +382,26 @@
                                 </div>
                                 <div class="field-select field-date">
                                     <span class="sl-icon"><i class="la la-calendar-alt"></i></span>
-                                    <input type="text" placeholder="Date" class="datepicker" name="date" required>
+                                    {% if (old is defined) and ('date' in old|keys) %}
+                                    <input type="text" placeholder="Date" class="datepicker" name="date" value="{{ old.date }}">
+                                    {% else %}
+                                    <input type="text" placeholder="Date" class="datepicker" name="date">
+                                    {% endif %}
+                                    {% if (errors is defined) and ('date' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.date }}</span>
+                                    {% endif %}
                                     <i class="la la-angle-down"></i>
                                 </div>
                                 <div class="field-select has-sub field-time">
                                     <span class="sl-icon"><i class="la la-clock"></i></span>
-                                    <input type="text" placeholder="Time" name="time" required>
+                                    {% if (old is defined) and ('time' in old|keys) %}
+                                    <input type="text" placeholder="Time" name="time" value="{{ old.time }}">
+                                    {% else %}
+                                    <input type="text" placeholder="Time" name="time">
+                                    {% endif %}
+                                    {% if (errors is defined) and ('time' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.time }}</span>
+                                    {% endif %}
                                     <i class="la la-angle-down"></i>
                                     <div class="field-sub">
                                         <ul>

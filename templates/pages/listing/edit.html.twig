@@ -29,7 +29,14 @@
                 <div class="field-inline">
                     <div class="field-group field-input">
                         <label for="name">Nom de l'annonce</label>
+                        {% if (old is defined) and ('name' in old|keys) %}
+                        <input type="text" id="name" placeholder="Le nom de votre annonce" name="name" value="{{ old.name }}">
+                        {% else %}
                         <input type="text" id="name" placeholder="Le nom de votre annonce" name="name" value="{{ listing.getName }}">
+                        {% endif %}
+                        {% if (errors is defined) and ('name' in errors|keys) %}
+                        <span style="color: red;">{{ errors.name }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-group field-select">
                         <label for="price_range">les prix</label>
@@ -45,7 +52,14 @@
                 </div>
                 <div class="field-group">
                     <h4 class="label">Description</h4>
+                    {% if (old is defined) and ('description' in old|keys) %}
+                    <textarea name="description" rows="6" style="width: 100%;">{{ old.description }}</textarea>
+                    {% else %}
                     <textarea name="description" rows="6" style="width: 100%;">{{ listing.getDescription }}</textarea>
+                    {% endif %}
+                    {% if (errors is defined) and ('description' in errors|keys) %}
+                    <span style="color: red;">{{ errors.description }}</span>
+                    {% endif %}
                     <!-- <div id="editor"></div> -->
                 </div>
                 <div class="field-group field-select">
@@ -133,7 +147,14 @@
                 <h3>Localisation exact</h3>
                 <div class="field-group">
                     <label for="address">Addresse</label>
+                    {% if (old is defined) and ('address' in old|keys) %}
+                    <input type="text" id="address" placeholder="Full Address" name="address" value="{{ old.address }}">
+                    {% else %}
                     <input type="text" id="address" placeholder="Full Address" name="address" value="{{ listing.getAddress }}">
+                    {% endif %}
+                    {% if (errors is defined) and ('address' in errors|keys) %}
+                    <span style="color: red;">{{ errors.address }}</span>
+                    {% endif %}
                 </div>
                 <div class="field-group field-maps">
                     <div class="field-inline">
@@ -160,7 +181,14 @@
                 <h3>Contact Info</h3>
                 <div class="field-group">
                     <label for="email">Email</label>
+                    {% if (old is defined) and ('email' in old|keys) %}
+                    <input type="email" id="email" placeholder="Your email address" name="email" value="{{ old.email }}">
+                    {% else %}
                     <input type="email" id="email" placeholder="Your email address" name="email" value="{{ listing.getEmail }}">
+                    {% endif %}
+                    {% if (errors is defined) and ('email' in errors|keys) %}
+                    <span style="color: red;">{{ errors.email }}</span>
+                    {% endif %}
                 </div>
                 <div class="field-group">
                     <label for="phone">Phone number (optional)</label>

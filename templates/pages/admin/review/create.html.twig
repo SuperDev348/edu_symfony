@@ -46,18 +46,32 @@
               </div>
               <div class="form-group">
                 <label for="rate">Rate</label>
-                <input type="number" class="form-control" name="rate" id="rate" required>
+                {% if (old is defined) and ('rate' in old|keys) %}
+                <input type="number" class="form-control" name="rate" id="rate" value="{{ old.rate }}">
+                {% else %}
+                <input type="number" class="form-control" name="rate" id="rate">
+                {% endif %}
+                {% if (errors is defined) and ('rate' in errors|keys) %}
+                <span style="color: red;">{{ errors.rate }}</span>
+                {% endif %}
               </div>
               <div class="form-group">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" row="8" style="width: 100%;" required></textarea>
+                {% if (old is defined) and ('rate' in old|keys) %}
+                <textarea name="description" id="description" row="8" style="width: 100%;">{{ old.description }}</textarea>
+                {% else %}
+                <textarea name="description" id="description" row="8" style="width: 100%;"></textarea>
+                {% endif %}
+                {% if (errors is defined) and ('description' in errors|keys) %}
+                <span style="color: red;">{{ errors.description }}</span>
+                {% endif %}
               </div>
             </div>
             <!-- /.card-body -->
             <input type="hidden" name="user_id" value="1">
             <div class="card-footer">
               <button type="submit" class="btn btn-primary">Save</button>
-              <div class="btn btn-info">Cancel</div>
+              <a href="{{ path('admin_review') }}" class="btn btn-info">Cancel</a>
             </div>
           </form>
         </div>

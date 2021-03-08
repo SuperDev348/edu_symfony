@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Listing;
 use App\Entity\Review;
 
@@ -41,6 +43,39 @@ class ListingController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
+        $name = $request->request->get("name");
+        $description = $request->request->get("description");
+        $address = $request->request->get("address");
+        $email = $request->request->get("email");
+        $input = [
+            'name' => $name,
+            'description' => $description,
+            'address' => $address,
+            'email' => $email
+        ];
+        $constraints = new Assert\Collection([
+            'name' => [new Assert\NotBlank],
+            'description' => [new Assert\NotBlank],
+            'address' => [new Assert\NotBlank],
+            'email' => [new Assert\NotBlank, new Assert\Email()],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+            return $this->render('pages/listing/create.html.twig', [
+                'listings' => $listings,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $listing = new Listing();
         $name = $request->request->get('name');
         $listing->setName($name);
@@ -227,6 +262,39 @@ class ListingController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
+        $name = $request->request->get("name");
+        $description = $request->request->get("description");
+        $address = $request->request->get("address");
+        $email = $request->request->get("email");
+        $input = [
+            'name' => $name,
+            'description' => $description,
+            'address' => $address,
+            'email' => $email
+        ];
+        $constraints = new Assert\Collection([
+            'name' => [new Assert\NotBlank],
+            'description' => [new Assert\NotBlank],
+            'address' => [new Assert\NotBlank],
+            'email' => [new Assert\NotBlank, new Assert\Email()],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+            return $this->render('pages/listing/edit.html.twig', [
+                'listing' => $listing,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $name = $request->request->get('name');
