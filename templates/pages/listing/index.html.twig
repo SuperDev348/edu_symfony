@@ -12,39 +12,53 @@
             <div class="member-place-wrap">
                 {{ include('nav/owner.subtitle.html.twig') }}
                 <div class="member-filter">
-                    <div class="mf-left">
-                        <form action="#" method="GET">
-                            <div class="field-select">
-                                <select name="place_cities">
+                    <form action="{{ path('listing_search') }}" method="POST" style="width: 100%;">
+                        <div class="row">
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="city">
                                     <option value="0">All cities</option>
-                                    <option value="paris">Paris</option>
-                                    <option value="newyork">New York</option>
-                                    <option value="chicago">Chicago</option>
+                                    {% for city in cities %}
+                                        {% if (filter is defined) and ('city' in filter|keys) and (filter.city == city) %}
+                                        <option value="{{ city }}" selected>{{ city }}</option>
+                                        {% else %}
+                                        <option value="{{ city }}">{{ city }}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
                                 <i class="la la-angle-down"></i>
                             </div>
-                            <div class="field-select">
-                                <select name="place_cities">
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="category">
                                     <option value="0">All categories</option>
-                                    <option value="Restaurant">Restaurant</option>
-                                    <option value="Gym">Gym</option>
-                                    <option value="Beaty">Beaty & Spa</option>
-                                    <option value="Shopping">Shopping</option>
+                                    {% for category in categories %}
+                                        {% if (filter is defined) and ('category' in filter|keys) and (filter.category == category) %}
+                                        <option value="{{ category }}" selected>{{ category }}</option>
+                                        {% else %}
+                                        <option value="{{ category }}">{{ category }}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
                                 <i class="la la-angle-down"></i>
                             </div>
-                        </form>
-                    </div><!-- .mf-left -->
-                    <div class="mf-right">
-                        <form action="#" class="site__search__form" method="GET">
-                            <div class="site__search__field">
-                                <span class="site__search__icon">
-                                    <i class="la la-search"></i>
-                                </span><!-- .site__search__icon -->
-                                <input class="site__search__input" type="text" name="s" placeholder="Search">
-                            </div><!-- .search__input -->
-                        </form><!-- .search__form -->
-                    </div><!-- .mf-right -->
+                            <div class="field-group col-md-3">
+                                {% if (filter is defined) and ('id' in filter|keys) %}
+                                <input type="text" id="id" class="search-input" placeholder="Search id" name="id" value="{{ filter.id }}">
+                                {% else %}
+                                <input type="text" id="id" class="search-input" placeholder="Search id" name="id">
+                                {% endif %}
+                            </div>
+                            <div class="field-group col-md-3">
+                                {% if (filter is defined) and ('name' in filter|keys) %}
+                                <input type="text" id="name" class="search-input" placeholder="Search name" name="name" value="{{ filter.name }}">
+                                {% else %}
+                                <input type="text" id="name" class="search-input" placeholder="Search name" name="name">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <button type="submit" class="search-button">
+                            Search
+                        </button>
+                    </form>
                 </div><!-- .member-filter -->
                 <table class="member-place-list table-responsive">
                     <thead>

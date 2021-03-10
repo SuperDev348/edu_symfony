@@ -23,28 +23,58 @@
                         <div class="col-lg-3 col-6">
                             <div class="item blue">
                                 <h3>Active Places</h3>
-                                <span class="number">0</span>
+                                <span class="number">{{ listing_number }}</span>
                                 <span class="line"></span>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="item green">
                                 <h3>Bookings Made</h3>
-                                <span class="number">12</span>
+                                <span class="number">{{ booking_number }}</span>
                                 <span class="line"></span>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="item yellow">
                                 <h3>Total Reviews</h3>
-                                <span class="number">6</span>
+                                <span class="number">{{ review_number }}</span>
                                 <span class="line"></span>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="item purple">
                                 <h3>Total Views</h3>
-                                <span class="number">145</span>
+                                <span class="number">{{ listing_number + booking_number + review_number }}</span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-3 col-6">
+                            <div class="item blue">
+                                <h3>Visiting Number of Listing</h3>
+                                <span class="number">{{ visit_number }}</span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="item green">
+                                <h3>Booking Number Per Visit</h3>
+                                <span class="number">{{ booking_per_visit }}</span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="item yellow">
+                                <h3>Review per Booking</h3>
+                                <span class="number">{{ review_per_booking }}</span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="item purple">
+                                <h3>Satisfaction Percentage</h3>
+                                <span class="number">{{ percentage }}</span>
                                 <span class="line"></span>
                             </div>
                         </div>

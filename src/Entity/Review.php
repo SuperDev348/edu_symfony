@@ -23,9 +23,14 @@ class Review
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=100)
      */
-    private $user_id;
+    private $user_name;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $user_avatar;
 
     /**
      * @ORM\Column(type="integer")
@@ -41,6 +46,11 @@ class Review
      * @ORM\Column(type="date")
      */
     private $date;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $feature;
 
     public function getId(): ?int
     {
@@ -59,14 +69,26 @@ class Review
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUserName(): ?string
     {
-        return $this->user_id;
+        return $this->user_name;
     }
 
-    public function setUserId(int $user_id): self
+    public function setUserName(string $user_name): self
     {
-        $this->user_id = $user_id;
+        $this->user_name = $user_name;
+
+        return $this;
+    }
+
+    public function getUserAvatar(): ?string
+    {
+        return $this->user_avatar;
+    }
+
+    public function setUserAvatar(string $user_avatar): self
+    {
+        $this->user_avatar = $user_avatar;
 
         return $this;
     }
@@ -103,6 +125,18 @@ class Review
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getFeature(): ?bool
+    {
+        return $this->feature;
+    }
+
+    public function setFeature(bool $feature): self
+    {
+        $this->feature = $feature;
 
         return $this;
     }

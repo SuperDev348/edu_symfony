@@ -5,27 +5,21 @@
 {% endblock %}
 
 {% block body %}
-<main id="main" class="site-main home-main overflow">
-    <div class="site-banner hcg-banner">
-        <div class="banner slick-sliders">
-            <div class="banner-sliders slick-slider" data-item="1" data-arrows="false" data-dots="false" data-autoplay="autoplay" data-cssease="cubic-bezier(0.7, 0, 0.3, 1)" data-fade="true" data-infinite="true" data-speed="900">
-                <div class="item"><img src="{{ asset('assets/images/bg/bg-hero-4.jpeg') }}" alt="Banner"></div>
-                <div class="item"><img src="{{ asset('assets/images/bg/bg-hero-5.jpeg') }}" alt="Banner"></div>
-                <div class="item"><img src="{{ asset('assets/images/bg/bg-hero-6.jpeg') }}" alt="Banner"></div>
-            </div>
-        </div><!-- .banner -->
+<main id="main" class="site-main home-main business-main overflow">
+    <div class="site-banner bg_hero_02">
+        <video class="overlay-video" autoplay="" muted="" playsinline="" loop="" src="https://getgolo.com/images/video3.mp4"></video>
         <div class="container">
             <div class="site-banner__content">
-             <div class="item"><img src="{{ asset('assets/images/assets/logo2.png') }}" alt="Banner"></div>
-                <p>Discover Tunisia like a local!</p>
+                <h1 class="site-banner__title">Business Listing</h1>
+                <p><i>20</i> cities, <i>10</i> categories, <i>5662</i> listings.</p>
                 <form action="#" class="site-banner__search layout-02">
                     <div class="field-input">
-                        <label for="s">Recherche</label>
-                        <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="Ex: fastfood, musée" autocomplete="off">
+                        <label for="s">Find</label>
+                        <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="Ex: fastfood, beer" autocomplete="off">
                         <div class="search-suggestions name-suggestions">
                             <ul>
                                 <li><a href="#"><i class="las la-utensils"></i><span>Restaurant</span></a></li>
-                                <li><a href="#"><i class="las la-spa"></i><span>Musée</span></a></li>
+                                <li><a href="#"><i class="las la-spa"></i><span>Beauty</span></a></li>
                                 <li><a href="#"><i class="las la-dumbbell"></i><span>Fitness</span></a></li>
                                 <li><a href="#"><i class="las la-cocktail"></i><span>Nightlight</span></a></li>
                                 <li><a href="#"><i class="las la-shopping-bag"></i><span>Shopping</span></a></li>
@@ -34,12 +28,12 @@
                         </div>
                     </div><!-- .site-banner__search__input -->
                     <div class="field-input">
-                        <label for="loca">Où?</label>
-                        <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="where" placeholder="Destination" autocomplete="off">
+                        <label for="loca">Where</label>
+                        <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="where" placeholder="Your city" autocomplete="off">
                         <div class="search-suggestions location-suggestions">
                             <ul>
-                                <li><a href="#"><i class="las la-location-arrow"></i><span>Votre localisation</span></a></li>
-                                <li><a href="#"><span>Monastir, Tunisie</span></a></li>
+                                <li><a href="#"><i class="las la-location-arrow"></i><span>Current location</span></a></li>
+                                <li><a href="#"><span>San Francisco, CA</span></a></li>
                             </ul>
                         </div>
                     </div><!-- .site-banner__search__input -->
@@ -50,83 +44,77 @@
             </div><!-- .site-banner__content -->
         </div>
     </div><!-- .site-banner -->
-    <div class="explore">
+    <div class="business-category">
         <div class="container">
-            <h2 class="title title-border-bottom align-center offset-item">Découvrer par type</h2>
+            <h2 class="title title-border-bottom align-center offset-item">Browse Businesses by Category</h2>
             <div class="slick-sliders offset-item">
-                <div class="slick-slider explore-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="1" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-mobileitem="1" data-mobilearrows="false">
-                    <div class="slick-item">
-                        <div class="explore-item dark-sky-blue">
-                            <div class="explore-thumb">
-                                <a href="ex-half-map-1.html"><img src="{{ asset('assets/images/explore-05.jpg') }}" alt=""></a>
-                            </div>
-                            <div class="explore-info">
-                                <h3><a href="ex-half-map-1.html">See & Do</a></h3>
-                                <span>16 places</span>
-                            </div>
-                        </div>
+                <div class="slick-slider business-cat-slider slider-pd30" data-item="6" data-arrows="true" data-itemScroll="6" data-dots="true" data-centerPadding="50" data-tabletitem="3" data-tabletscroll="3" data-smallpcitem="4" data-smallpcscroll="4" data-mobileitem="2" data-mobilescroll="2" data-mobilearrows="false">
+                    <div class="bsn-cat-item rosy-pink">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-utensils"></i>
+                            <span class="title">Restaurant</span>
+                            <span class="place">12 Places</span>
+                        </a>
                     </div>
-                    <div class="slick-item">
-                        <div class="explore-item rosy-pink">
-                            <div class="explore-thumb">
-                                <a href="ex-half-map-1.html"><img src="{{ asset('assets/images/explore-01.jpeg') }}" alt=""></a>
-                            </div>
-                            <div class="explore-info">
-                                <h3><a href="ex-half-map-1.html">Eat & Drink</a></h3>
-                                <span>14 places</span>
-                            </div>
-                        </div>
+                    <div class="bsn-cat-item purple">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-spa"></i>
+                            <span class="title">Beauty</span>
+                            <span class="place">8 Places</span>
+                        </a>
                     </div>
-                    <div class="slick-item">
-                        <div class="explore-item dodger-blue">
-                            <div class="explore-thumb">
-                                <a href="ex-half-map-1.html"><img src="{{ asset('assets/images/explore-02.jpg') }}" alt=""></a>
-                            </div>
-                            <div class="explore-info">
-                                <h3><a href="ex-half-map-1.html">Place to Stay</a></h3>
-                                <span>15 places</span>
-                            </div>
-                        </div>
+                    <div class="bsn-cat-item blue">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-dumbbell"></i>
+                            <span class="title">Fitness</span>
+                            <span class="place">6 Places</span>
+                        </a>
                     </div>
-                    <div class="slick-item">
-                        <div class="explore-item yellow">
-                            <div class="explore-thumb">
-                                <a href="ex-half-map-1.html"><img src="{{ asset('assets/images/explore-04.jpeg') }}" alt=""></a>
-                            </div>
-                            <div class="explore-info">
-                                <h3><a href="ex-half-map-1.html">Shopping</a></h3>
-                                <span>16 places</span>
-                            </div>
-                        </div>
+                    <div class="bsn-cat-item orange">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-cocktail"></i>
+                            <span class="title">Nightlife</span>
+                            <span class="place">10 Places</span>
+                        </a>
                     </div>
-                    <div class="slick-item">
-                        <div class="explore-item dark-sky-blue">
-                            <div class="explore-thumb">
-                                <a href="ex-half-map-1.html"><img src="{{ asset('assets/images/explore-05.jpg') }}" alt=""></a>
-                            </div>
-                            <div class="explore-info">
-                                <h3><a href="ex-half-map-1.html">See & Do</a></h3>
-                                <span>16 places</span>
-                            </div>
-                        </div>
+                    <div class="bsn-cat-item charcoal-purple">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-shopping-bag"></i>
+                            <span class="title">Shopping</span>
+                            <span class="place">12 Places</span>
+                        </a>
+                    </div>
+                    <div class="bsn-cat-item green">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-film"></i>
+                            <span class="title">Cinema</span>
+                            <span class="place">15 Places</span>
+                        </a>
+                    </div>
+                    <div class="bsn-cat-item rosy-pink">
+                        <a href="ex-half-map-1.html">
+                            <i class="las la-utensils"></i>
+                            <span class="title">Restaurant</span>
+                            <span class="place">12 Places</span>
+                        </a>
                     </div>
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">
-                        <i class="la la-arrow-left"></i>
+                        <i class="las la-angle-left"></i>
                     </div><!-- .place-slider__prev -->
-                    <div class="place-slider__next slick-nav__next">		
-                        <i class="la la-arrow-right"></i>
+                    <div class="place-slider__next slick-nav__next">
+                        <i class="las la-angle-right"></i>
                     </div><!-- .place-slider__next -->
                 </div><!-- .place-slider__nav -->
             </div>
         </div>
-    </div><!-- .explore -->
-    <div class="trending">
+    </div><!-- .business-category -->
+    <div class="trending trending-business">
         <div class="container">
-            <h2 class="title title-border-bottom align-center offset-item">Recommander par inTunisia</h2>
+            <h2 class="title title-border-bottom align-center offset-item">Trending Business Places</h2>
             <div class="slick-sliders offset-item">
-                <div class="slick-slider trending-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="1" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-mobileitem="1" data-mobilearrows="false">
+                <div class="slick-slider trending-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="4" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-tabletscroll="2" data-smallpcscroll="3" data-smallpcitem="3" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
                     <div class="place-item layout-02 place-hover">
                         <div class="place-inner">
                             <div class="place-thumb hover-img">
@@ -135,23 +123,23 @@
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
-                                </a>       
+                                </a>
                                 <a class="entry-category rosy-pink" href="#">
                                     <i class="las la-utensils"></i><span>Restaurant</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-3.jpg') }}" alt="Author"></a>
                                 <div class="feature">Featured</div>
-                            </div>       
+                            </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
                                         <span>Restaurant</span>
-                                       </div>
+                                    </div>
                                     <div class="place-city">
-                                        <a href="#">Tunis</a>
+                                        <a href="#">Paris</a>
                                     </div>
                                 </div>
-                                <h3 class="place-title"><a href="single-1.html">VIA MERCATO LAC 2 </a></h3>
+                                <h3 class="place-title"><a href="single-1.html">Mattone Restaurant</a></h3>
                                 <div class="open-now"><i class="las la-door-open"></i>Open now</div>
                                 <div class="entry-bottom">
                                     <div class="place-preview">
@@ -176,22 +164,22 @@
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
-                                </a>       
+                                </a>
                                 <a class="entry-category blue" href="#">
                                     <i class="las la-dumbbell"></i><span>Gym</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-2.jpg') }}" alt="Author"></a>
-                            </div>       
+                            </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
                                         <span>Gym</span>
-                                       </div>
+                                    </div>
                                     <div class="place-city">
-                                        <a href="#">Tunis</a>
+                                        <a href="#">Bordeaux</a>
                                     </div>
                                 </div>
-                                <h3 class="place-title"><a href="single-1.html">California Gym</a></h3>
+                                <h3 class="place-title"><a href="single-1.html">Retro Fitness</a></h3>
                                 <div class="open-now"><i class="las la-door-open"></i>Open now</div>
                                 <div class="entry-bottom">
                                     <div class="place-preview">
@@ -216,22 +204,22 @@
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
-                                </a>       
+                                </a>
                                 <a class="entry-category purple" href="#">
                                     <i class="las la-spa"></i><span>Massage</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Author"></a>
-                            </div>       
+                            </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
                                         <span>Massage</span>
-                                       </div>
+                                    </div>
                                     <div class="place-city">
-                                        <a href="#">Sousse</a>
+                                        <a href="#">Lyon</a>
                                     </div>
                                 </div>
-                                <h3 class="place-title"><a href="single-1.html">Centre Sa3ida</a></h3>
+                                <h3 class="place-title"><a href="single-1.html">Renew Body Spa</a></h3>
                                 <div class="close-now"><i class="las la-door-closed"></i>Close now</div>
                                 <div class="entry-bottom">
                                     <div class="place-preview">
@@ -256,19 +244,19 @@
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
-                                </a>       
+                                </a>
                                 <a class="entry-category charcoal-purple" href="#">
-                                    <i class="las la-shopping-bag"></i><span>Tunisia Mall</span>
+                                    <i class="las la-shopping-bag"></i><span>Clothing Shop</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt="Author"></a>
-                            </div>       
+                            </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
                                         <span>Clothing Shop</span>
-                                       </div>
+                                    </div>
                                     <div class="place-city">
-                                        <a href="#">Tunis</a>
+                                        <a href="#">Nantes</a>
                                     </div>
                                 </div>
                                 <h3 class="place-title"><a href="single-1.html">Antoinette</a></h3>
@@ -292,17 +280,17 @@
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
-                                </a>       
+                                </a>
                                 <a class="entry-category green" href="#">
                                     <i class="las la-film"></i><span>Cinema</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Author"></a>
-                            </div>       
+                            </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
                                         <span>Restaurant</span>
-                                       </div>
+                                    </div>
                                     <div class="place-city">
                                         <a href="#">Paris</a>
                                     </div>
@@ -323,10 +311,10 @@
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">
-                        <i class="la la-arrow-left"></i>
+                        <i class="las la-angle-left"></i>
                     </div><!-- .place-slider__prev -->
-                    <div class="place-slider__next slick-nav__next">		
-                        <i class="la la-arrow-right"></i>
+                    <div class="place-slider__next slick-nav__next">
+                        <i class="las la-angle-right"></i>
                     </div><!-- .place-slider__next -->
                 </div><!-- .place-slider__nav -->
             </div>
@@ -334,19 +322,19 @@
     </div><!-- .trending -->
     <div class="featured-cities">
         <div class="container">
-            <h2 class="title title-border-bottom align-center title-while offset-item">Featured Cities</h2>
+            <h2 class="title title-border-bottom align-center offset-item">Featured Cities<span>Choose the city you’ll be living in next</span></h2>
             <div class="slick-sliders offset-item">
-                <div class="slick-slider featured-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="1" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-mobileitem="1" data-mobilearrows="false">
+                <div class="slick-slider featured-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="4" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-tabletscroll="2" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
                     <div class="slick-item">
                         <div class="cities__item hover__box">
                             <div class="cities__thumb hover__box__thumb">
-                                <a title="Singapo" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/singapo.jpg') }}" alt="Singapo">
+                                <a title="London" href="city-details-1.html">
+                                    <img src="{{ asset('assets/images/city/newyork.jpg') }}" alt="London">
                                 </a>
                             </div>
-                            <h4 class="cities__name">Singapo</h4>
+                            <h4 class="cities__name">United States</h4>
                             <div class="cities__info">
-                                <h3 class="cities__capital">Singapo</h3>
+                                <h3 class="cities__capital">New York</h3>
                                 <p class="cities__number">80 places</p>
                             </div>
                         </div><!-- .cities__item -->
@@ -354,13 +342,13 @@
                     <div class="slick-item">
                         <div class="cities__item hover__box">
                             <div class="cities__thumb hover__box__thumb">
-                                <a title="Barcalona" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/barca.jpeg') }}" alt="Barcalona">
+                                <a title="Rome" href="city-details-1.html">
+                                    <img src="{{ asset('assets/images/city/barca.jpeg') }}" alt="Rome">
                                 </a>
                             </div>
                             <h4 class="cities__name">Spain</h4>
                             <div class="cities__info">
-                                <h3 class="cities__capital">Barcalona</h3>
+                                <h3 class="cities__capital">Barcelona</h3>
                                 <p class="cities__number">92 places</p>
                             </div>
                         </div><!-- .cities__item -->
@@ -374,7 +362,7 @@
                             </div>
                             <h4 class="cities__name">United States</h4>
                             <div class="cities__info">
-                                <h3 class="cities__capital">San Fancisco</h3>
+                                <h3 class="cities__capital">Los Angeles</h3>
                                 <p class="cities__number">64 places</p>
                             </div>
                         </div><!-- .cities__item -->
@@ -410,104 +398,132 @@
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">
-                        <i class="la la-arrow-left"></i>
+                        <i class="las la-angle-left"></i>
                     </div><!-- .place-slider__prev -->
-                    <div class="place-slider__next slick-nav__next">		
-                        <i class="la la-arrow-right"></i>
+                    <div class="place-slider__next slick-nav__next">
+                        <i class="las la-angle-right"></i>
                     </div><!-- .place-slider__next -->
                 </div><!-- .place-slider__nav -->
             </div>
         </div>
     </div><!-- .featured-cities -->
+    <div class="business-about" style="background-image: url(images/img_about_1.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="business-about-info">
+                        <h2 class="offset-item">Who we are</h2>
+                        <p class="offset-item">Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident.</p>
+                        <a href="#" class="btn offset-item">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- .business-about -->
     <div class="testimonial">
         <div class="container">
-            <h2 class="title title-border-bottom align-center offset-item">Loved by Our Users</h2>
+            <h2 class="title title-border-bottom align-center offset-item">People Talking About Us</h2>
             <div class="slick-sliders offset-item">
-                <div class="slick-slider testimonial-slider slider-pd30" data-item="1" data-arrows="false" data-dots="false" data-asNavFor=".slick-control">
-                    <div class="slick-item">
-                        <div class="testimonial-item">
-                            <img src="{{ asset('assets/images/assets/quote.png') }}" alt="">
-                            <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
-                            <h4>Kari Granleese</h4>
-                            <span>Traveler</span>
+                <div class="slick-slider testimonial-slider slider-pd30" data-item="2" data-arrows="true" data-itemScroll="2" data-dots="true" data-centerPadding="30" data-tabletitem="1" data-tabletscroll="1" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
+                    <div class="testimonial-item layout-02">
+                        <div class="avatar">
+                            <img src="{{ asset('assets/images/avatars/male-1.jpg') }}" alt="Avatar">
+                            <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
+                        </div>
+                            <div class="testimonial-info">
+                                <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
+                                <div class="testimonial-meta">
+                                    <b>Kari Granleese</b>
+                                    <span>CEO Alididi</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial-item layout-02">
+                            <div class="avatar">
+                                <img src="{{ asset('assets/images/avatars/female-1.jpg') }}" alt="Avatar">
+                                <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
+                        </div>
+                                <div class="testimonial-info">
+                                    <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
+                                    <div class="testimonial-meta">
+                                        <b>Kari Granleese</b>
+                                        <span>CEO Alididi</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="testimonial-item layout-02">
+                                <div class="avatar">
+                                    <img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Avatar">
+                                    <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
+                        </div>
+                                    <div class="testimonial-info">
+                                        <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
+                                        <div class="testimonial-meta">
+                                            <b>Kari Granleese</b>
+                                            <span>CEO Alididi</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="place-slider__nav slick-nav">
+                                <div class="place-slider__prev slick-nav__prev">
+                                    <i class="las la-angle-left"></i>
+                                </div><!-- .place-slider__prev -->
+                                <div class="place-slider__next slick-nav__next">
+                                    <i class="las la-angle-right"></i>
+                                </div><!-- .place-slider__next -->
+                            </div><!-- .place-slider__nav -->
                         </div>
                     </div>
-                    <div class="slick-item">
-                        <div class="testimonial-item">
-                            <img src="{{ asset('assets/images/assets/quote.png') }}" alt="">
-                            <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
-                            <h4>Kari Granleese</h4>
-                            <span>Traveler</span>
+                </div><!-- .testimonial -->
+                <div class="blogs">
+                    <div class="container">
+                        <h2 class="title title-border-bottom align-center offset-item">From Our Blog</h2>
+                        <div class="news__content offset-item">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <article class="post hover__box">
+                                        <div class="post__thumb hover__box__thumb">
+                                            <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-05.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
+                                        </div>
+                                        <div class="post__info">
+                                            <ul class="post__category">
+                                                <li><a title="Food" href="#">Food & Drink</a></li>
+                                            </ul>
+                                            <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">10 Best Classic Diners in Manhattan</a></h3>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="col-md-4">
+                                    <article class="post hover__box">
+                                        <div class="post__thumb hover__box__thumb">
+                                            <a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-01.jpg') }}" alt="The 7 Best Restaurants to Try Kobe Beef in London"></a>
+                                        </div>
+                                        <div class="post__info">
+                                            <ul class="post__category">
+                                                <li><a title="Art & Decor" href="#">Lifestyle</a></li>
+                                            </ul>
+                                            <h3 class="post__title"><a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html">The Stepping Razor Barbershop</a></h3>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="col-md-4">
+                                    <article class="post hover__box">
+                                        <div class="post__thumb hover__box__thumb">
+                                            <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-10.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
+                                        </div>
+                                        <div class="post__info">
+                                            <ul class="post__category">
+                                                <li><a title="Stay" href="#">Place to Stay</a></li>
+                                            </ul>
+                                            <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">The 9 Best Cheap Hotels in New York City</a></h3>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                            <div class="align-center button-wrap"><a href="blog-fullwidth.html" class="btn btn-border">View more</a></div>
                         </div>
                     </div>
-                    <div class="slick-item">
-                        <div class="testimonial-item">
-                            <img src="{{ asset('assets/images/assets/quote.png') }}" alt="">
-                            <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
-                            <h4>Kari Granleese</h4>
-                            <span>Traveler</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-control testimonial-control">
-                    <div class="tc-item"><img src="{{ asset('assets/images/avatars/female-1.jpg') }}" alt=""></div>
-                    <div class="tc-item"><img src="{{ asset('assets/images/avatars/female-2.jpg') }}" alt=""></div>
-                    <div class="tc-item"><img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt=""></div>
-                </div><!-- .slick-control -->
-            </div>
-        </div>
-    </div><!-- .testimonial -->
-    <div class="blogs">
-        <div class="container">
-            <h2 class="title title-border-bottom align-center offset-item">Travel Inspiration</h2>
-            <div class="news__content offset-item">
-                <div class="row">
-                    <div class="col-md-4">
-                        <article class="post hover__box">
-                            <div class="post__thumb hover__box__thumb">
-                                <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-01.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
-                            </div>
-                            <div class="post__info">
-                                <ul class="post__category">
-                                    <li><a title="Paris" href="#">Paris</a></li>
-                                    <li><a title="Food" href="#">Food</a></li>
-                                </ul>
-                                <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">The 8 Most Affordable Michelin Restaurants in Paris</a></h3>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="col-md-4">
-                        <article class="post hover__box">
-                            <div class="post__thumb hover__box__thumb">
-                                <a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-02.jpg') }}" alt="The 7 Best Restaurants to Try Kobe Beef in London"></a>
-                            </div>
-                            <div class="post__info">
-                                <ul class="post__category">
-                                    <li><a title="London" href="#">London</a></li>
-                                    <li><a title="Art & Decor" href="#">Art & Decor</a></li>
-                                </ul>
-                                <h3 class="post__title"><a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html">The 7 Best Restaurants to Try Kobe Beef in London</a></h3>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="col-md-4">
-                        <article class="post hover__box">
-                            <div class="post__thumb hover__box__thumb">
-                                <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-03.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
-                            </div>
-                            <div class="post__info">
-                                <ul class="post__category">
-                                    <li><a title="Paris" href="#">Paris</a></li>
-                                    <li><a title="Stay" href="#">Stay</a></li>
-                                </ul>
-                                <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">The 8 Most Affordable Michelin Restaurants in Paris</a></h3>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <div class="align-center button-wrap"><a href="#" class="btn btn-border">View more</a></div>
-            </div>
-        </div>
-    </div><!-- .blogs -->
+                </div><!-- .blogs -->
 </main><!-- .site-main -->
 {% endblock %}

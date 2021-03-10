@@ -66,6 +66,18 @@
                 <span style="color: red;">{{ errors.description }}</span>
                 {% endif %}
               </div>
+              <div class="form-check">
+                {% if (old is defined) and ('feature' in old|keys) %}
+                  {% if old.feature %}
+                  <input type="checkbox" class="form-check-input" id="feature" name="feature" value="true" checked>
+                  {% else %}
+                  <input type="checkbox" class="form-check-input" id="feature" name="feature" value="true">
+                  {% endif %}
+                {% else %}
+                  <input type="checkbox" class="form-check-input" id="feature" name="feature" value="true">
+                {% endif %}
+                <label class="form-check-label" for="feature">Feature</label>
+              </div>
             </div>
             <!-- /.card-body -->
             <input type="hidden" name="user_id" value="1">

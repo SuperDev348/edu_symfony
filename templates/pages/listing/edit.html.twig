@@ -65,10 +65,9 @@
                 <div class="field-group field-select">
                     <label for="category">catégorie</label>
                     <select data-placeholder="Veuillez choisir une catégorie" name="category" id="category" value="{{ listing.getCategory }}">
-                        <option value="See & Do">See & Do</option>
-                        <option value="Food & Drink">Food & Drink</option>
-                        <option value="Stay">Stay</option>
-                        <option value="Shop">Shop</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
                 </div>
@@ -83,9 +82,9 @@
                 <div class="field-group field-select">
                     <label for="city">City</label>
                     <select data-placeholder="" name="city" id="city" value="{{ listing.getCity }}">
-                        <option value="paris">Paris</option>
-                        <option value="newyork">New York</option>
-                        <option value="chicago">Chicago</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}">{{ city }}</option>
+                        {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
                 </div>
@@ -173,6 +172,10 @@
                     </div>
                     <div class="field-map">
                         <input id="pac-input" class="address-input" type="text" placeholder="Search Box">
+                        <input type="hidden" id="La_g" name="La_g" value="{{ listing.getLaG }}">
+                        <input type="hidden" id="La_i" name="La_i" value="{{ listing.getLaI }}">
+                        <input type="hidden" id="Ra_g" name="Ra_g" value="{{ listing.getRaG }}">
+                        <input type="hidden" id="Ra_i" name="Ra_i" value="{{ listing.getRaI }}">
                         <div id="location-map"></div>
                     </div>
                 </div>
@@ -869,4 +872,197 @@
         </form>
     </div><!-- .listing-content -->
 </main><!-- .site-main -->
+{% endblock %}
+{% block javascripts %}
+<script>
+    var neighborhoods = [
+        {lat: 52.511, lng: 13.447},
+    ];
+    var laG = {{listing.getLaG}};
+    var laI = {{listing.getLaI}};
+    var raG = {{listing.getRaG}};
+    var raI = {{listing.getRaI}};
+    var markers = [];
+    var map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('location-map'), {
+          zoom: 13,
+          center: {lat: 52.511, lng: 13.447},
+          disableDefaultUI: true,
+          styles: [
+            {
+                "featureType": "landscape",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "stylers": [
+                    {
+                        "hue": "#00aaff"
+                    },
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "gamma": 2.15
+                    },
+                    {
+                        "lightness": 12
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "visibility": "on"
+                    },
+                    {
+                        "lightness": 24
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "lightness": 57
+                    }
+                ]
+            }
+        ]
+        });
+        var defaultBounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(raG, laG),
+          new google.maps.LatLng(raI, laI));
+        map.fitBounds(defaultBounds);
+        
+        var input = document.getElementById('pac-input');
+
+        var searchBox = new google.maps.places.SearchBox(input, {
+          bounds: defaultBounds
+        });
+
+        searchBox.addListener('places_changed', function() {
+            var places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            // Clear out the old markers.
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            // For each place, get the icon, name and location.
+            var bounds = new google.maps.LatLngBounds();
+            places.forEach(function(place) {
+                if (!place.geometry) {
+                      console.log("Returned place contains no geometry");
+                      return;
+                }
+                var icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                // Create a marker for each place.
+                markers.push(new google.maps.Marker({
+                      map: map,
+                      icon: icon,
+                      title: place.name,
+                      position: place.geometry.location
+                }));
+
+                if (place.geometry.viewport) {
+                      // Only geocodes have viewport.
+                      bounds.union(place.geometry.viewport);
+                } else {
+                      bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+
+            // set input
+            $("#La_g").val(bounds.La.g);
+            $("#La_i").val(bounds.La.i);
+            $("#Ra_g").val(bounds.Ra.g);
+            $("#Ra_i").val(bounds.Ra.i);
+        });
+    }
+
+    function drop() {
+         clearMarkers();
+        for (var i = 0; i < neighborhoods.length; i++) {
+          addMarkerWithTimeout(neighborhoods[i], i * 200);
+        }
+    }
+
+    function addMarkerWithTimeout(position, timeout) {
+        window.setTimeout(function() {
+          markers.push(new google.maps.Marker({
+            position: position,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+          }));
+        }, timeout);
+    }
+
+    function clearMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+        markers = [];
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-2mhVoLX7oIOgRQ-6bxlJt4TF5k0xhWc&libraries=places&callback=initMap" async defer></script>
 {% endblock %}

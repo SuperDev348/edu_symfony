@@ -32,9 +32,57 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Listings</h3>
+              <a href="{{ path('listing_create') }}" class="btn btn-primary" style="float:right">New Listing</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+              <form action="{{ path('admin_listing_search') }}" method="POST">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="city">
+                      <option value="0">All cities</option>
+                      {% for city in cities %}
+                        {% if (filter is defined) and ('city' in filter|keys) and (filter.city == city) %}
+                        <option value="{{ city }}" selected>{{ city }}</option>
+                        {% else %}
+                        <option value="{{ city }}">{{ city }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="category">
+                      <option value="0">All cities</option>
+                      {% for category in categories %}
+                        {% if (filter is defined) and ('category' in filter|keys) and (filter.category == category) %}
+                        <option value="{{ category }}" selected>{{ category }}</option>
+                        {% else %}
+                        <option value="{{ category }}">{{ category }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    {% if (filter is defined) and ('id' in filter|keys) %}
+                    <input type="text" id="id" class="form-control" placeholder="Search id" name="id" value="{{ filter.id }}">
+                    {% else %}
+                    <input type="text" id="id" class="form-control" placeholder="Search id" name="id">
+                    {% endif %}
+                  </div>
+                  <div class="form-group col-md-3">
+                    {% if (filter is defined) and ('name' in filter|keys) %}
+                    <input type="text" id="name" class="form-control" placeholder="Search name" name="name" value="{{ filter.name }}">
+                    {% else %}
+                    <input type="text" id="name" class="form-control" placeholder="Search name" name="name">
+                    {% endif %}
+                  </div>
+                </div>
+                <div style="height: 40px;">
+                  <button class="btn btn-primary" style="float:right">
+                    Search
+                  </button>
+                </div>
+              </form>
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                 <tr>

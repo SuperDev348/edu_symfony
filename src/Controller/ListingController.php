@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Listing;
 use App\Entity\Review;
+use App\Entity\Setting;
 
 class ListingController extends AbstractController
 {
@@ -21,10 +22,14 @@ class ListingController extends AbstractController
     public function index(): Response
     {
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
         return $this->render('pages/listing/index.html.twig', [
             'page' => 'listing',
             'subtitle' => 'My Listings',
-            'listings' => $listings
+            'listings' => $listings,
+            'cities' => $cities,
+            'categories' => $categories
         ]);
     }
 
@@ -33,49 +38,15 @@ class ListingController extends AbstractController
      */
     public function create(): Response
     {
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
         return $this->render('pages/listing/create.html.twig', [
-            
+            'cities' => $cities,
+            'categories' => $categories
         ]);
     }
 
-    /**
-     * @Route("/listing/store", name="listing_store")
-     */
-    public function store(Request $request, ValidatorInterface $validator): Response
-    {
-        $name = $request->request->get("name");
-        $description = $request->request->get("description");
-        $address = $request->request->get("address");
-        $email = $request->request->get("email");
-        $input = [
-            'name' => $name,
-            'description' => $description,
-            'address' => $address,
-            'email' => $email
-        ];
-        $constraints = new Assert\Collection([
-            'name' => [new Assert\NotBlank],
-            'description' => [new Assert\NotBlank],
-            'address' => [new Assert\NotBlank],
-            'email' => [new Assert\NotBlank, new Assert\Email()],
-        ]);
-        $violations = $validator->validate($input, $constraints);
-        if (count($violations) > 0) {
-            $accessor = PropertyAccess::createPropertyAccessor();
-            $errorMessages = [];
-            foreach ($violations as $violation) {
-                $accessor->setValue($errorMessages,
-                $violation->getPropertyPath(),
-                $violation->getMessage());
-            }
-            $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
-            return $this->render('pages/listing/create.html.twig', [
-                'listings' => $listings,
-                'errors' => $errorMessages,
-                'old' => $input
-            ]);
-        }
-
+    private function listing_create(Request $request) {
         $listing = new Listing();
         $name = $request->request->get('name');
         $listing->setName($name);
@@ -108,6 +79,14 @@ class ListingController extends AbstractController
         $listing->setAirportTaxi($airport_taxi=='true');
         $address = $request->request->get('address');
         $listing->setAddress($address);
+        $La_g = $request->request->get('La_g');
+        $listing->setLaG($La_g);
+        $La_i = $request->request->get('La_i');
+        $listing->setLaI($La_i);
+        $Ra_g = $request->request->get('Ra_g');
+        $listing->setRaG($Ra_g);
+        $Ra_i = $request->request->get('Ra_i');
+        $listing->setRaI($Ra_i);
         $email = $request->request->get('email');
         $listing->setEmail($email);
         $phone = $request->request->get('phone');
@@ -234,49 +213,39 @@ class ListingController extends AbstractController
             $listing->setGalleryImage('upload/images/'.$newFilename);
         }
         
-        // validate
-        $errors = $validator->validate($listing);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
         // save
         $doct = $this->getDoctrine()->getManager();
         $doct->persist($listing);
         $doct->flush();
-        return $this->redirectToRoute('listing');
     }
 
     /**
-     * @Route("/listing/edit/{id}", name="listing_edit")
+     * @Route("/listing/store", name="listing_store")
      */
-    public function edit($id): Response
+    public function store(Request $request, ValidatorInterface $validator): Response
     {
-        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
-        return $this->render('pages/listing/edit.html.twig', [
-            'listing' => $listing
-        ]);
-    }
+        $categories = $this->getCategoryList();
+        $cities = $this->getCityList();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
 
-    /**
-     * @Route("/listing/update/{id}", name="listing_update")
-     */
-    public function update($id, Request $request, ValidatorInterface $validator): Response
-    {
         $name = $request->request->get("name");
         $description = $request->request->get("description");
         $address = $request->request->get("address");
         $email = $request->request->get("email");
+        $La_g = $request->request->get("La_g");
         $input = [
             'name' => $name,
             'description' => $description,
             'address' => $address,
-            'email' => $email
+            'email' => $email,
+            'La_g' => $La_g
         ];
         $constraints = new Assert\Collection([
             'name' => [new Assert\NotBlank],
             'description' => [new Assert\NotBlank],
             'address' => [new Assert\NotBlank],
             'email' => [new Assert\NotBlank, new Assert\Email()],
+            'La_g' => [new Assert\NotBlank],
         ]);
         $violations = $validator->validate($input, $constraints);
         if (count($violations) > 0) {
@@ -287,14 +256,46 @@ class ListingController extends AbstractController
                 $violation->getPropertyPath(),
                 $violation->getMessage());
             }
-            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
-            return $this->render('pages/listing/edit.html.twig', [
-                'listing' => $listing,
+            
+            return $this->render('pages/listing/create.html.twig', [
+                'listings' => $listings,
                 'errors' => $errorMessages,
-                'old' => $input
+                'old' => $input,
+                'categories' => $categories,
+                'cities' => $cities
             ]);
         }
+        $cover_image_file = $request->files->get('cover_image');
+        if (!$cover_image_file) {
+            $errorMessages['cover_image'] = "Cover image is require.";
+            return $this->render('pages/listing/create.html.twig', [
+                'listings' => $listings,
+                'errors' => $errorMessages,
+                'old' => $input,
+                'categories' => $categories,
+                'cities' => $cities
+            ]);
+        }
+        $this->listing_create($request);
+        return $this->redirectToRoute('listing');
+    }
 
+    /**
+     * @Route("/listing/edit/{id}", name="listing_edit")
+     */
+    public function edit($id): Response
+    {
+        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
+        return $this->render('pages/listing/edit.html.twig', [
+            'listing' => $listing,
+            'cities' => $cities,
+            'categories' => $categories
+        ]);
+    }
+
+    private function listing_edit(Request $request) {
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $name = $request->request->get('name');
@@ -328,6 +329,14 @@ class ListingController extends AbstractController
         $listing->setAirportTaxi($airport_taxi=='true');
         $address = $request->request->get('address');
         $listing->setAddress($address);
+        $La_g = $request->request->get('La_g');
+        $listing->setLaG($La_g);
+        $La_i = $request->request->get('La_i');
+        $listing->setLaI($La_i);
+        $Ra_g = $request->request->get('Ra_g');
+        $listing->setRaG($Ra_g);
+        $Ra_i = $request->request->get('Ra_i');
+        $listing->setRaI($Ra_i);
         $email = $request->request->get('email');
         $listing->setEmail($email);
         $phone = $request->request->get('phone');
@@ -454,13 +463,52 @@ class ListingController extends AbstractController
             $listing->setGalleryImage('upload/images/'.$newFilename);
         }
         
-        // validate
-        $errors = $validator->validate($listing);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
         // update
         $doct->flush();
+    }
+
+    /**
+     * @Route("/listing/update/{id}", name="listing_update")
+     */
+    public function update($id, Request $request, ValidatorInterface $validator): Response
+    {
+        $name = $request->request->get("name");
+        $description = $request->request->get("description");
+        $address = $request->request->get("address");
+        $email = $request->request->get("email");
+        $La_g = $request->request->get("La_g");
+        $input = [
+            'name' => $name,
+            'description' => $description,
+            'address' => $address,
+            'email' => $email,
+            'La_g' => $La_g
+        ];
+        $constraints = new Assert\Collection([
+            'name' => [new Assert\NotBlank],
+            'description' => [new Assert\NotBlank],
+            'address' => [new Assert\NotBlank],
+            'email' => [new Assert\NotBlank, new Assert\Email()],
+            'La_g' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+            return $this->render('pages/listing/edit.html.twig', [
+                'listing' => $listing,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        $this->listing_edit($request);
+        
         return $this->redirectToRoute('listing', [
             'id' => $listing->getId()
         ]);
@@ -481,10 +529,44 @@ class ListingController extends AbstractController
     }
 
     /**
+     * @Route("/listing/search", name="listing_search")
+     */
+    public function search(Request $request): Response
+    {
+        $category = $request->request->get('category');
+        $city = $request->request->get('city');
+        $id = $request->request->get('id');
+        $name = $request->request->get('name');
+        $filter = [];
+        if ($category != '0')
+            $filter['category'] = $category;
+        if ($city != '0')
+            $filter['city'] = $city;
+        if ($id != '')
+            $filter['id'] = $id;
+        if ($name != '')
+            $filter['name'] = $name;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
+        return $this->render('pages/listing/index.html.twig', [
+            'page' => 'listing',
+            'subtitle' => 'My Listings',
+            'listings' => $listings,
+            'filter' => $filter,
+            'cities' => $cities,
+            'categories' => $categories
+        ]);
+    }
+
+    /**
      * @Route("/listing/detail/{id}", name="listing_detail")
      */
     public function detail($id): Response
     {
+        $this->visit();
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
         return $this->render('pages/listing/detail.html.twig', [
@@ -534,14 +616,56 @@ class ListingController extends AbstractController
         return $res;
     }
 
+    private function getCityList() {
+        $res = [
+            "Paris",
+            "New York",
+            "Chicago"
+        ];
+        return $res;
+    }
+
+    private function getCategoryList() {
+        $res = [
+            "Restaurant",
+            "Gym",
+            "Beaty & Spa",
+            "Shopping"
+        ];
+        return $res;
+    }
+
+    private function visit() {
+        // visit number
+        $doct = $this->getDoctrine()->getManager();
+        $settings = $doct->getRepository(Setting::class)->findAll();
+        if (count($settings) == 0) {
+            $visit_number = 1;
+            $setting = new Setting();
+            $setting->setVisitNumber($visit_number);
+            $doct->persist($setting);
+            $doct->flush();
+        }
+        else {
+            $setting = $settings[0];
+            $visit_number = $setting->getVisitNumber() + 1;
+            $setting->setVisitNumber($visit_number);
+            $doct->flush();
+        }
+    }
+
     /**
      * @Route("/admin/listing", name="admin_listing")
      */
     public function admin_index(): Response
     {
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
         return $this->render('pages/admin/listing/index.html.twig', [
-            'listings' => $listings
+            'listings' => $listings,
+            'cities' => $cities,
+            'categories' => $categories
         ]);
     }
 
@@ -569,6 +693,39 @@ class ListingController extends AbstractController
         $doct->flush();
         return $this->redirectToRoute('admin_listing', [
             'id' => $listing->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/listing/search", name="admin_listing_search")
+     */
+    public function admin_search(Request $request): Response
+    {
+        $category = $request->request->get('category');
+        $city = $request->request->get('city');
+        $id = $request->request->get('id');
+        $name = $request->request->get('name');
+        $filter = [];
+        if ($category != '0')
+            $filter['category'] = $category;
+        if ($city != '0')
+            $filter['city'] = $city;
+        if ($id != '')
+            $filter['id'] = $id;
+        if ($name != '')
+            $filter['name'] = $name;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
+        $cities = $this->getCityList();
+        $categories = $this->getCategoryList();
+        return $this->render('pages/admin/listing/index.html.twig', [
+            'page' => 'listing',
+            'subtitle' => 'My Listings',
+            'listings' => $listings,
+            'filter' => $filter,
+            'cities' => $cities,
+            'categories' => $categories
         ]);
     }
 }

@@ -20,6 +20,8 @@ class ReviewController extends AbstractController
     public function index(): Response
     {
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $rates = [1, 2, 3, 4, 5];
         foreach ($reviews as $review) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
             $review->list_name = $listing->getName();
@@ -27,7 +29,9 @@ class ReviewController extends AbstractController
         return $this->render('pages/review/index.html.twig', [
             'page' => 'review',
             'subtitle' => 'Reviews',
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'listings' => $listings,
+            'rates' => $rates
         ]);
     }
 
@@ -47,15 +51,20 @@ class ReviewController extends AbstractController
     public function store(Request $request, ValidatorInterface $validator): Response
     {
         $rate = $request->request->get("rate");
+        // echo $rate;
+        // return false;
         $description = $request->request->get("description");
+        $user_name = $request->request->get("user_name");
         $listing_id = $request->request->get('listing_id');
         $input = [
             'rate' => $rate,
-            'description' => $description
+            'description' => $description,
+            'user_name' => $user_name
         ];
         $constraints = new Assert\Collection([
             'rate' => [new Assert\NotBlank, new Assert\Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'You must be between {{ min }} and {{ max }} to enter',])],
             'description' => [new Assert\NotBlank],
+            'user_name' => [new Assert\NotBlank],
         ]);
         $violations = $validator->validate($input, $constraints);
         if (count($violations) > 0) {
@@ -77,8 +86,8 @@ class ReviewController extends AbstractController
         }
 
         $review = new Review();
-        $user_id = $request->request->get('user_id');
-        $review->setUserId($user_id);
+        $user_name = $request->request->get('user_name');
+        $review->setUserName($user_name);
         $rate = $request->request->get('rate');
         $review->setRate($rate);
         $description = $request->request->get('description');
@@ -87,6 +96,32 @@ class ReviewController extends AbstractController
         $review->setListingId($listing_id);
         $date = new DateTime();
         $review->setDate($date);
+        $review->setFeature(false);
+
+        $user_avatar_file = $request->files->get('user_avatar');
+        if ($user_avatar_file) {
+            $originalFilename = pathinfo($user_avatar_file->getClientOriginalName(), PATHINFO_FILENAME);
+            // this is needed to safely include the file name as part of the URL
+            $safeFilename = $this->generateRandomString();
+            $newFilename = $safeFilename.'.'.$user_avatar_file->guessExtension();
+
+            // Move the file to the directory where brochures are stored
+            try {
+                $user_avatar_file->move(
+                    'upload/avatars/',
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+
+            // updates the 'brochureFilename' property to store the PDF file name
+            // instead of its contents
+            $review->setUserAvatar('upload/avatars/'.$newFilename);
+        }
+        else {
+            $review->setUserAvatar('assets/images/avatars/default.jpg');
+        }
         
         // validate
         $errors = $validator->validate($review);
@@ -154,17 +189,65 @@ class ReviewController extends AbstractController
     }
 
     /**
+     * @Route("/review/search", name="review_search")
+     */
+    public function search(Request $request): Response
+    {
+        $listing_id = $request->request->get('listing_id');
+        $rate = $request->request->get('rate');
+        $user_name = $request->request->get('user_name');
+        $filter = [];
+        if ($listing_id != '0')
+            $filter['listing_id'] = $listing_id;
+        if ($rate != '0')
+            $filter['rate'] = $rate;
+        if ($user_name != '')
+            $filter['user_name'] = $user_name;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $rates = [1, 2, 3, 4, 5];
+        $reviews = $doct->getRepository(Review::class)->findWithFilter($filter);
+        foreach ($reviews as $review) {
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
+            $review->list_name = $listing->getName();
+        }
+        return $this->render('pages/review/index.html.twig', [
+            'page' => 'Review',
+            'subtitle' => 'My Reviews',
+            'listings' => $listings,
+            'filter' => $filter,
+            'reviews' => $reviews,
+            'rates' => $rates,
+        ]);
+    }
+
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    /**
      * @Route("/admin/review", name="admin_review")
      */
     public function admin_index(): Response
     {
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $rates = [1, 2, 3, 4, 5];
         foreach ($reviews as $review) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
             $review->list_name = $listing->getName();
         }
         return $this->render('pages/admin/review/index.html.twig', [
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'listings' => $listings,
+            'rates' => $rates
         ]);
     }
 
@@ -186,9 +269,11 @@ class ReviewController extends AbstractController
     {
         $rate = $request->request->get("rate");
         $description = $request->request->get("description");
+        $feature = $request->request->get('feature');
         $input = [
             'rate' => $rate,
-            'description' => $description
+            'description' => $description,
+            'feature' => $feature
         ];
         $constraints = new Assert\Collection([
             'rate' => [new Assert\NotBlank, new Assert\Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'You must be between {{ min }} and {{ max }} to enter',])],
@@ -212,8 +297,6 @@ class ReviewController extends AbstractController
         }
 
         $review = new Review();
-        $user_id = $request->request->get('user_id');
-        $review->setUserId($user_id);
         $rate = $request->request->get('rate');
         $review->setRate($rate);
         $description = $request->request->get('description');
@@ -222,6 +305,8 @@ class ReviewController extends AbstractController
         $review->setListingId($listing_id);
         $date = new DateTime();
         $review->setDate($date);
+        $feature = $request->request->get('feature');
+        $review->setFeature($feature=='true');
         
         // validate
         $errors = $validator->validate($review);
@@ -284,14 +369,14 @@ class ReviewController extends AbstractController
 
         $doct = $this->getDoctrine()->getManager();
         $review = $doct->getRepository(Review::class)->find($id);
-        $user_id = $request->request->get('user_id');
-        $review->setUserId($user_id);
         $rate = $request->request->get('rate');
         $review->setRate($rate);
         $description = $request->request->get('description');
         $review->setDescription($description);
         $listing_id = $request->request->get('listing_id');
         $review->setListingId($listing_id);
+        $feature = $request->request->get('feature');
+        $review->setFeature($feature=='true');
         // $date = new DateTime();
         // $review->setDate($date);
         
@@ -318,6 +403,38 @@ class ReviewController extends AbstractController
         $doct->flush();
         return $this->redirectToRoute('admin_review', [
             'id' => $review->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/review/search", name="admin_review_search")
+     */
+    public function admin_search(Request $request): Response
+    {
+        $listing_id = $request->request->get('listing_id');
+        $rate = $request->request->get('rate');
+        $user_name = $request->request->get('user_name');
+        $filter = [];
+        if ($listing_id != '0')
+            $filter['listing_id'] = $listing_id;
+        if ($rate != '0')
+            $filter['rate'] = $rate;
+        if ($user_name != '')
+            $filter['user_name'] = $user_name;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $rates = [1, 2, 3, 4, 5];
+        $reviews = $doct->getRepository(Review::class)->findWithFilter($filter);
+        foreach ($reviews as $review) {
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
+            $review->list_name = $listing->getName();
+        }
+        return $this->render('pages/admin/review/index.html.twig', [
+            'listings' => $listings,
+            'filter' => $filter,
+            'reviews' => $reviews,
+            'rates' => $rates,
         ]);
     }
 }

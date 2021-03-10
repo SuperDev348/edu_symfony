@@ -19,6 +19,42 @@ class ListingRepository extends ServiceEntityRepository
         parent::__construct($registry, Listing::class);
     }
 
+    /**
+     * @return Listing[]
+     */
+    public function findAllActive(): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT listing
+            FROM App\Entity\Listing listing
+            WHERE listing.status = 'approved'
+            ORDER BY listing.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Listing[]
+     */
+    public function findWithFilter($filter): array
+    {
+        $query = $this->createQueryBuilder('listing');
+        foreach ($filter as $key => $value)
+        {
+            $query->andWhere($query->expr()->andX(
+                $query->expr()->like("listing.".$key, ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$value.'%');
+        }
+        return $query->orderBy('listing.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+    }
+
     // /**
     //  * @return Listing[] Returns an array of Listing objects
     //  */

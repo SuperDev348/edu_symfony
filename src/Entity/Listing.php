@@ -98,6 +98,26 @@ class Listing
     private $address;
 
     /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $La_g;
+
+    /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $La_i;
+
+    /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $Ra_g;
+
+    /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $Ra_i;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     private $email;
@@ -495,6 +515,54 @@ class Listing
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getLaG(): ?float
+    {
+        return $this->La_g;
+    }
+
+    public function setLaG(?float $La_g): self
+    {
+        $this->La_g = $La_g;
+
+        return $this;
+    }
+
+    public function getLaI(): ?float
+    {
+        return $this->La_i;
+    }
+
+    public function setLaI(?float $La_i): self
+    {
+        $this->La_i = $La_i;
+
+        return $this;
+    }
+
+    public function getRaG(): ?float
+    {
+        return $this->Ra_g;
+    }
+
+    public function setRaG(?float $Ra_g): self
+    {
+        $this->Ra_g = $Ra_g;
+
+        return $this;
+    }
+
+    public function getRaI(): ?float
+    {
+        return $this->Ra_i;
+    }
+
+    public function setRaI(?float $Ra_i): self
+    {
+        $this->Ra_i = $Ra_i;
 
         return $this;
     }

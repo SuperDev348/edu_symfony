@@ -37,6 +37,24 @@ class ReviewRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @return Review[]
+     */
+    public function findWithFilter($filter): array
+    {
+        $query = $this->createQueryBuilder('review');
+        foreach ($filter as $key => $value)
+        {
+            $query->andWhere($query->expr()->andX(
+                $query->expr()->like("review.".$key, ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$value.'%');
+        }
+        return $query->orderBy('review.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+    }
+
     // /**
     //  * @return Review[] Returns an array of Review objects
     //  */

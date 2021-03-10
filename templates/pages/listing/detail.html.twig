@@ -148,22 +148,60 @@
                         <div class="place__box">
                             <h3>Contact Info</h3>
                             <ul class="place__contact">
+                                {% if listing.getPhone %}
                                 <li>									
                                     <i class="la la-phone"></i>
-                                    <a title="00 343 7859" href="tel:003437859">00 343 7859</a>
+                                    <a title="{{ listing.getPhone }}" href="tel:{{listing.getPhone}}">{{ listing.getPhone }}</a>
                                 </li>
+                                {% endif %}
+                                {% if listing.getWebsite %}
                                 <li>											
                                     <i class="la la-globe"></i>
-                                    <a title="www.abcsite.com" href="www.abcsite.com">www.abcsite.com</a>
+                                    <a title="{{ listing.getWebsite }}" href="{{ listing.getWebsite }}">{{ listing.getWebsite }}</a>
                                 </li>
-                                <li>											
+                                {% endif %}
+                                {% if listing.getFacebook %}
+                                <li>
                                     <i class="la la-facebook-f"></i>
-                                    <a title="fb.com/abc" href="fb.com/abc">facebook.com/getgolo</a>
+                                    <a title="{{ listing.getFacebookUrl }}" href="{{ listing.getFacebookUrl }}">{{ listing.getFacebookUrl }}</a>
                                 </li>
-                                <li>											
+                                {% endif %}
+                                {% if listing.getInstagram %}
+                                <li>
                                     <i class="la la-instagram"></i>
-                                    <a title="instagram.com/abc" href="instagram.com/abc">instagram.com/getgolo</a>
+                                    <a title="{{ listing.getInstagramUrl }}" href="{{ listing.getInstagramUrl }}">{{ listing.getInstagramUrl }}</a>
                                 </li>
+                                {% endif %}
+                                {% if listing.getYoutube %}
+                                <li>
+                                    <i class="la la-instagram"></i>
+                                    <a title="{{ listing.getYoutubeUrl }}" href="{{ listing.getYoutubeUrl }}">{{ listing.getYoutubeUrl }}</a>
+                                </li>
+                                {% endif %}
+                                {% if listing.Twitter %}
+                                <li>
+                                    <i class="la la-instagram"></i>
+                                    <a title="{{ listing.TwitterUrl }}" href="{{ listing.TwitterUrl }}">{{ listing.TwitterUrl }}</a>
+                                </li>
+                                {% endif %}
+                                {% if listing.Google %}
+                                <li>
+                                    <i class="la la-instagram"></i>
+                                    <a title="{{ listing.GoogleUrl }}" href="{{ listing.GoogleUrl }}">{{ listing.GoogleUrl }}</a>
+                                </li>
+                                {% endif %}
+                                {% if listing.getPinterest %}
+                                <li>
+                                    <i class="la la-instagram"></i>
+                                    <a title="{{ listing.getPinterestUrl }}" href="{{ listing.getPinterestUrl }}">{{ listing.getPinterestUrl }}</a>
+                                </li>
+                                {% endif %}
+                                {% if listing.getSnapchat %}
+                                <li>
+                                    <i class="la la-instagram"></i>
+                                    <a title="{{ listing.getSnapchatUrl }}" href="{{ listing.getSnapchatUrl }}">{{ listing.getSnapchatUrl }}</a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </div><!-- .place__box -->
                         <div class="place__box place__box-open">
@@ -230,24 +268,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><!-- .place__box -->
-                                <div class="place__box">
-                            <h3>FAQ's</h3>
-                            <ul class="faqs-accordion">
-                                <li>									
-                                    <h4>What are the ingredients or taste profile for the signature sauce?</h4>
-                                    <div class="desc"><p>We are currently offering free shipping throughout Northern California on all orders over $80. Peninsula to San Francisco can receive next day delivery.</p></div>
-                                </li>
-                                <li>											
-                                    <h4>How far does free delivery extend to? To San Francisco?</h4>
-                                    <div class="desc"><p>We are currently offering free shipping throughout Northern California on all orders over $80. Peninsula to San Francisco can receive next day delivery.</p></div>
-                                </li>
-                                <li>											
-                                    <h4>How far does free delivery extend to? To San Francisco?</h4>
-                                    <div class="desc"><p>We are currently offering free shipping throughout Northern California on all orders over $80. Peninsula to San Francisco can receive next day delivery.</p></div>
-                                </li>
-                            </ul>
-                        </div><!-- .place__box -->
+                        </div>
                         <div class="place__box place__box--reviews">
                             <h3 class="place__title--reviews">
                                 Review ({{ reviews|length }})
@@ -261,17 +282,17 @@
                                 <li>
                                     <div class="place__author">
                                         <div class="place__author__avatar">
-                                            <a title="Sebastian" href="#"><img src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt=""></a>
+                                            <a title="{{ review.getUserName }}" href="#"><img src="{{ asset(review.getUserAvatar) }}" alt=""></a>
                                         </div>
                                         <div class="place__author__info">
-                                            <a title="Sebastian" href="#">Sebastian</a>
+                                            <a title="{{ review.getUserName }}" href="#">{{ review.getUserName }}</a>
                                             <div class="place__author__star">
                                                 <i class="la la-star"></i>
                                                 <i class="la la-star"></i>
                                                 <i class="la la-star"></i>
                                                 <i class="la la-star"></i>
                                                 <i class="la la-star"></i>
-                                                <span style="width: 100%;">
+                                                <span style="width: {{ 100 * review.getRate / 5 }}%;">
                                                     <i class="la la-star"></i>
                                                     <i class="la la-star"></i>
                                                     <i class="la la-star"></i>
@@ -294,42 +315,52 @@
                             </ul>
                             <div class="review-form">
                                 <h3>Write a review</h3>
-                                <form action="{{ path('review_store') }}" method="POST">
-                                    <div class="rate">
-                                        <span>Rate This Place</span>
-                                        <div class="stars">
-                                            <a href="#" title="star-1">
-                                                <i class="la la-star"></i>
-                                            </a>
-                                            <a href="#"  title="star-2">
-                                                <i class="la la-star"></i>
-                                            </a>
-                                            <a href="#"  title="star-3">
-                                                <i class="la la-star"></i>
-                                            </a>
-                                            <a href="#"  title="star-4">
-                                                <i class="la la-star"></i>
-                                            </a>
-                                            <a href="#"  title="star-5">
-                                                <i class="la la-star"></i>
-                                            </a>
+                                <form action="{{ path('review_store') }}" method="POST" enctype="multipart/form-data">
+                                    <div style="height: 65px;">
+                                        <div class="rate">
+                                            <input type="radio" id="star5" name="rate" value="5" />
+                                            <label for="star5" title="text">5 stars</label>
+                                            <input type="radio" id="star4" name="rate" value="4" />
+                                            <label for="star4" title="text">4 stars</label>
+                                            <input type="radio" id="star3" name="rate" value="3" />
+                                            <label for="star3" title="text">3 stars</label>
+                                            <input type="radio" id="star2" name="rate" value="2" />
+                                            <label for="star2" title="text">2 stars</label>
+                                            <input type="radio" id="star1" name="rate" value="1" />
+                                            <label for="star1" title="text">1 star</label>
                                         </div>
                                     </div>
                                     <div class="field-textarea">
-                                        <img class="author-avatar" src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt="">
                                         {% if (old is defined) and ('description' in old|keys) %}
                                         <textarea name="description" placeholder="Write a review">{{ old.description }}</textarea>
                                         {% else %}
                                         <textarea name="description" placeholder="Write a review"></textarea>
                                         {% endif %}
-                                        
-                                        <input type="hidden" name="rate" value="5">
-                                        <input type="hidden" name="user_id" value="1">
                                         <input type="hidden" name="listing_id" value="{{ listing.getId }}">
                                     </div>
                                     {% if (errors is defined) and ('description' in errors|keys) %}
                                     <span style="color: red;">{{ errors.description }}</span>
                                     {% endif %}
+                                    <div class="field-group">
+                                        <label for="user_name">Name</label>
+                                        {% if (old is defined) and ('user_name' in old|keys) %}
+                                        <input type="text" id="user_name" name="user_name" style="border-color: #eeeeee; width: 100%;" value="{{ old.user_name }}">
+                                        {% else %}
+                                        <input type="text" id="user_name" name="user_name" style="border-color: #eeeeee; width: 100%;">
+                                        {% endif %}
+                                        {% if (errors is defined) and ('user_name' in errors|keys) %}
+                                        <span style="color: red;">{{ errors.user_name }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="field-group field-file">
+                                        <label for="user_avatar">Avatar image</label>
+                                        <label for="user_avatar" class="preview" style="width: 100px; height: 100px;">
+                                            <input type="file" id="user_avatar" name="user_avatar" class="upload-file" data-max-size="1024000">
+                                            <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                                            <i class="la la-cloud-upload-alt"></i>
+                                        </label>
+                                        <div class="field-note">Maximum file size: 1 MB.</div>
+                                    </div>
                                     <div class="field-submit">
                                         <input type="submit" class="btn" value="Submit" name="submit">
                                     </div>
