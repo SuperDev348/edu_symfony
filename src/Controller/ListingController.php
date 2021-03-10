@@ -13,6 +13,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Listing;
 use App\Entity\Review;
 use App\Entity\Setting;
+use App\Entity\Suggestion;
 
 class ListingController extends AbstractController
 {
@@ -61,6 +62,7 @@ class ListingController extends AbstractController
         $city = $request->request->get('city');
         $listing->setCity($city);
         $listing->setStatus("pending");
+        $listing->setFeature(false);
         $wifi = $request->request->get('wifi');
         $listing->setWifi($wifi=='true');
         $parking = $request->request->get('parking');
@@ -568,10 +570,20 @@ class ListingController extends AbstractController
     {
         $this->visit();
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+        $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+        $review_rate = 0;
+        if (count($reviews) != 0) {
+            foreach($reviews as $review) {
+                $review_rate = $review_rate + $review->getRate();
+            }
+            $review_rate = number_format($review_rate/count($reviews), 2);
+        }
         return $this->render('pages/listing/detail.html.twig', [
             'listing' => $listing,
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'review_rate' => $review_rate,
+            'suggestions' => $suggestions
         ]);
     }
 
@@ -584,12 +596,9 @@ class ListingController extends AbstractController
         $listing = $doct->getRepository(Listing::class)->find($id);
         $status = $request->request->get('status');
         $listing->setStatus($status);
+        $feature = $request->request->get('feature');
+        $listing->setFeature($feature == true);
         
-        // validate
-        $errors = $validator->validate($listing);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
         // update
         $doct->flush();
         return $this->redirectToRoute('admin_listing', [

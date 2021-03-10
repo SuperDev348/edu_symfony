@@ -1,0 +1,67 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>Owner - Listings</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main single single-02">
+    <div class="place">
+        <div class="slick-sliders">
+            <div class="slick-slider" data-item="1" data-arrows="true" data-itemscroll="1" data-dots="true" data-infinite="true" data-centermode="true" data-centerpadding="418px" data-tabletitem="1" data-tabletscroll="1" data-tabletpadding="70px" data-mobileitem="1" data-mobilescroll="1" data-mobilepadding="30px">
+            <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-01.jpg') }}" alt="slider-01"></a></div>
+            <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-02.jpg') }}" alt="slider-02"></a></div>
+            <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-03.jpg') }}" alt="slider-03"></a></div>
+            <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-05.jpg') }}" alt="slider-05"></a></div>
+            <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-06.jpg') }}" alt="slider-06"></a></div>
+        </div><!-- .page-title -->
+        <div class="place-share">
+            <a title="Save" href="#" class="add-wishlist">							
+                <i class="la la-bookmark large"></i>
+            </a>
+            <a title="Share" href="#" class="share">									
+                <i class="la la-share-square la-24"></i>
+            </a>
+            <div class="social-share"><div class="list-social-icon"> 
+                <a class="facebook" onclick="window.open('https://www.facebook.com/sharer.php?u=https%3A%2F%2Fwp.getgolo.com%2Fplace%2Fthe-louvre%2F','sharer', 'toolbar=0,status=0');" href="javascript:void(0)"> <i class="fab fa-facebook-f"></i> </a> 
+                <a class="twitter" onclick="popUp=window.open('https://twitter.com/share?url=https%3A%2F%2Fwp.getgolo.com%2Fplace%2Fthe-louvre%2F','sharer','scrollbars=yes');popUp.focus();return false;" href="javascript:void(0)"> <i class="fab fa-twitter"></i> </a>  
+                <a class="linkedin" onclick="popUp=window.open('http://linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fwp.getgolo.com%2Fplace%2Fthe-louvre%2F&amp;title=The+Louvre','sharer','scrollbars=yes');popUp.focus();return false;" href="javascript:void(0)"> <i class="fab fa-linkedin-in"></i> </a> 
+                <a class="pinterest" onclick="popUp=window.open('http://pinterest.com/pin/create/button/?url=https%3A%2F%2Fwp.getgolo.com%2Fplace%2Fthe-louvre%2F&amp;description=The+Louvre&amp;media=https://wp.getgolo.com/wp-content/uploads/2019/10/ef3cc68f-2e02-41cc-aad6-4b301a655555.jpg','sharer','scrollbars=yes,width=800,height=400');popUp.focus();return false;" href="javascript:void(0)"> <i class="fab fa-pinterest-p"></i> </a></div></div>
+            </div><!-- .place-share -->
+            <div class="place-slider__nav slick-nav">
+            <div class="place-slider__prev slick-nav__prev">
+                <i class="las la-angle-left"></i>
+            </div><!-- .place-slider__prev -->
+            <div class="place-slider__next slick-nav__next">		
+                <i class="las la-angle-right"></i>
+            </div><!-- .place-slider__next -->
+        </div><!-- .place-slider__nav -->
+        </div><!-- .place-slider -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="sidebar sidebar--shop sidebar--border">
+                        <div class="widget-reservation-mini">
+                            <h3>Booking Phone Verify</h3>
+                            <a href="#" class="open-wg btn">Verify</a>
+                        </div>
+                        <aside class="widget widget-shadow widget-reservation">
+                            <h3>Booking Phone Verify</h3>
+                            <form action="{{ path('booking_verify') }}" method="POST" class="form-underline">
+                                <p class="mb-3">Please insert your phone verify code</p>
+                                <div class="field-group field-input">
+                                    <input type="text" id="verify_code" placeholder="Verify Code" name="verify_code">
+                                    {% if (errors is defined) and ('verify_code' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.verify_code }}</span>
+                                    {% endif %}
+                                </div>
+                                <input type="submit" name="submit" value="Verify">
+                            </form>
+                        </aside><!-- .widget-reservation -->
+                    </div><!-- .sidebar -->
+                </div>
+            </div>
+        </div>
+    </div>
+</main><!-- .site-main -->
+{% endblock %}

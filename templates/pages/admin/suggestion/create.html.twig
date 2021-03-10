@@ -1,7 +1,7 @@
 {% extends 'layout/admin/app.html.twig' %}
 
 {% block title %}
-<title>Admin Listing Edit</title>
+<title>Admin Suggestion Create</title>
 {% endblock %}
 
 {% block body %}
@@ -12,12 +12,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Listing Edit</h1>
+          <h1>Suggestion Add</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-            <li class="breadcrumb-item active">Listing Edit</li>
+            <li class="breadcrumb-item active">Suggestion Add</li>
           </ol>
         </div>
       </div>
@@ -30,38 +30,28 @@
         <!-- general form elements -->
         <div class="card card-primary">
           <div class="card-header">
-            <h3 class="card-title">Edit Listing</h3>
+            <h3 class="card-title">Create New Suggestion</h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
-          <form action="{{ path('listing_status', {'id': listing.getId}) }}" method="POST">
+          <form action="{{ path('suggestion_store') }}" method="POST">
             <div class="card-body">
               <div class="form-group">
-                <label>Status</label>
-                <select class="form-control select2" name="status" style="width: 100%;" value="{{ listing.getStatus }}">
-                  {% for status in statuslist %}
-                    {% if status == listing.getStatus %}
-                    <option value="{{ status }}" selected>{{ status }}</option>
-                    {% else %}
-                    <option value="{{ status }}">{{ status }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="form-check">
-                {% if listing.getFeature %}
-                <input type="checkbox" class="form-check-input" id="feature" name="feature" value="true" checked>
+                <label for="name">Name</label>
+                {% if (old is defined) and ('name' in old|keys) %}
+                <input type="text" class="form-control" name="name" id="name" value="{{ old.name }}">
                 {% else %}
-                <input type="checkbox" class="form-check-input" id="feature" name="feature" value="true">
+                <input type="text" class="form-control" name="name" id="name">
                 {% endif %}
-                <label class="form-check-label" for="feature">Feature</label>
+                {% if (errors is defined) and ('name' in errors|keys) %}
+                <span style="color: red;">{{ errors.name }}</span>
+                {% endif %}
               </div>
             </div>
             <!-- /.card-body -->
-
             <div class="card-footer">
               <button type="submit" class="btn btn-primary">Save</button>
-              <a href="{{ path('admin_listing') }}" class="btn btn-info">Cancel</a>
+              <a href="{{ path('suggestion') }}" class="btn btn-info">Cancel</a>
             </div>
           </form>
         </div>

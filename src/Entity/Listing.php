@@ -38,6 +38,11 @@ class Listing
     private $status;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $feature;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $category;
@@ -371,6 +376,18 @@ class Listing
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getFeature(): ?bool
+    {
+        return $this->feature;
+    }
+
+    public function setFeature(bool $feature): self
+    {
+        $this->feature = $feature;
 
         return $this;
     }

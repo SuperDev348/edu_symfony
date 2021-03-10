@@ -273,7 +273,7 @@
                             <h3 class="place__title--reviews">
                                 Review ({{ reviews|length }})
                                 <span class="place__reviews__number">
-                                    5										
+                                    {{ review_rate }}									
                                     <i class="la la-star"></i>
                                 </span>
                             </h3>
@@ -330,11 +330,16 @@
                                             <label for="star1" title="text">1 star</label>
                                         </div>
                                     </div>
+                                    <div style="padding-bottom: 15px;">
+                                        {% for suggestion in suggestions %}
+                                        <span class="suggestion" onclick="addSuggestion('{{ suggestion.getName }}')">{{ suggestion.getName }}</span>
+                                        {% endfor %}
+                                    </div>
                                     <div class="field-textarea">
                                         {% if (old is defined) and ('description' in old|keys) %}
-                                        <textarea name="description" placeholder="Write a review">{{ old.description }}</textarea>
+                                        <textarea id="review-description" name="description" placeholder="Write a review">{{ old.description }}</textarea>
                                         {% else %}
-                                        <textarea name="description" placeholder="Write a review"></textarea>
+                                        <textarea id="review-description" name="description" placeholder="Write a review"></textarea>
                                         {% endif %}
                                         <input type="hidden" name="listing_id" value="{{ listing.getId }}">
                                     </div>
@@ -486,6 +491,9 @@
                                             <li><a href="#">11:30 PM</a></li>
                                         </ul>
                                     </div>
+                                </div>
+                                <div class="field-group field-input">
+                                    <input type="text" id="phone_number" placeholder="Phone number" name="phone_number">
                                 </div>
                                 <input type="hidden" name="listing_id" value="{{ listing.getId }}">
                                 <input type="submit" name="submit" value="Request a book">
@@ -671,4 +679,12 @@
         </div>
     </div><!-- .similar-places -->
 </main><!-- .site-main -->
+{% endblock %}
+{% block javascripts %}
+<script>
+    function addSuggestion(suggestion) {
+        var cur_description = $("#review-description").text();
+        $("#review-description").text(cur_description + ' ' + suggestion);
+    }
+</script>
 {% endblock %}

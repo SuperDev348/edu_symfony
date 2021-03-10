@@ -47,6 +47,11 @@ class Booking
      */
     private $children_number;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $phone_number;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +125,18 @@ class Booking
     public function setChildrenNumber(int $children_number): self
     {
         $this->children_number = $children_number;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(string $phone_number): self
+    {
+        $this->phone_number = $phone_number;
 
         return $this;
     }

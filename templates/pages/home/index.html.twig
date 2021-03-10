@@ -115,31 +115,34 @@
             <h2 class="title title-border-bottom align-center offset-item">Trending Business Places</h2>
             <div class="slick-sliders offset-item">
                 <div class="slick-slider trending-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="4" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-tabletscroll="2" data-smallpcscroll="3" data-smallpcitem="3" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
+                    {% for listing in listings %}
                     <div class="place-item layout-02 place-hover">
                         <div class="place-inner">
                             <div class="place-thumb hover-img">
-                                <a class="entry-thumb" href="single-1.html"><img src="{{ asset('assets/images/listing/01.jpg') }}" alt=""></a>
+                                <a class="entry-thumb" href="{{ path('listing_detail', {'id': listing.getId}) }}"><img src="{{ asset(listing.getCoverImage) }}" alt=""></a>
                                 <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
                                     <span class="icon-heart">
                                         <i class="la la-bookmark large"></i>
                                     </span>                                    
                                 </a>
                                 <a class="entry-category rosy-pink" href="#">
-                                    <i class="las la-utensils"></i><span>Restaurant</span>
+                                    <i class="las la-utensils"></i><span>{{ listing.getCategory }}</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-3.jpg') }}" alt="Author"></a>
+                                {% if listing.getFeature %}
                                 <div class="feature">Featured</div>
+                                {% endif %}
                             </div>
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
-                                        <span>Restaurant</span>
+                                        <span>{{ listing.getCategory }}</span>
                                     </div>
                                     <div class="place-city">
-                                        <a href="#">Paris</a>
+                                        <a href="#">{{ listing.getCity }}</a>
                                     </div>
                                 </div>
-                                <h3 class="place-title"><a href="single-1.html">Mattone Restaurant</a></h3>
+                                <h3 class="place-title"><a href="{{ path('listing_detail', {'id': listing.getId}) }}">{{ listing.getName }}</a></h3>
                                 <div class="open-now"><i class="las la-door-open"></i>Open now</div>
                                 <div class="entry-bottom">
                                     <div class="place-preview">
@@ -150,164 +153,13 @@
                                         <span class="count-reviews">(2 Reviews)</span>
                                     </div>
                                     <div class="place-price">
-                                        <span>$$</span>
+                                        <span>{{ listing.getPriceRange }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="place-item layout-02 place-hover">
-                        <div class="place-inner">
-                            <div class="place-thumb hover-img">
-                                <a class="entry-thumb" href="single-1.html"><img src="{{ asset('assets/images/listing/02.jpg') }}" alt=""></a>
-                                <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
-                                    <span class="icon-heart">
-                                        <i class="la la-bookmark large"></i>
-                                    </span>                                    
-                                </a>
-                                <a class="entry-category blue" href="#">
-                                    <i class="las la-dumbbell"></i><span>Gym</span>
-                                </a>
-                                <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-2.jpg') }}" alt="Author"></a>
-                            </div>
-                            <div class="entry-detail">
-                                <div class="entry-head">
-                                    <div class="place-type list-item">
-                                        <span>Gym</span>
-                                    </div>
-                                    <div class="place-city">
-                                        <a href="#">Bordeaux</a>
-                                    </div>
-                                </div>
-                                <h3 class="place-title"><a href="single-1.html">Retro Fitness</a></h3>
-                                <div class="open-now"><i class="las la-door-open"></i>Open now</div>
-                                <div class="entry-bottom">
-                                    <div class="place-preview">
-                                        <div class="place-rating">
-                                            <span>5.0</span>
-                                            <i class="la la-star"></i>
-                                        </div>
-                                        <span class="count-reviews">(2 Reviews)</span>
-                                    </div>
-                                    <div class="place-price">
-                                        <span>$$</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="place-item layout-02 place-hover">
-                        <div class="place-inner">
-                            <div class="place-thumb hover-img">
-                                <a class="entry-thumb" href="single-1.html"><img src="{{ asset('assets/images/listing/03.jpg') }}" alt=""></a>
-                                <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
-                                    <span class="icon-heart">
-                                        <i class="la la-bookmark large"></i>
-                                    </span>                                    
-                                </a>
-                                <a class="entry-category purple" href="#">
-                                    <i class="las la-spa"></i><span>Massage</span>
-                                </a>
-                                <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Author"></a>
-                            </div>
-                            <div class="entry-detail">
-                                <div class="entry-head">
-                                    <div class="place-type list-item">
-                                        <span>Massage</span>
-                                    </div>
-                                    <div class="place-city">
-                                        <a href="#">Lyon</a>
-                                    </div>
-                                </div>
-                                <h3 class="place-title"><a href="single-1.html">Renew Body Spa</a></h3>
-                                <div class="close-now"><i class="las la-door-closed"></i>Close now</div>
-                                <div class="entry-bottom">
-                                    <div class="place-preview">
-                                        <div class="place-rating">
-                                            <span>5.0</span>
-                                            <i class="la la-star"></i>
-                                        </div>
-                                        <span class="count-reviews">(2 Reviews)</span>
-                                    </div>
-                                    <div class="place-price">
-                                        <span>$$</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="place-item layout-02 place-hover">
-                        <div class="place-inner">
-                            <div class="place-thumb hover-img">
-                                <a class="entry-thumb" href="single-1.html"><img src="{{ asset('assets/images/listing/04.jpg') }}" alt=""></a>
-                                <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
-                                    <span class="icon-heart">
-                                        <i class="la la-bookmark large"></i>
-                                    </span>                                    
-                                </a>
-                                <a class="entry-category charcoal-purple" href="#">
-                                    <i class="las la-shopping-bag"></i><span>Clothing Shop</span>
-                                </a>
-                                <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-4.jpg') }}" alt="Author"></a>
-                            </div>
-                            <div class="entry-detail">
-                                <div class="entry-head">
-                                    <div class="place-type list-item">
-                                        <span>Clothing Shop</span>
-                                    </div>
-                                    <div class="place-city">
-                                        <a href="#">Nantes</a>
-                                    </div>
-                                </div>
-                                <h3 class="place-title"><a href="single-1.html">Antoinette</a></h3>
-                                <div class="close-now"><i class="las la-door-closed"></i>Close now</div>
-                                <div class="entry-bottom">
-                                    <div class="place-preview">
-                                        <span class="no-reviews">(no reviews)</span>
-                                    </div>
-                                    <div class="place-price">
-                                        <span>$$$</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="place-item layout-02 place-hover">
-                        <div class="place-inner">
-                            <div class="place-thumb hover-img">
-                                <a class="entry-thumb" href="single-1.html"><img src="{{ asset('assets/images/listing/06.jpg') }}" alt=""></a>
-                                <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
-                                    <span class="icon-heart">
-                                        <i class="la la-bookmark large"></i>
-                                    </span>                                    
-                                </a>
-                                <a class="entry-category green" href="#">
-                                    <i class="las la-film"></i><span>Cinema</span>
-                                </a>
-                                <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Author"></a>
-                            </div>
-                            <div class="entry-detail">
-                                <div class="entry-head">
-                                    <div class="place-type list-item">
-                                        <span>Restaurant</span>
-                                    </div>
-                                    <div class="place-city">
-                                        <a href="#">Paris</a>
-                                    </div>
-                                </div>
-                                <h3 class="place-title"><a href="single-1.html">Kathay Cinema</a></h3>
-                                <div class="close-now"><i class="las la-door-closed"></i>Close now</div>
-                                <div class="entry-bottom">
-                                    <div class="place-preview">
-                                        <span class="no-reviews">(no reviews)</span>
-                                    </div>
-                                    <div class="place-price">
-                                        <span>$$</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">

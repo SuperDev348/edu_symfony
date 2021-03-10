@@ -12,6 +12,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Booking;
 use App\Entity\Listing;
 use App\Entity\Review;
+use Twilio\Rest\Client;
 
 class BookingController extends AbstractController
 {
@@ -52,17 +53,20 @@ class BookingController extends AbstractController
         $date = $request->request->get("date");
         $time = $request->request->get("time");
         $listing_id = $request->request->get('listing_id');
+        $phone_number = $request->request->get('phone_number');
         $input = [
             'adult_number' => $adult_number,
             'children_number' => $children_number,
             'date' => $date,
-            'time' => $time
+            'time' => $time,
+            'phone_number' => $phone_number
         ];
         $constraints = new Assert\Collection([
             'adult_number' => [new Assert\NotBlank],
             'children_number' => [new Assert\NotBlank],
             'time' => [new Assert\NotBlank],
             'date' => [new Assert\NotBlank],
+            'phone_number' => [new Assert\NotBlank],
         ]);
         $violations = $validator->validate($input, $constraints);
         if (count($violations) > 0) {
@@ -83,24 +87,78 @@ class BookingController extends AbstractController
             ]);
         }
 
+        // send message to phone
+        $verify_code = $this->generateRandomString(5);
+        $sender = $this->getParameter('twilio_number');
+        $sid = $this->getParameter('twilio_sid');
+        $token = $this->getParameter('twilio_token');
+        $client = new Client($sid, $token);
+        $message = $client->messages->create(
+            $phone_number, // Text this number
+            [
+                'from' => $sender, // From a valid Twilio number
+                'body' => 'Booking Verify Code: ' . $verify_code
+            ]
+        );
+        dd($message->sid);
+        $booking = [
+            'verify_code' => $verify_code,
+            'adult_number' => $adult_number,
+            'children_number' => $children_number,
+            'listing_id' => $listing_id,
+            'date' => $date,
+            'time' => $time,
+            'phone_number' => $phone_number,
+        ];
+        $this->get('session')->set('booking', $booking);
+        return $this->render('pages/booking/verify.html.twig', [
+        ]);
+    }
+
+    /**
+     * @Route("/booking/verify", name="booking_verify")
+     */
+    public function verify(Request $request, ValidatorInterface $validator): Response
+    {
+        $verify_code = $request->request->get("verify_code");
+        $input = [
+            'verify_code' => $verify_code
+        ];
+        $constraints = new Assert\Collection([
+            'verify_code' => [new Assert\NotBlank]
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            return $this->render('pages/booking/verify.html.twig', [
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        $booking_tmp = $this->get('session')->get('booking');
+
+        if ($booking_tmp['verify_code'] != $verify_code) {
+            $errorMessages = ["verify_code" => "please insert a correct code."];
+            return $this->render('pages/booking/verify.html.twig', [
+                'errors' => $errorMessages
+            ]);
+        }
+
         $booking = new Booking();
         $booking->setStatus('pending');
-        $adult_number = $request->request->get('adult_number');
-        $booking->setAdultNumber($adult_number);
-        $children_number = $request->request->get('children_number');
-        $booking->setChildrenNumber($children_number);
-        $listing_id = $request->request->get('listing_id');
-        $booking->setListingId($listing_id);
-        $time = $request->request->get('time');
-        $booking->setTime($time);
-        $date = $request->request->get('date');
-        $booking->setDate(\DateTime::createFromFormat("d.m.Y", $date));
-        
-        // validate
-        $errors = $validator->validate($booking);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
+        $booking->setAdultNumber($booking_tmp['adult_number']);
+        $booking->setChildrenNumber($booking_tmp['children_number']);
+        $booking->setListingId($booking_tmp['listing_id']);
+        $booking->setTime($booking_tmp['time']);
+        $booking->setDate(\DateTime::createFromFormat("d.m.Y", $booking_tmp['date']));
+        $booking->setPhoneNumber($booking_tmp['phone_number']);
+
         // save
         $doct = $this->getDoctrine()->getManager();
         $doct->persist($booking);
@@ -180,6 +238,16 @@ class BookingController extends AbstractController
         return $this->redirectToRoute('booking', [
             'id' => $booking->getId()
         ]);
+    }
+
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     private function getStatusList() {
