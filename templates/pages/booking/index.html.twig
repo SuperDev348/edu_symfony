@@ -3,6 +3,11 @@
 {% block title %}
 <title>Owner - Bookings</title>
 {% endblock %}
+{% block stylesheets %}
+<!-- Daterange picker -->
+<link rel="stylesheet" href="{{ asset('assets2/plugins/daterangepicker/daterangepicker.css') }}">
+{% endblock %}
+
 {% block body %}
 <main id="main" class="site-main">
     <div class="site-content owner-content">
@@ -42,6 +47,35 @@
                         </form><!-- .search__form -->
                     </div><!-- .mf-right -->
                 </div><!-- .member-filter -->
+                <form action="{{ path('booking_blockset') }}" method="POST">
+                    <div class="field-accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-top field-check" style="padding: 20px 0px;">
+                                <label for="booking_block">
+                                    <input type="checkbox" name="booking_block" id="booking_block" value=true>mark a date as full
+                                    <span class="checkmark">																
+                                        <i class="la la-check"></i>
+                                    </span>
+                                    
+                                </label>
+                                <span>Never</span>
+                            </div>
+                            <div class="accordion-bot">
+                                <div class="form-group">
+                                    <div class="input-group" style="width: 300px;">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                          </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right" id="reservation" name="date_range">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="set-button">Set</button>
+                        </div>
+                    </div>
+                </form>
                 <table class="member-place-list owner-booking table-responsive">
                     <thead>
                         <tr>
@@ -90,4 +124,19 @@
         </div>
     </div><!-- .site-content -->
 </main><!-- .site-main -->
+{% endblock %}
+{% block javascripts %}
+<!-- InputMask -->
+<script src="{{ asset('assets2/plugins/moment/moment.min.js') }}"></script>
+<script src="{{ asset('assets2/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+<!-- daterangepicker -->
+<script src="{{ asset('assets2/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script>
+//Date range picker
+$('#reservationdate').datetimepicker({
+    format: 'L'
+});
+//Date range picker
+$('#reservation').daterangepicker()
+</script>
 {% endblock %}

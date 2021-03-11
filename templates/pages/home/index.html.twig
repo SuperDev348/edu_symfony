@@ -277,56 +277,35 @@
             <h2 class="title title-border-bottom align-center offset-item">People Talking About Us</h2>
             <div class="slick-sliders offset-item">
                 <div class="slick-slider testimonial-slider slider-pd30" data-item="2" data-arrows="true" data-itemScroll="2" data-dots="true" data-centerPadding="30" data-tabletitem="1" data-tabletscroll="1" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
-                    <div class="testimonial-item layout-02">
-                        <div class="avatar">
-                            <img src="{{ asset('assets/images/avatars/male-1.jpg') }}" alt="Avatar">
-                            <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
-                        </div>
-                            <div class="testimonial-info">
-                                <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
-                                <div class="testimonial-meta">
-                                    <b>Kari Granleese</b>
-                                    <span>CEO Alididi</span>
-                                </div>
-                            </div>
-                        </div>
+                    {% if reviews|length > 0 %}
+                        {% for review in reviews %}
                         <div class="testimonial-item layout-02">
                             <div class="avatar">
-                                <img src="{{ asset('assets/images/avatars/female-1.jpg') }}" alt="Avatar">
+                                <img src="{{ asset(review.getUserAvatar) }}" alt="Avatar">
                                 <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
-                        </div>
+                            </div>
                                 <div class="testimonial-info">
-                                    <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
+                                    <p>{{ review.getDescription }}</p>
                                     <div class="testimonial-meta">
-                                        <b>Kari Granleese</b>
+                                        <b>{{ review.getUserName }}</b>
                                         <span>CEO Alididi</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="testimonial-item layout-02">
-                                <div class="avatar">
-                                    <img src="{{ asset('assets/images/avatars/female-3.jpg') }}" alt="Avatar">
-                                    <img src="{{ asset('assets/images/assets/quote-active.png') }}" alt="Quote" class="quote">
-                        </div>
-                                    <div class="testimonial-info">
-                                        <p>Really useful app to find interesting things to see do, drink and eat in new places. I’ve been using it regularly in my travels over the past few months.</p>
-                                        <div class="testimonial-meta">
-                                            <b>Kari Granleese</b>
-                                            <span>CEO Alididi</span>
-                                        </div>
-                                    </div>
+                        {% endfor %}
                                 </div>
+                                <div class="place-slider__nav slick-nav">
+                                    <div class="place-slider__prev slick-nav__prev">
+                                        <i class="las la-angle-left"></i>
+                                    </div><!-- .place-slider__prev -->
+                                    <div class="place-slider__next slick-nav__next">
+                                        <i class="las la-angle-right"></i>
+                                    </div><!-- .place-slider__next -->
+                                </div><!-- .place-slider__nav -->
+                        {% for i in 0..reviews|length-1 %}
                             </div>
-                            <div class="place-slider__nav slick-nav">
-                                <div class="place-slider__prev slick-nav__prev">
-                                    <i class="las la-angle-left"></i>
-                                </div><!-- .place-slider__prev -->
-                                <div class="place-slider__next slick-nav__next">
-                                    <i class="las la-angle-right"></i>
-                                </div><!-- .place-slider__next -->
-                            </div><!-- .place-slider__nav -->
-                        </div>
-                    </div>
+                        {% endfor %}
+                    {% endif %} 
                 </div><!-- .testimonial -->
                 <div class="blogs">
                     <div class="container">

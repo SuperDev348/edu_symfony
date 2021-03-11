@@ -652,6 +652,7 @@ class ListingController extends AbstractController
             $visit_number = 1;
             $setting = new Setting();
             $setting->setVisitNumber($visit_number);
+            $setting->setBookingBlock(false);
             $doct->persist($setting);
             $doct->flush();
         }

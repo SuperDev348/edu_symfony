@@ -12,6 +12,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Booking;
 use App\Entity\Listing;
 use App\Entity\Review;
+use App\Entity\Setting;
+use App\Entity\Suggestion;
 use Twilio\Rest\Client;
 
 class BookingController extends AbstractController
@@ -79,12 +81,52 @@ class BookingController extends AbstractController
             }
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
             $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+            $review_rate = 0;
+            if (count($reviews) != 0) {
+                foreach($reviews as $review) {
+                    $review_rate = $review_rate + $review->getRate();
+                }
+                $review_rate = number_format($review_rate/count($reviews), 2);
+            }
+            $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
             return $this->render('pages/listing/detail.html.twig', [
                 'listing' => $listing,
                 'reviews' => $reviews,
                 'errors' => $errorMessages,
-                'old' => $input
+                'old' => $input,
+                'review_rate' => $review_rate,
+                'suggestions' => $suggestions
             ]);
+        }
+
+        $doct = $this->getDoctrine()->getManager();
+        $settings = $doct->getRepository(Setting::class)->findAll();
+        $setting = $settings[0];
+        if ($setting->getBookingBlock()) {
+            $from = $setting->getBookingBlockFrom();
+            $to = $setting->getBookingBlockTo();
+            $real_date = \DateTime::createFromFormat("d.m.Y", $date);
+            if ($real_date >= $from && $real_date <= $to) {
+                $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
+                $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+                $review_rate = 0;
+                if (count($reviews) != 0) {
+                    foreach($reviews as $review) {
+                        $review_rate = $review_rate + $review->getRate();
+                    }
+                    $review_rate = number_format($review_rate/count($reviews), 2);
+                }
+                $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
+                $errorMessages = ['date' => 'this date is blocked'];
+                return $this->render('pages/listing/detail.html.twig', [
+                    'listing' => $listing,
+                    'reviews' => $reviews,
+                    'errors' => $errorMessages,
+                    'old' => $input,
+                    'review_rate' => $review_rate,
+                    'suggestions' => $suggestions
+                ]);
+            }
         }
 
         // send message to phone
@@ -100,7 +142,7 @@ class BookingController extends AbstractController
                 'body' => 'Booking Verify Code: ' . $verify_code
             ]
         );
-        dd($message->sid);
+        // dd($message->sid);
         $booking = [
             'verify_code' => $verify_code,
             'adult_number' => $adult_number,
@@ -237,6 +279,46 @@ class BookingController extends AbstractController
         $doct->flush();
         return $this->redirectToRoute('booking', [
             'id' => $booking->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/booking/blockset", name="booking_blockset")
+     */
+    public function block(Request $request, ValidatorInterface $validator): Response
+    {
+        $booking_block = $request->request->get('booking_block');
+        $from = "";
+        $to = "";
+        if ($booking_block == true) {
+            $date_range = $request->request->get('date_range'); //03/11/2021 - 03/11/2021
+            list($from, $to) = explode(' - ', $date_range);
+        }
+
+        $doct = $this->getDoctrine()->getManager();
+        $settings = $doct->getRepository(Setting::class)->findAll();
+        if (count($settings) == 0) {
+            $visit_number = 0;
+            $setting = new Setting();
+            $setting->setVisitNumber($visit_number);
+            $setting->setBookingBlock($booking_block);
+            if ($booking_block == true) {
+                $setting->setBookingBlockFrom(\DateTime::createFromFormat("m/d/Y", $from));
+                $setting->setBookingBlockTo(\DateTime::createFromFormat("m/d/Y", $to));
+            }
+            $doct->persist($setting);
+            $doct->flush();
+        }
+        else {
+            $setting = $settings[0];
+            $setting->setBookingBlock($booking_block);
+            if ($booking_block == true) {
+                $setting->setBookingBlockFrom(\DateTime::createFromFormat("m/d/Y", $from));
+                $setting->setBookingBlockTo(\DateTime::createFromFormat("m/d/Y", $to));
+            }
+            $doct->flush();
+        }
+        return $this->redirectToRoute('booking', [
         ]);
     }
 

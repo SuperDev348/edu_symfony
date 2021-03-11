@@ -16,6 +16,16 @@
     cursor: pointer;
 }
 
+.set-button {
+    color: white;
+    background-color: #23d3d3;
+    border-width: 0;
+    padding: 5px 25px;
+    border-radius: 17px;
+    cursor: pointer;
+    margin: 10px 0px;
+}
+
 .rate {
     float: left;
     height: 46px;
