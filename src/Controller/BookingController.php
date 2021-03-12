@@ -24,6 +24,8 @@ class BookingController extends AbstractController
     public function index(): Response
     {
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $statusList = $this->getStatusList();
         foreach ($bookings as $booking) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($booking->getListingId());
             $booking->list_name = $listing->getName();
@@ -31,7 +33,9 @@ class BookingController extends AbstractController
         return $this->render('pages/booking/index.html.twig', [
             'page' => 'booking',
             'subtitle' => 'Bookings',
-            'bookings' => $bookings
+            'bookings' => $bookings,
+            'listings' => $listings,
+            'statues' => $statusList
         ]);
     }
 
@@ -55,6 +59,7 @@ class BookingController extends AbstractController
         $date = $request->request->get("date");
         $time = $request->request->get("time");
         $listing_id = $request->request->get('listing_id');
+        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
         $phone_number = $request->request->get('phone_number');
         $input = [
             'adult_number' => $adult_number,
@@ -79,7 +84,6 @@ class BookingController extends AbstractController
                 $violation->getPropertyPath(),
                 $violation->getMessage());
             }
-            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
             $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
             $review_rate = 0;
             if (count($reviews) != 0) {
@@ -107,7 +111,6 @@ class BookingController extends AbstractController
             $to = $setting->getBookingBlockTo();
             $real_date = \DateTime::createFromFormat("d.m.Y", $date);
             if ($real_date >= $from && $real_date <= $to) {
-                $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
                 $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
                 $review_rate = 0;
                 if (count($reviews) != 0) {
@@ -129,32 +132,32 @@ class BookingController extends AbstractController
             }
         }
 
-        // send message to phone
-        $verify_code = $this->generateRandomString(5);
+        $booking = new Booking();
+        $booking->setStatus('pending');
+        $booking->setAdultNumber($adult_number);
+        $booking->setChildrenNumber($children_number);
+        $booking->setListingId($listing_id);
+        $booking->setTime($time);
+        $booking->setDate(\DateTime::createFromFormat("d.m.Y", $date));
+        $booking->setPhoneNumber($phone_number);
+        // save
+        $doct = $this->getDoctrine()->getManager();
+        $doct->persist($booking);
+        $doct->flush();
+        // send message
         $sender = $this->getParameter('twilio_number');
         $sid = $this->getParameter('twilio_sid');
         $token = $this->getParameter('twilio_token');
         $client = new Client($sid, $token);
         $message = $client->messages->create(
-            $phone_number, // Text this number
+            $listing->getPhone(), // Text this number
             [
                 'from' => $sender, // From a valid Twilio number
-                'body' => 'Booking Verify Code: ' . $verify_code
+                'body' => 'You have received a new reservation for your listing: ' . $listing->getName()
             ]
         );
         // dd($message->sid);
-        $booking = [
-            'verify_code' => $verify_code,
-            'adult_number' => $adult_number,
-            'children_number' => $children_number,
-            'listing_id' => $listing_id,
-            'date' => $date,
-            'time' => $time,
-            'phone_number' => $phone_number,
-        ];
-        $this->get('session')->set('booking', $booking);
-        return $this->render('pages/booking/verify.html.twig', [
-        ]);
+        return $this->redirectToRoute('booking');
     }
 
     /**
@@ -277,6 +280,22 @@ class BookingController extends AbstractController
         }
         // update
         $doct->flush();
+        $listing = $doct->getRepository(Listing::class)->find($booking->getListingId());
+        if ($status == 'approved') {
+            // send message
+            $sender = $this->getParameter('twilio_number');
+            $sid = $this->getParameter('twilio_sid');
+            $token = $this->getParameter('twilio_token');
+            $client = new Client($sid, $token);
+            $message = $client->messages->create(
+                $booking->getPhoneNumber(), // Text this number
+                [
+                    'from' => $sender, // From a valid Twilio number
+                    'body' => 'Your booking for "' . $listing->getName() . '" is now confirmed.'
+                ]
+            );
+            // dd($message->sid);
+        }
         return $this->redirectToRoute('booking', [
             'id' => $booking->getId()
         ]);
@@ -319,6 +338,39 @@ class BookingController extends AbstractController
             $doct->flush();
         }
         return $this->redirectToRoute('booking', [
+        ]);
+    }
+
+    /**
+     * @Route("/booking/search", name="booking_search")
+     */
+    public function search(Request $request): Response
+    {
+        $status = $request->request->get('status');
+        $listing_id = $request->request->get('listing_id');
+        $id = $request->request->get('id');
+        $name = $request->request->get('name');
+        $filter = [];
+        if ($status != '0')
+            $filter['status'] = $status;
+        if ($listing_id != '0')
+            $filter['listing_id'] = $listing_id;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $bookings = $doct->getRepository(Booking::class)->findWithFilter($filter);
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $statusList = $this->getStatusList();
+        foreach ($bookings as $booking) {
+            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($booking->getListingId());
+            $booking->list_name = $listing->getName();
+        }
+        return $this->render('pages/booking/index.html.twig', [
+            'page' => 'booking',
+            'subtitle' => 'Bookings',
+            'bookings' => $bookings,
+            'listings' => $listings,
+            'statues' => $statusList,
+            'filter' => $filter
         ]);
     }
 

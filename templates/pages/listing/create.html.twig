@@ -170,11 +170,13 @@
                         </div>
                     </div>
                     <div class="field-map">
-                        <input id="pac-input" class="address-input" type="text" placeholder="Search Box">
+                        <input id="pac-input" class="address-input" type="text" placeholder="Search Box" name="googlemap_address">
                         <input type="hidden" id="La_g" name="La_g">
                         <input type="hidden" id="La_i" name="La_i">
                         <input type="hidden" id="Ra_g" name="Ra_g">
                         <input type="hidden" id="Ra_i" name="Ra_i">
+                        <input type="hidden" id="lat" name="lat">
+                        <input type="hidden" id="lng" name="lng">
                         <div id="location-map"></div>
                     </div>
                 </div>
@@ -887,6 +889,9 @@
     // $("#La_i").val(151.2631);
     // $("#Ra_g").val(-33.8902);
     // $("#Ra_i").val(-33.8474);
+    // $("#lat").val(-33.8692538);
+    // $("#lng").val(151.1295659);
+    // $("#pac-input").val("Fork Australia");
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('location-map'), {
@@ -1030,6 +1035,9 @@
                 } else {
                       bounds.extend(place.geometry.location);
                 }
+                // set input
+                $("#lat").val(place.geometry.location.lat());
+                $("#lng").val(place.geometry.location.lng());
             });
             map.fitBounds(bounds);
 

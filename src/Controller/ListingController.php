@@ -89,6 +89,12 @@ class ListingController extends AbstractController
         $listing->setRaG($Ra_g);
         $Ra_i = $request->request->get('Ra_i');
         $listing->setRaI($Ra_i);
+        $lat = $request->request->get('lat');
+        $listing->setLat($lat);
+        $lng = $request->request->get('lng');
+        $listing->setLng($lng);
+        $googlemap_address = $request->request->get('googlemap_address');
+        $listing->setGooglemapAddress($googlemap_address);
         $email = $request->request->get('email');
         $listing->setEmail($email);
         $phone = $request->request->get('phone');
@@ -235,12 +241,14 @@ class ListingController extends AbstractController
         $address = $request->request->get("address");
         $email = $request->request->get("email");
         $La_g = $request->request->get("La_g");
+        $lat = $request->request->get("lat");
         $input = [
             'name' => $name,
             'description' => $description,
             'address' => $address,
             'email' => $email,
-            'La_g' => $La_g
+            'La_g' => $La_g,
+            'lat' => $lat
         ];
         $constraints = new Assert\Collection([
             'name' => [new Assert\NotBlank],
@@ -248,6 +256,7 @@ class ListingController extends AbstractController
             'address' => [new Assert\NotBlank],
             'email' => [new Assert\NotBlank, new Assert\Email()],
             'La_g' => [new Assert\NotBlank],
+            'lat' => [new Assert\NotBlank],
         ]);
         $violations = $validator->validate($input, $constraints);
         if (count($violations) > 0) {
@@ -339,6 +348,12 @@ class ListingController extends AbstractController
         $listing->setRaG($Ra_g);
         $Ra_i = $request->request->get('Ra_i');
         $listing->setRaI($Ra_i);
+        $lat = $request->request->get('lat');
+        $listing->setLat($lat);
+        $lng = $request->request->get('lng');
+        $listing->setLng($lng);
+        $googlemap_address = $request->request->get('googlemap_address');
+        $listing->setGooglemapAddress($googlemap_address);
         $email = $request->request->get('email');
         $listing->setEmail($email);
         $phone = $request->request->get('phone');
@@ -479,12 +494,14 @@ class ListingController extends AbstractController
         $address = $request->request->get("address");
         $email = $request->request->get("email");
         $La_g = $request->request->get("La_g");
+        $lat = $request->request->get("lat");
         $input = [
             'name' => $name,
             'description' => $description,
             'address' => $address,
             'email' => $email,
-            'La_g' => $La_g
+            'La_g' => $La_g,
+            'lat' => $lat
         ];
         $constraints = new Assert\Collection([
             'name' => [new Assert\NotBlank],
@@ -492,6 +509,7 @@ class ListingController extends AbstractController
             'address' => [new Assert\NotBlank],
             'email' => [new Assert\NotBlank, new Assert\Email()],
             'La_g' => [new Assert\NotBlank],
+            'lat' => [new Assert\NotBlank],
         ]);
         $violations = $validator->validate($input, $constraints);
         if (count($violations) > 0) {

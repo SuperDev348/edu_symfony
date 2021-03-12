@@ -55,6 +55,21 @@ class ReviewRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
+    /**
+     * @return Review[]
+     */
+    public function findLatest(int $num = 5): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        return $this->createQueryBuilder('review')
+            ->orderBy('review.id', 'DESC')
+            ->setMaxResults($num)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Review[] Returns an array of Review objects
     //  */

@@ -90,36 +90,14 @@
                                 </div>
                                 <div class="ob-content">
                                     <ul>
-                                        <li class="pending">
-                                            <p class="date"><b>Date:</b>March 15, 2020</p>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                            <p class="status"><b>Status:</b><span>Pending</span></p>
+                                        {% for booking in new_bookings %}
+                                        <li class="{{ booking.getStatus }}">
+                                            <p class="date"><b>Date:</b>{{ booking.getDate.format('M d Y') }}</p>
+                                            <p class="place"><b>Place:</b>{{ booking.city }}</p>
+                                            <p class="status"><b>Status:</b><span>{{ booking.getStatus }}</span></p>
                                             <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
                                         </li>
-                                        <li class="approve">
-                                            <p class="date"><b>Date:</b>March 15, 2020</p>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                            <p class="status"><b>Status:</b><span>Approve</span></p>
-                                            <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
-                                        </li>
-                                        <li class="cancel">
-                                            <p class="date"><b>Date:</b>March 15, 2020</p>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                            <p class="status"><b>Status:</b><span>Cancel</span></p>
-                                            <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
-                                        </li>
-                                        <li class="pending">
-                                            <p class="date"><b>Date:</b>March 15, 2020</p>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                            <p class="status"><b>Status:</b><span>Pending</span></p>
-                                            <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
-                                        </li>
-                                        <li class="approve">
-                                            <p class="date"><b>Date:</b>March 15, 2020</p>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                            <p class="status"><b>Status:</b><span>Approve</span></p>
-                                            <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
-                                        </li>
+                                        {% endfor %}
                                     </ul>
                                 </div>
                             </div>
@@ -132,20 +110,21 @@
                                 </div>
                                 <div class="ob-content">
                                     <ul class="place__comments">
+                                        {% for review in new_reviews %}
                                         <li>
                                             <div class="place__author">
                                                 <div class="place__author__avatar">
-                                                    <a title="Sebastian" href="#"><img src="{{ asset('assets/images/avatars/male-2.jpg') }}" alt=""></a>
+                                                    <a title="{{ review.getUserName }}" href="#"><img src="{{ asset(review.getUserAvatar) }}" alt=""></a>
                                                 </div>
                                                 <div class="place__author__info">
-                                                        <a title="Sebastian" href="#">Sebastian</a>
+                                                        <a title="{{ review.getUserName }}" href="#">{{ review.getUserName }}</a>
                                                         <div class="place__author__star">
                                                             <i class="la la-star"></i>
                                                             <i class="la la-star"></i>
                                                             <i class="la la-star"></i>
                                                             <i class="la la-star"></i>
                                                             <i class="la la-star"></i>
-                                                            <span style="width: 72%">
+                                                            <span style="width: {{ 100 * review.getRate / 5 }}%;">
                                                                 <i class="la la-star"></i>
                                                                 <i class="la la-star"></i>
                                                                 <i class="la la-star"></i>
@@ -153,72 +132,15 @@
                                                                 <i class="la la-star"></i>
                                                             </span>
                                                         </div>
-                                                    <span class="time">October 1, 2019</span>
+                                                    <span class="time">{{ review.getDate.format('M d Y') }}</span>
                                                 </div>
                                             </div>
                                             <div class="place__comments__content">
-                                                <p>Went there last Saturday for the first time to watch my favorite djs (Kungs, Sam Feldet and Watermat) and really had a great experience. </p>
+                                                <p>{{ review.getDescription }}</p>
                                             </div>
-                                            <p class="place"><b>Place:</b>Vago Restaurant</p>
+                                            <p class="place"><b>Place:</b>{{ review.city }}</p>
                                         </li>
-                                        <li>
-                                            <div class="place__author">
-                                                <div class="place__author__avatar">
-                                                    <a title="Sebastian" href="#"><img src="{{ asset('assets/images/avatars/male-1.jpg') }}" alt=""></a>
-                                                </div>
-                                                <div class="place__author__info">
-                                                        <a title="Sebastian" href="#">Sebastian</a>
-                                                        <div class="place__author__star">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <span style="width: 72%">
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                            </span>
-                                                        </div>
-                                                    <span class="time">October 1, 2019</span>
-                                                </div>
-                                            </div>
-                                            <div class="place__comments__content">
-                                                <p>Went there last Saturday for the first time to watch my favorite djs (Kungs, Sam Feldet and Watermat) and really had a great experience. </p>
-                                            </div>
-                                            <p class="place"><b>Place:</b>Renew Body Spa</p>
-                                        </li>
-                                        <li>
-                                            <div class="place__author">
-                                                <div class="place__author__avatar">
-                                                    <a title="Sebastian" href="#"><img src="{{ asset('assets/images/avatars/female-1.jpg') }}" alt=""></a>
-                                                </div>
-                                                <div class="place__author__info">
-                                                        <a title="Sebastian" href="#">Sebastian</a>
-                                                        <div class="place__author__star">
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <i class="la la-star"></i>
-                                                            <span style="width: 72%">
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                                <i class="la la-star"></i>
-                                                            </span>
-                                                        </div>
-                                                    <span class="time">October 1, 2019</span>
-                                                </div>
-                                            </div>
-                                            <div class="place__comments__content">
-                                                <p>Went there last Saturday for the first time to watch my favorite djs (Kungs, Sam Feldet and Watermat) and really had a great experience. </p>
-                                            </div>
-                                            <p class="place"><b>Place:</b>Bamboo Hotel Paris</p>
-                                        </li>
+                                        {% endfor %}
                                     </ul>
                                 </div>
                             </div>

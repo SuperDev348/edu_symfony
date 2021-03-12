@@ -16,43 +16,47 @@
             <div class="member-place-wrap">
                 {{ include('nav/owner.subtitle.html.twig') }}
                 <div class="member-filter">
-                    <div class="mf-left">
-                        <form action="#" method="GET">
-                            <div class="field-select">
-                                <select name="place_cities">
-                                    <option value="20">Show 20</option>
-                                    <option value="40">Show 40</option>
-                                </select>
-                                <i class="la la-angle-down"></i>
-                            </div>
-                            <div class="field-select">
-                                <select name="place_cities">
+                    <form action="{{ path('booking_search') }}" method="POST" style="width: 100%;">
+                        <div class="row">
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="status">
                                     <option value="0">All status</option>
-                                    <option value="approve">Approve</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="cancel">Cancel</option>
+                                    {% for status in statues %}
+                                        {% if (filter is defined) and ('status' in filter|keys) and (filter.status == status) %}
+                                        <option value="{{ status }}" selected>{{ status }}</option>
+                                        {% else %}
+                                        <option value="{{ status }}">{{ status }}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
                                 <i class="la la-angle-down"></i>
                             </div>
-                        </form>
-                    </div><!-- .mf-left -->
-                    <div class="mf-right">
-                        <form action="#" class="site__search__form" method="GET">
-                            <div class="site__search__field">
-                                <span class="site__search__icon">
-                                    <i class="la la-search"></i>
-                                </span><!-- .site__search__icon -->
-                                <input class="site__search__input" type="text" name="s" placeholder="Search">
-                            </div><!-- .search__input -->
-                        </form><!-- .search__form -->
-                    </div><!-- .mf-right -->
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="listing_id">
+                                    <option value="0">All Listings</option>
+                                    {% for listing in listings %}
+                                        {% if (filter is defined) and ('listing' in filter|keys) and (filter.listing == listing.getName) %}
+                                        <option value="{{ listing.getName }}" selected>{{ listing.getName }}</option>
+                                        {% else %}
+                                        <option value="{{ listing.getName }}">{{ listing.getName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="search-button">
+                            Search
+                        </button>
+                    </form>
                 </div><!-- .member-filter -->
                 <form action="{{ path('booking_blockset') }}" method="POST">
                     <div class="field-accordion">
                         <div class="accordion-item">
                             <div class="accordion-top field-check" style="padding: 20px 0px;">
-                                <label for="booking_block">
-                                    <input type="checkbox" name="booking_block" id="booking_block" value=true>mark a date as full
+                                <label for="booking_block" id="booking_block_label" style="position: relative;">
+                                    <input type="checkbox" name="booking_block" id="booking_block" value=true>
+                                    <div id="booking_block_text" style="position: absolute; top: 0; left: 40px;">mark as full</div>
                                     <span class="checkmark">																
                                         <i class="la la-check"></i>
                                     </span>
@@ -104,7 +108,6 @@
                                 {% if booking.getStatus == 'cancel' %}
                                 <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'approved'}) }}" class="approve" title="Approve">Approve</a>
                                 {% endif %}
-                                <a href="{{ path('booking_status', {'id': booking.getId, 'status': 'detail'}) }}" class="detail" title="Detail">Detail</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -138,5 +141,16 @@ $('#reservationdate').datetimepicker({
 });
 //Date range picker
 $('#reservation').daterangepicker()
+$(document).ready(function(){
+    $("#booking_block_label").on("click", function(){
+        if ($(this).find('input').is(':checked')) {
+            $('#booking_block_text').text("unmark as full");
+        }
+        else 
+        {
+            $('#booking_block_text').text("mark as full");
+        }
+    });
+});
 </script>
 {% endblock %}

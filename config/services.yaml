@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     twilio_sid: 'AC93a70387d753923956ce81ac614bec38'
-    twilio_token: '1d35d93dcc3b51264ec6755b2325d731'
+    twilio_token: '03594e3dc18c6a86fcaed91b5802fbfa'
     twilio_number: '18312288635'
 services:
     # default configuration for services in *this* file

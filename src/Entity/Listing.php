@@ -122,6 +122,22 @@ class Listing
      */
     private $Ra_i;
 
+    
+    /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="decimal", precision=16, scale=13)
+     */
+    private $lng;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $googlemap_address;
+
     /**
      * @ORM\Column(type="string", length=100)
      */
@@ -580,6 +596,42 @@ class Listing
     public function setRaI(?float $Ra_i): self
     {
         $this->Ra_i = $Ra_i;
+
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(?float $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLng(): ?float
+    {
+        return $this->lng;
+    }
+
+    public function setLng(?float $lng): self
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    public function getGooglemapAddress(): ?string
+    {
+        return $this->googlemap_address;
+    }
+
+    public function setGooglemapAddress(?string $googlemap_address): self
+    {
+        $this->googlemap_address = $googlemap_address;
 
         return $this;
     }

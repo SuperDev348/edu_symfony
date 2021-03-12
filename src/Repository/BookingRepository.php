@@ -19,6 +19,39 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    /**
+     * @return Booking[]
+     */
+    public function findLatest(int $num = 5): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        return $this->createQueryBuilder('booking')
+            ->orderBy('booking.id', 'DESC')
+            ->setMaxResults($num)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Booking[]
+     */
+    public function findWithFilter($filter): array
+    {
+        $query = $this->createQueryBuilder('booking');
+        foreach ($filter as $key => $value)
+        {
+            $query->andWhere($query->expr()->andX(
+                $query->expr()->like("booking.".$key, ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$value.'%');
+        }
+        return $query->orderBy('booking.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+    }
+
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */

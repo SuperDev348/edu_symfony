@@ -176,6 +176,8 @@
                         <input type="hidden" id="La_i" name="La_i" value="{{ listing.getLaI }}">
                         <input type="hidden" id="Ra_g" name="Ra_g" value="{{ listing.getRaG }}">
                         <input type="hidden" id="Ra_i" name="Ra_i" value="{{ listing.getRaI }}">
+                        <input type="hidden" id="lat" name="lat" value="{{ listing.getLat }}">
+                        <input type="hidden" id="lng" name="lng" value="{{ listing.getLng }}">
                         <div id="location-map"></div>
                     </div>
                 </div>
@@ -1028,6 +1030,8 @@
                 } else {
                       bounds.extend(place.geometry.location);
                 }
+                $("#lat").val(place.geometry.location.lat());
+                $("#lng").val(place.geometry.location.lng());
             });
             map.fitBounds(bounds);
 

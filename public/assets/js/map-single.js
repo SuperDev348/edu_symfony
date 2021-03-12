@@ -1,6 +1,6 @@
 
 		    // When the window has finished loading create our google map below
-		    google.maps.event.addDomListener(window, 'load', initMap);
+		    // google.maps.event.addDomListener(window, 'load', initMap);
 
 		    function initMap() {
 		        // Basic options for a simple Google Map
@@ -265,10 +265,30 @@
 		        // Create the Google Map using our element and options defined above
 		        var map = new google.maps.Map(mapElement, mapOptions);
 
-		        // Let's also add a marker while we're at it
-		        var marker = new google.maps.Marker({
-		            position: new google.maps.LatLng(18.689100, 105.691398),
+				var laG = 151.1116135564585;
+				var laI = 151.1420754006468;
+				var raG = -33.87419013788703;
+				var raI = -33.85860546913968;
+				// console.log(place.geometry.location.lat());
+				// 	console.log(place.geometry.location.lng());
+				// 	-33.8692538, 
+				// 	151.1295659
+				var marker = new google.maps.Marker({
+		            position: new google.maps.LatLng(-33.8692538, 151.1295659),
 		            map: map,
 		            title: 'Snazzy!'
 		        });
+				// La: Kf {g: 151.1116135564585, i: 151.1420754006468}
+				// Ra: Qf {g: -33.87419013788703, i: -33.85860546913968}
+		        // Let's also add a marker while we're at it
+		        // var marker = new google.maps.Marker({
+		        //     position: new google.maps.LatLng(18.689100, 105.691398),
+		        //     map: map,
+		        //     title: 'Snazzy!'
+		        // });
+
+				var defaultBounds = new google.maps.LatLngBounds(
+					new google.maps.LatLng(raG, laG),
+					new google.maps.LatLng(raI, laI));
+				  map.fitBounds(defaultBounds);
 		    }
