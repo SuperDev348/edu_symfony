@@ -45,7 +45,6 @@ class BookingController extends AbstractController
     public function create(): Response
     {
         return $this->render('pages/booking/create.html.twig', [
-            
         ]);
     }
 

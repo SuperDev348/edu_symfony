@@ -105,9 +105,9 @@
                   <td data-title="Category">{{ listing.getCategory }}</td>
                   <td data-title="Status" class="{{ listing.status }}">{{ listing.getStatus }}</td>
                   <td data-title="" class="place-action">
-                      <a href="{{ path('listing_edit', {'id': listing.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>
-                      <a href="{{ path('admin_listing_edit', {'id': listing.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-eye"></i></a>
-                      <a href="{{ path('admin_listing_delete', {'id': listing.getId}) }}" class="" title=""><i class="la la-trash-alt" style="color: red;"></i></a>
+                    <a href="{{ path('listing_edit', {'id': listing.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>
+                    <a href="{{ path('admin_listing_edit', {'id': listing.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-eye"></i></a>
+                    <a href="{{ path('admin_listing_delete', {'id': listing.getId}) }}" class="" title=""><i class="la la-trash-alt" style="color: red;"></i></a>
                   </td>
                 </tr>
                 {% endfor %}
