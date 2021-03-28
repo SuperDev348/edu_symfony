@@ -16,10 +16,10 @@
                     <div class="blog-left">
                         <ul class="breadcrumbs">
                             <li><a title="Blog" href="#">Blog</a></li>
-                            <li><a title="Unique stay" href="#">Unique stay</a></li>
+                            <li><a title="{{blog.type.getName}}" href="#">{{blog.type.getName}}</a></li>
                         </ul><!-- .breadcrumbs -->
                         <div class="entry-content">
-                            <h1>A Perfectly Dreamy Weekend in Toronto</h1>
+                            <h1>{{ blog.getTitle }}</h1>
                             <ul class="entry-meta">
                                 <li>
                                     by <a title="Ben Cobb" href="#">Ben Cobb</a>
@@ -27,17 +27,8 @@
                                 <li>22 July 2019</li>
                                 <li>3 comments</li>
                             </ul>
-                            <div class="entry-desc">
-                                <p>A weekend spent with our northern neighbors can go a few ways. Eager travelers with prebooked museum tours, locked-in-months-ago dinner reservations, and a Notes app full of must-dos will no doubt have a stellar weekend. And they will love every scheduled minute. But Toronto is a city for both the freewheeling wanderer and the tick-the-box itinerary maker. Neighborhoods like Yorkville, Kensington Market, and Dundas West are worthwhile destinations all on their own. Every leafy corner comes with world-class coffee, cute and laid-back wine bars, and food good enough to rival the boldest names in the city. The culture and the shopping aren’t too shabby either. Whether you identify as an Old Masters obsessive, a dedicated tapas eater, a craft-beer connoisseur, or none of the above, our city guide of tried-and-tested favorites is a solid place to start. But for an idea of what a whirlwind weekend over the border might look like—and some ideas on what to pack—start here.</p>
-                                <p>Don’t get us wrong—we love a grand marble lobby as much as the next hotel guest. But Toronto has so many cool, more contemporary places to stay in its skyline, it would be a shame to miss them.</p>
-                                <blockquote><p>There is no passion to be found playing small – in settling for a life that is less than the one you are capable of living.</p></blockquote>
-                                <p class="entry-image columns-2">
-                                    <img src="{{ asset('assets/images/blog/thumb-01.jpg') }}" alt="Blog detail 01">
-                                    <img src="{{ asset('assets/images/blog/thumb-02.jpg') }}" alt="Blog detail 02">
-                                </p>
-                                <p>Kensington Market, and Dundas West are worthwhile destinations all on their own. Every leafy corner comes with world-class coffee, cute and laid-back wine bars, and food good enough to rival the boldest names in the city. The culture and the shopping aren’t too shabby either. </p>
-                                <img src="{{ asset('assets/images/blog/thumb-06.jpg') }}" alt="Blog detail 03">
-                                <p>Whether you identify as an Old Masters obsessive, a dedicated tapas eater, a craft-beer connoisseur, or none of the above, our city guide of tried-and-tested favorites is a solid place to start. </p>
+                            <div class="entry-desc"><img src="{{ asset(blog.getImage) }}" alt="Blog detail 03">
+                                <p>{{ blog.getDiscription }}</p>
                             </div><!-- .entry-desc -->
                             <div class="entry-author">
                                 <img src="{{ asset('assets/images/avatars/male-1.jpg') }}" alt="Bangkok">

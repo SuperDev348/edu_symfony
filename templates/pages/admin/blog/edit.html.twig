@@ -1,0 +1,106 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin Blog Edit</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Blog Edit</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Blog Edit</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Edit Blog</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_blog_update', {'id': blog.getId}) }}" method="POST" enctype="multipart/form-data">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="title">Title</label>
+                {% if (old is defined) and ('title' in old|keys) %}
+                <input type="text" class="form-control" name="title" id="title" value="{{ old.title }}">
+                {% else %}
+                <input type="text" class="form-control" name="title" id="title" value="{{ blog.title }}">
+                {% endif %}
+                {% if (errors is defined) and ('title' in errors|keys) %}
+                <span style="color: red;">{{ errors.title }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label>Type</label>
+                <select class="form-control select2" name="type_id" style="width: 100%;" value="{{ blog.getTypeId }}">
+                  {% for blogtype in blogtypes %}
+                    {% if blogtype.getId == blog.gettypeId %}
+                    <option value="{{ blogtype.getId }}" selected>{{ blogtype.getName }}</option>
+                    {% else %}
+                    <option value="{{ blogtype.getId }}">{{ blogtype.getName }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="discription">Discription</label>
+                {% if (old is defined) and ('discription' in old|keys) %}
+                <textarea name="discription" id="discription" rows="8" style="width: 100%;">{{ old.discription }}</textarea>
+                {% else %}
+                <textarea name="discription" id="discription" rows="8" style="width: 100%;">{{ blog.discription }}</textarea>
+                {% endif %}
+                {% if (errors is defined) and ('discription' in errors|keys) %}
+                <span style="color: red;">{{ errors.discription }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <!-- <label for="customFile">Custom File</label> -->
+
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="image" name="image">
+                  <label class="custom-file-label" for="image">Choose image</label>
+                  {% if (errors is defined) and ('image' in errors|keys) %}
+                  <span style="color: red;">{{ errors.image }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="{{ path('admin_blog') }}" class="btn btn-info">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+</script>
+{% endblock %}

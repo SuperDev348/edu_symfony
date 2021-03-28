@@ -76,12 +76,27 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('admin_blog') }}" class="nav-link">
-            <i class="nav-icon far fa-plus-square"></i>
+          <a href="#" class="nav-link">
+            <i class="nav-icon far fa-envelope"></i>
             <p>
               Blog
+              <i class="fas fa-angle-left right"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ path('admin_blog') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Blog</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ path('admin_blogtype') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>BlogType</p>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>
