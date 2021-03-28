@@ -1,0 +1,72 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin ActiveType Create</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>ActiveType Add</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">ActiveType Add</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Create New ActiveType</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_activetype_store') }}" method="POST">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="name">Name</label>
+                {% if (old is defined) and ('name' in old|keys) %}
+                <input type="text" class="form-control" name="name" id="name" value="{{ old.name }}">
+                {% else %}
+                <input type="text" class="form-control" name="name" id="name">
+                {% endif %}
+                {% if (errors is defined) and ('name' in errors|keys) %}
+                <span style="color: red;">{{ errors.name }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="{{ path('admin_activetype') }}" class="btn btn-info">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+  </script>
+{% endblock %}

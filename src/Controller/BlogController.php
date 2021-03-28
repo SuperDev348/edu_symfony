@@ -309,7 +309,7 @@ class BlogController extends AbstractController
                 $violation->getPropertyPath(),
                 $violation->getMessage());
             }
-            return $this->render('pages/admin/blog/create.html.twig', [
+            return $this->render('pages/admin/blogtype/create.html.twig', [
                 'errors' => $errorMessages,
                 'old' => $input
             ]);
@@ -359,7 +359,7 @@ class BlogController extends AbstractController
                 $violation->getMessage());
             }
             $blogtype = $this->getDoctrine()->getRepository(Blogtype::class)->find($id);
-            return $this->render('pages/admin/blog/create.html.twig', [
+            return $this->render('pages/admin/blogtype/edit.html.twig', [
                 'blogtype' => $blogtype,
                 'errors' => $errorMessages,
                 'old' => $input

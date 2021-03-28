@@ -8,50 +8,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use App\Entity\City;
+use App\Entity\ActiveType;
 
-class CityController extends AbstractController
+class ActiveTypeController extends AbstractController
 {
     /**
-     * @Route("/citydetail2", name="citydetail2")
-     */
-    public function detail2(): Response
-    {
-        return $this->render('pages/city/detail2.html.twig', [
-        ]);
-    }
-
-    /**
-     * @Route("/citydetail3", name="citydetail3")
-     */
-    public function detail3(): Response
-    {
-        return $this->render('pages/city/detail3.html.twig', [
-        ]);
-    }
-
-    /**
-     * @Route("/admin/city", name="admin_city")
+     * @Route("/admin/activetype", name="admin_activetype")
      */
     public function admin_index(): Response
     {
-        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
-        return $this->render('pages/admin/city/index.html.twig', [
-            'cities' => $cities
+        $activetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        return $this->render('pages/admin/activetype/index.html.twig', [
+            'activetypes' => $activetypes
         ]);
     }
 
     /**
-     * @Route("/admin/city/create", name="admin_city_create")
+     * @Route("/admin/activetype/create", name="admin_activetype_create")
      */
     public function admin_create(): Response
     {
-        return $this->render('pages/admin/city/create.html.twig', [
+        return $this->render('pages/admin/activetype/create.html.twig', [
         ]);
     }
 
     /**
-     * @Route("/admin/city/store", name="admin_city_store")
+     * @Route("/admin/activetype/store", name="admin_activetype_store")
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
@@ -71,36 +53,36 @@ class CityController extends AbstractController
                 $violation->getPropertyPath(),
                 $violation->getMessage());
             }
-            return $this->render('pages/admin/city/create.html.twig', [
+            return $this->render('pages/admin/activetype/create.html.twig', [
                 'errors' => $errorMessages,
                 'old' => $input
             ]);
         }
         
-        $city = new City();
+        $activetype = new ActiveType();
         $name = $request->request->get('name');
-        $city->setName($name);
+        $activetype->setName($name);
         
         // save
         $doct = $this->getDoctrine()->getManager();
-        $doct->persist($city);
+        $doct->persist($activetype);
         $doct->flush();
-        return $this->redirectToRoute('admin_city');
+        return $this->redirectToRoute('admin_activetype');
     }
 
     /**
-     * @Route("/admin/city/edit/{id}", name="admin_city_edit")
+     * @Route("/admin/activetype/edit/{id}", name="admin_activetype_edit")
      */
     public function admin_edit($id): Response
     {
-        $city = $this->getDoctrine()->getRepository(City::class)->find($id);
-        return $this->render('pages/admin/city/edit.html.twig', [
-            'city' => $city,
+        $activetype = $this->getDoctrine()->getRepository(ActiveType::class)->find($id);
+        return $this->render('pages/admin/activetype/edit.html.twig', [
+            'activetype' => $activetype,
         ]);
     }
 
     /**
-     * @Route("/admin/city/update/{id}", name="admin_city_update")
+     * @Route("/admin/activetype/update/{id}", name="admin_activetype_update")
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
@@ -120,37 +102,37 @@ class CityController extends AbstractController
                 $violation->getPropertyPath(),
                 $violation->getMessage());
             }
-            $city = $this->getDoctrine()->getRepository(City::class)->find($id);
-            return $this->render('pages/admin/city/edit.html.twig', [
-                'city' => $city,
+            $activetype = $this->getDoctrine()->getRepository(ActiveType::class)->find($id);
+            return $this->render('pages/admin/activetype/edit.html.twig', [
+                'activetype' => $activetype,
                 'errors' => $errorMessages,
                 'old' => $input
             ]);
         }
         
         $doct = $this->getDoctrine()->getManager();
-        $city = $doct->getRepository(City::class)->find($id);
+        $activetype = $doct->getRepository(ActiveType::class)->find($id);
         $name = $request->request->get('name');
-        $city->setName($name);
+        $activetype->setName($name);
         
         // update
         $doct->flush();
-        return $this->redirectToRoute('admin_city', [
-            'id' => $city->getId()
+        return $this->redirectToRoute('admin_activetype', [
+            'id' => $activetype->getId()
         ]);
     }
 
     /**
-     * @Route("/admin/city/delete/{id}", name="admin_city_delete")
+     * @Route("/admin/activetype/delete/{id}", name="admin_activetype_delete")
      */
     public function admin_delete($id): Response
     {
         $doct = $this->getDoctrine()->getManager();
-        $city = $doct->getRepository(City::class)->find($id);
-        $doct->remove($city);
+        $activetype = $doct->getRepository(ActiveType::class)->find($id);
+        $doct->remove($activetype);
         $doct->flush();
-        return $this->redirectToRoute('admin_city', [
-            'id' => $city->getId()
+        return $this->redirectToRoute('admin_activetype', [
+            'id' => $activetype->getId()
         ]);
     }
 }
