@@ -4,6 +4,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Entity\Review;
 use App\Entity\Booking;
 use App\Entity\Listing;
@@ -11,11 +12,19 @@ use App\Entity\Setting;
 
 class DashboardController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/dashboard", name="dashboard")
      */
     public function index(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();
@@ -23,7 +32,10 @@ class DashboardController extends AbstractController
         $listing_number = count($listings);
         $booking_number = count($bookings);
         $review_number = count($reviews);
-        $visit_number = $settings[0]->getVisitNumber();
+        if(count($settings) == 0)
+            $visit_number = 0;
+        else
+            $visit_number = $settings[0]->getVisitNumber();
         if ($visit_number == 0)
             $booking_per_visit = 'N/A';
         else
@@ -73,6 +85,9 @@ class DashboardController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();

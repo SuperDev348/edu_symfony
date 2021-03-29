@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Review;
@@ -14,6 +15,11 @@ use \DateTime;
 
 class ReviewController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/review", name="review")
      */

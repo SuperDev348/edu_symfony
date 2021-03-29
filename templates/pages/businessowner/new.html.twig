@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+    <div id="wrapper">
+        <header id="header" class="site-header home-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-6 col-5">
+                        <div class="site">
+                            <div class="site__menu">
+                                <a title="Menu Icon" href="#" class="site__menu__icon">
+                                    <i class="las la-bars la-24-black"></i>
+                                </a>
+                                <div class="popup-background"></div>
+                                <div class="popup popup--left">
+                                    <a title="Close" href="#" class="popup__close">
+                                        <i class="las la-times la-24-black"></i>
+                                    </a><!-- .popup__close -->
+                                    <div class="popup__content">
+                                        <div class="popup__user popup__box open-form">
+                                            <a title="Login" href="#" class="open-login">Login</a>
+                                            <a title="Sign Up" href="#" class="open-signup">Créer un compte</a>
+                                        </div><!-- .popup__user -->
+                                        <div class="popup__destinations popup__box">
+                                            <ul class="menu-arrow">
+                                                <li>
+                                                    <a title="Destinations" href="#">Destinations </a>
+                                                    <ul class="sub-menu">
+                                                        <li><a href="city-details-1.html" title="Tokyo">Tunis</a></li>
+                                                        <li><a href="city-details-1.html" title="New York">Nabeul</a></li>
+                                                        <li><a href="city-details-1.html" title="Barcelona">Sousse</a></li>
+                                                        <li><a href="city-details-1.html" title="Amsterdam">Monastir</a></li>
+                                                        <li><a href="city-details-1.html" title="Los Angeles">Mahdia</a></li>
+                                                        <li><a href="city-details-1.html" title="London">Tabarka</a></li>
+                                                        <li><a href="city-details-1.html" title="Bangkok">Tozeur</a></li>
+                                                        <li><a href="city-details-1.html" title="Paris">Djerba</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="popup__menu popup__box">
+                                            <ul class="menu-arrow">
+                                                <li>
+                                                    <a href="#" title="Demos">Acceuil</a>
+
+                                                </li>
+                                                <li>
+                                                    <a href="#" title="Listings">Annonces</a>
+
+                                                </li>
+                                                <li>
+                                                    <a title="Page" href="#">Page</a>
+                                                    <ul class="sub-menu">
+                                                        <li><a title="About" href="about-us.html">About Us</a></li>
+                                                        <li><a title="FAQ's" href="faqs.html">FAQ's</a></li>
+                                                        <li><a title="App Landing" href="app-landing.html">App Landing</a></li>
+                                                        <li><a title="Contacts" href="contact-us.html">Contacts</a></li>
+                                                        <li><a title="Add Listing" href="add-place.html">Add Listing</a></li>
+                                                        <li><a title="Pricing" href="">Pricing</a>
+                                                            <ul class="sub-menu">
+                                                                <li><a title="Pricing Plan" href="pricing-plan.html">Pricing Plan</a></li>
+                                                                <li><a title="Pricing Plan Checkout" href="pricing-checkout.html">Pricing Checkout</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a title="Page" href="#">Shop</a>
+                                                            <ul class="sub-menu">
+                                                                <li><a title="Products" href="shop.html">Products</a></li>
+                                                                <li><a title="Product Detail" href="shop-detail.html">Product Detail</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a title="Page" href="#">Blog</a>
+                                                            <ul class="sub-menu">
+                                                                <li><a title="Fullwidth" href="blog-fullwidth.html">Fullwidth</a></li>
+                                                                <li><a title="Right Sidebar" href="blog-right-sidebar.html">Right Sidebar</a></li>
+                                                                <li><a title="Blog Detail" href="blog-detail.html">Blog Detail</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li><a title="Owner Dashboard" href="owner-dashboard.html">Owner Dashboard</a></li>
+                                                        <li><a title="Owner Single" href="owner-page.html">Owner Single</a></li>
+                                                        <li><a title="Construction" href="construction.html">Construction</a></li>
+                                                        <li><a title="Coming Soon" href="coming-soon.html">Coming Soon </a></li>
+                                                        <li><a title="404" href="404.html">404 Page</a></li>
+                                                    </ul>
+                                                </li>
+
+                                            </ul>
+                                        </div><!-- .popup__menu -->
+                                    </div><!-- .popup__content -->
+                                    <div class="popup__button popup__box">
+                                        <a title="Add place" href="add-place.html" class="btn">
+                                            <i class="la la-plus"></i>
+                                            <span>Add place</span>
+                                        </a>
+                                    </div><!-- .popup__button -->
+                                </div><!-- .popup -->
+                            </div><!-- .site__menu -->
+                            <div class="site__brand">
+                                <a title="Logo" href="home-restaurant.html" class="site__brand__logo"><img src="{{ asset('images/assets/logo.png') }}" alt="Golo"></a>
+                            </div><!-- .site__brand -->
+
+                        </div><!-- .site -->
+                    </div><!-- .col-md-6 -->
+                    <div class="col-xl-6 col-7">
+                        <div class="right-header align-right">
+
+
+                            <div class="right-header__search">
+                                <a title="Search" href="#" class="search-open">
+                                    <i class="las la-search la-24-black"></i>
+                                </a>
+                                <div class="site__search">
+                                    <a title="Close" href="#" class="search__close">
+                                        <i class="la la-times"></i>
+                                    </a><!-- .search__close -->
+                                    <form action="#" class="site__search__form" method="GET">
+                                        <div class="site__search__field">
+                                            <span class="site__search__icon">
+                                                <i class="las la-search la-24-black"></i>
+                                            </span><!-- .site__search__icon -->
+                                            <input class="site__search__input" type="text" name="s" placeholder="Search places, cities">
+                                        </div><!-- .search__input -->
+                                    </form><!-- .search__form -->
+                                </div><!-- .site__search -->
+                            </div>
+                            <div class="right-header__button btn">
+                                <a title="Add place" href="add-place.html">
+                                    <i class="las la-plus la-24-white"></i>
+                                    <span>Ajouter une annonce</span>
+                                </a>
+                            </div><!-- .right-header__button -->
+                        </div><!-- .right-header -->
+                    </div><!-- .col-md-6 -->
+                </div><!-- .row -->
+            </div><!-- .container-fluid -->
+        </header><!-- .site-header -->
+        <main id="main" class="site-main home-main overflow">
+            <div class="site-banner hcg-banner">
+                <div class="banner slick-sliders">
+                    <div class="banner-sliders slick-slider" data-item="1" data-arrows="false" data-dots="false" data-autoplay="autoplay" data-cssease="cubic-bezier(0.7, 0, 0.3, 1)" data-fade="true" data-infinite="true" data-speed="900">
+                        <div class="item"><img src="{{ asset('images/bg/bg-hero-4.jpeg') }} " alt="Banner"></div>
+                        <div class="item"><img src="{{ asset('images/bg/bg-hero-5.jpeg') }} " alt="Banner"></div>
+                        <div class="item"><img src={{ asset('images/bg/bg-hero-6.jpeg') }} alt="Banner"></div>
+                    </div>
+                </div><!-- .banner -->
+                <div class="container">
+                    <div class="site-banner__content">
+                        <div class="item"><img src="images/assets/logo2.png" alt="Banner"></div>
+                        <p>Discover Tunisia like a local!</p>
+                        <form action="#" class="site-banner__search layout-02">
+                            <div class="field-input">
+                                <label for="s">Recherche</label>
+                                <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="Ex: fastfood, musée" autocomplete="off">
+                                <div class="search-suggestions name-suggestions">
+                                    <ul>
+                                        <li><a href="#"><i class="las la-utensils"></i><span>Restaurant</span></a></li>
+                                        <li><a href="#"><i class="las la-spa"></i><span>Musée</span></a></li>
+                                        <li><a href="#"><i class="las la-dumbbell"></i><span>Fitness</span></a></li>
+                                        <li><a href="#"><i class="las la-cocktail"></i><span>Nightlight</span></a></li>
+                                        <li><a href="#"><i class="las la-shopping-bag"></i><span>Shopping</span></a></li>
+                                        <li><a href="#"><i class="las la-film"></i><span>Cinema</span></a></li>
+                                    </ul>
+                                </div>
+                            </div><!-- .site-banner__search__input -->
+                            <div class="field-input">
+                                <label for="loca">Où?</label>
+                                <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="where" placeholder="Destination" autocomplete="off">
+                                <div class="search-suggestions location-suggestions">
+                                    <ul>
+                                        <li><a href="#"><i class="las la-location-arrow"></i><span>Votre localisation</span></a></li>
+                                        <li><a href="#"><span>Monastir, Tunisie</span></a></li>
+                                    </ul>
+                                </div>
+                            </div><!-- .site-banner__search__input -->
+                            <div class="field-submit">
+                                <button><i class="las la-search la-24-black"></i></button>
+                            </div>
+                        </form><!-- .site-banner__search -->
+                    </div><!-- .site-banner__content -->
+                </div>
+            </div><!-- .site-banner -->
+            <div class="explore">
+                <div class="container">
+                    <h2 class="title title-border-bottom align-center offset-item">S'inscrire</h2>
+                    <div class="slick-sliders offset-item">
+                        <div class="slick-slider explore-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="1" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-mobileitem="1" data-mobilearrows="false">
+
+                        </div>
+                        <div class="place-slider__nav slick-nav">
+                            <div class="place-slider__prev slick-nav__prev">
+                                <i class="la la-arrow-left"></i>
+                            </div><!-- .place-slider__prev -->
+                            <div class="place-slider__next slick-nav__next">
+                                <i class="la la-arrow-right"></i>
+                            </div><!-- .place-slider__next -->
+                        </div><!-- .place-slider__nav -->
+                    </div>
+                    {{ include('user/_form.html.twig') }}
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

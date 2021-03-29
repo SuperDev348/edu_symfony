@@ -118,7 +118,6 @@
                                                 <li><a title="404" href="404.html">404 Page</a></li>
                                             </ul>
                                         </li>
-                                        
                                     </ul>
                                 </div><!-- .popup__menu -->
                             </div><!-- .popup__content -->
@@ -259,9 +258,18 @@
                             </li>
                         </ul>
                     </nav>
+                    {% if app.session.get('user') %}
+                    <div class="right-header__out">
+                        <a title="Logout" class="open-logout" href="{{path('deconnexion')}}">Logout</a>
+                    </div><!-- .right-header__out -->
+                    {% else %}
                     <div class="right-header__login">
-                        <a title="Login" class="open-login" href="#">Login</a>
+                        <a title="Login" class="open-login" href="{{path('connexion')}}">Login</a>
                     </div><!-- .right-header__login -->
+                    <div class="right-header__register">
+                        <a title="Register" class="open-register" href="{{path('user_new')}}">Register</a>
+                    </div><!-- .right-header__register -->
+                    {% endif %}
                     <div class="popup popup-form">
                         <a title="Close" href="#" class="popup__close">
                             <i class="las la-times la-24-black"></i>

@@ -108,7 +108,7 @@
                                                     <ul class="sub-menu">
                                                         <li><a title="Fullwidth" href="{{ path('blog') }}">Fullwidth</a></li>
                                                         <li><a title="Right Sidebar" href="blog-right-sidebar.html">Right Sidebar</a></li>
-                                                        <li><a title="Blog Detail" href="{{ path('blog_detail') }}">Blog Detail</a></li>
+                                                        <li><a title="Blog Detail" href="">Blog Detail</a></li>
                                                     </ul>
                                                 </li>
                                                 <li><a title="Owner Dashboard" href="{{ path('dashboard') }}">Owner Dashboard</a></li>
@@ -212,7 +212,7 @@
                                         <ul class="sub-menu">
                                             <li><a title="Fullwidth" href="{{ path('blog') }}">Fullwidth</a></li>
                                             <li><a title="Right Sidebar" href="blog-right-sidebar.html">Right Sidebar</a></li>
-                                            <li><a title="Blog Detail" href="{{ path('blog_detail') }}">Blog Detail</a></li>
+                                            <li><a title="Blog Detail" href="">Blog Detail</a></li>
                                         </ul>
                                     </li>
                                     <li><a title="Owner Dashboard" href="{{ path('dashboard') }}">Owner Dashboard</a></li>
@@ -224,9 +224,18 @@
                             </li>
                         </ul>
                     </nav>
+                    {% if app.session.get('user') %}
+                    <div class="right-header__out">
+                        <a title="Logout" class="open-logout" href="{{path('deconnexion')}}">Logout</a>
+                    </div><!-- .right-header__out -->
+                    {% else %}
                     <div class="right-header__login">
-                        <a title="Login" class="open-login" href="#">Login</a>
+                        <a title="Login" class="" href="{{path('connexion')}}">Login</a>
                     </div><!-- .right-header__login -->
+                    <div class="right-header__register">
+                        <a title="Register" class="" href="{{path('user_new')}}">Register</a>
+                    </div><!-- .right-header__register -->
+                    {% endif %}
                     <div class="popup popup-form">
                         <a title="Close" href="#" class="popup__close">
                             <i class="las la-times la-24-black"></i>

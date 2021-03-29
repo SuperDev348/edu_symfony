@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Category;
 use App\Entity\City;
@@ -15,11 +16,19 @@ use App\Entity\CategoryType;
 
 class CategoryController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/admin/category", name="admin_category")
      */
     public function admin_index(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
         foreach($categories as $category) {
             $categorytype = $this->getDoctrine()->getRepository(CategoryType::class)->find($category->getTypeId());
@@ -39,6 +48,9 @@ class CategoryController extends AbstractController
      */
     public function admin_create(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
         $categorytypes = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
@@ -56,6 +68,9 @@ class CategoryController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $city_id = $request->request->get("city_id");
         $type_id = $request->request->get("type_id");
         $active_type_id = $request->request->get("active_type_id");
@@ -112,6 +127,9 @@ class CategoryController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
         $categorytypes = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
@@ -129,6 +147,9 @@ class CategoryController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $city_id = $request->request->get("city_id");
         $type_id = $request->request->get("type_id");
         $active_type_id = $request->request->get("active_type_id");
@@ -186,6 +207,9 @@ class CategoryController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $category = $doct->getRepository(Category::class)->find($id);
         $doct->remove($category);
@@ -200,6 +224,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_index(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $categorytypes = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/admin/categorytype/index.html.twig', [
             'categorytypes' => $categorytypes
@@ -211,6 +238,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_create(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         return $this->render('pages/admin/categorytype/create.html.twig', [
         ]);
     }
@@ -220,6 +250,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_store(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -258,6 +291,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_edit($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $categorytype = $this->getDoctrine()->getRepository(CategoryType::class)->find($id);
         return $this->render('pages/admin/categorytype/edit.html.twig', [
             'categorytype' => $categorytype,
@@ -269,6 +305,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -310,6 +349,9 @@ class CategoryController extends AbstractController
      */
     public function admin_type_delete($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $categorytype = $doct->getRepository(CategoryType::class)->find($id);
         $doct->remove($categorytype);

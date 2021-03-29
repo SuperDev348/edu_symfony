@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Booking;
 use App\Entity\Listing;
@@ -18,11 +19,19 @@ use Twilio\Rest\Client;
 
 class BookingController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/booking", name="booking")
      */
     public function index(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         $statusList = $this->getStatusList();
@@ -44,6 +53,9 @@ class BookingController extends AbstractController
      */
     public function create(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         return $this->render('pages/booking/create.html.twig', [
         ]);
     }
@@ -53,6 +65,9 @@ class BookingController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $adult_number = $request->request->get("adult_number");
         $children_number = $request->request->get("children_number");
         $date = $request->request->get("date");
@@ -164,6 +179,9 @@ class BookingController extends AbstractController
      */
     public function verify(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $verify_code = $request->request->get("verify_code");
         $input = [
             'verify_code' => $verify_code
@@ -215,6 +233,9 @@ class BookingController extends AbstractController
      */
     public function edit($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
         return $this->render('pages/booking/edit.html.twig', [
             'booking' => $booking
@@ -226,6 +247,9 @@ class BookingController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $booking = $doct->getRepository(Booking::class)->find($id);
         $adult_number = $request->request->get('adult_number');
@@ -254,6 +278,9 @@ class BookingController extends AbstractController
      */
     public function delete($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $booking = $doct->getRepository(Booking::class)->find($id);
         $doct->remove($booking);
@@ -268,6 +295,9 @@ class BookingController extends AbstractController
      */
     public function setStatus($id, $status, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $booking = $doct->getRepository(Booking::class)->find($id);
         $booking->setStatus($status);
@@ -305,6 +335,9 @@ class BookingController extends AbstractController
      */
     public function block(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $booking_block = $request->request->get('booking_block');
         $from = "";
         $to = "";
@@ -345,6 +378,9 @@ class BookingController extends AbstractController
      */
     public function search(Request $request): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $status = $request->request->get('status');
         $listing_id = $request->request->get('listing_id');
         $id = $request->request->get('id');
@@ -451,6 +487,9 @@ class BookingController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         foreach ($bookings as $booking) {
@@ -468,6 +507,9 @@ class BookingController extends AbstractController
      */
     public function admin_create(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         $statuslist = $this->getStatusList();
         $timelist = $this->getTimeList();
@@ -483,6 +525,9 @@ class BookingController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $adult_number = $request->request->get("adult_number");
         $children_number = $request->request->get("children_number");
         $time = $request->request->get("time");
@@ -545,6 +590,9 @@ class BookingController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         $statuslist = $this->getStatusList();
@@ -562,6 +610,9 @@ class BookingController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $adult_number = $request->request->get("adult_number");
         $children_number = $request->request->get("children_number");
         $time = $request->request->get("time");
@@ -630,6 +681,9 @@ class BookingController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $booking = $doct->getRepository(Booking::class)->find($id);
         $doct->remove($booking);

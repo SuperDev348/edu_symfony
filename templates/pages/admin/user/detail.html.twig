@@ -1,0 +1,103 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin User Detail</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>User</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">User</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">User</h3>
+              <a href="{{ path('admin_blog_create') }}" class="btn btn-primary" style="float:right">New Blog</a>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ user.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ user.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prenom</th>
+                            <td>{{ user.prenom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mail</th>
+                            <td>{{ user.mail }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mot_de_passe</th>
+                            <td>{{ user.password }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+                <a href="{{ path('admin_user') }}">back to list</a>
+            
+                <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
+            
+                {{ include('pages/admin/user/_delete_form.html.twig') }}
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- Page specific script -->
+<script>
+  $(function () {
+    // $("#example1").DataTable({
+    //   "responsive": true, "lengthChange": false, "autoWidth": false,
+    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+{% endblock %}

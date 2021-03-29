@@ -1,0 +1,38 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>New User</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main home-main overflow">
+    <div class="explore">
+        <div class="container">
+            <h2 class="title title-border-bottom align-center offset-item">S'inscrire</h2>
+            <div class="slick-sliders offset-item">
+                <div class="slick-slider explore-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="1" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-mobileitem="1" data-mobilearrows="false">
+
+                </div>
+                <div class="place-slider__nav slick-nav">
+                    <div class="place-slider__prev slick-nav__prev">
+                        <i class="la la-arrow-left"></i>
+                    </div><!-- .place-slider__prev -->
+                    <div class="place-slider__next slick-nav__next">
+                        <i class="la la-arrow-right"></i>
+                    </div><!-- .place-slider__next -->
+                </div><!-- .place-slider__nav -->
+            </div>
+            {{ include('pages/user/_form.html.twig') }}
+            <a class="hollow button primary" href="{{path('connect_google_start')}}">
+                <img width="15px" style="margin-bottom:3px; margin-right:5px" alt="Google login" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                S'inscrire via google
+            </a>
+            {% for message in app.flashes('message') %}
+            <p style="color: red">
+                {{ message }}
+            </p>                
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

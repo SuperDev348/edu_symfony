@@ -6,17 +6,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Suggestion;
 
 class SuggestionController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/admin/suggestion", name="suggestion")
      */
     public function index(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
         return $this->render('pages/admin/suggestion/index.html.twig', [
             'suggestions' => $suggestions
@@ -28,6 +37,9 @@ class SuggestionController extends AbstractController
      */
     public function create(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         return $this->render('pages/admin/suggestion/create.html.twig', [
         ]);
     }
@@ -37,6 +49,9 @@ class SuggestionController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name
@@ -75,6 +90,9 @@ class SuggestionController extends AbstractController
      */
     public function edit($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $suggestion = $this->getDoctrine()->getRepository(Suggestion::class)->find($id);
         return $this->render('pages/admin/suggestion/edit.html.twig', [
             'suggestion' => $suggestion
@@ -86,6 +104,9 @@ class SuggestionController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name
@@ -125,6 +146,9 @@ class SuggestionController extends AbstractController
      */
     public function delete($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $suggestion = $doct->getRepository(Suggestion::class)->find($id);
         $doct->remove($suggestion);

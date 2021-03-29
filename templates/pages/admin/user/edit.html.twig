@@ -1,0 +1,58 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin User Edit</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>User Edit</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">User Edit</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Edit User</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            {{ include('pages/user/_form.html.twig', {'button_label': 'Update'}) }}
+
+            <a href="{{ path('admin_user') }}">back to list</a>
+
+            {{ include('pages/admin/user/_delete_form.html.twig') }}
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+<div class="field-inline">
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default("s'inscrire") }}</button>
+</div>
+{{ form_end(form) }}
