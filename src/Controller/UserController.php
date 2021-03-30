@@ -17,9 +17,181 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class UserController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+    
+    /**
+     * @Route("/user/profile", name="profile")
+     */
+    public function profile(Request $request): Response
+    {   
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        return $this->render('pages/profile/index.html.twig', [
+            'page' => 'profile',
+            'subtitle' => 'Profile Setting',
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/user/profile/password", name="profile_password")
+     */
+    public function update_password(Request $request, ValidatorInterface $validator): Response
+    {   
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        $old_password = $request->request->get("old_password");
+        $new_password = $request->request->get("new_password");
+        $re_password = $request->request->get("re_password");
+        $input = [
+            'old_password' => $old_password,
+            'new_password' => $new_password,
+            're_password' => $re_password,
+        ];
+        $constraints = new Assert\Collection([
+            'old_password' => [new Assert\NotBlank],
+            'new_password' => [new Assert\NotBlank],
+            're_password' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            return $this->render('pages/profile/index.html.twig', [
+                'page' => 'profile',
+                'subtitle' => 'Profile Setting',
+                'user' => $user,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        $errorMessages = [];
+        if (password_verify($old_password, $user->getPassword()) == false)
+            $errorMessages['old_password'] = 'password is not correct.';
+        if ($new_password != $re_password)
+            $errorMessages['re_password'] = 're password is not equal.';
+        if (count($errorMessages) > 0) {
+            return $this->render('pages/profile/index.html.twig', [
+                'page' => 'profile',
+                'subtitle' => 'Profile Setting',
+                'user' => $user,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        $doct = $this->getDoctrine()->getManager();
+        $new_user = $doct->getRepository(User::class)->find($this->session->get('user')->getId());
+        $password = $request->request->get('new_password');
+        $new_user->setPassword(password_hash($password, PASSWORD_DEFAULT));
+        
+        // save
+        $doct = $this->getDoctrine()->getManager();
+        $doct->persist($new_user);
+        $doct->flush();
+        return $this->redirectToRoute('profile');
+    }
+
+    /**
+     * @Route("/user/profile/update", name="profile_update")
+     */
+    public function update_profile(Request $request, ValidatorInterface $validator): Response
+    {   
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $first_name = $request->request->get("first_name");
+        $last_name = $request->request->get("last_name");
+        $input = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+        ];
+        $constraints = new Assert\Collection([
+            'first_name' => [new Assert\NotBlank],
+            'last_name' => [new Assert\NotBlank],
+        ]);
+        $violations = $validator->validate($input, $constraints);
+        if (count($violations) > 0) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $accessor->setValue($errorMessages,
+                $violation->getPropertyPath(),
+                $violation->getMessage());
+            }
+            $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+            return $this->render('pages/profile/index.html.twig', [
+                'page' => 'profile',
+                'subtitle' => 'Profile Setting',
+                'user' => $user,
+                'errors' => $errorMessages,
+                'old' => $input
+            ]);
+        }
+        
+        $doct = $this->getDoctrine()->getManager();
+        $new_user = $doct->getRepository(User::class)->find($this->session->get('user')->getId());
+        $first_name = $request->request->get('first_name');
+        $new_user->setNom($first_name);
+        $last_name = $request->request->get('last_name');
+        $new_user->setPrenom($last_name);
+        $avatar_file = $request->files->get('avatar');
+        if ($avatar_file) {
+            $originalFilename = pathinfo($avatar_file->getClientOriginalName(), PATHINFO_FILENAME);
+            // this is needed to safely include the file name as part of the URL
+            $safeFilename = $this->generateRandomString();
+            $newFilename = $safeFilename.'.'.$avatar_file->guessExtension();
+
+            // Move the file to the directory where brochures are stored
+            try {
+                $avatar_file->move(
+                    'upload/avatar/',
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+
+            // updates the 'brochureFilename' property to store the PDF file name
+            // instead of its contents
+            $new_user->setImage('upload/avatar/'.$newFilename);
+        }
+        
+        // save
+        $doct = $this->getDoctrine()->getManager();
+        $doct->persist($new_user);
+        $doct->flush();
+        return $this->redirectToRoute('profile');
+    }
+
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     /**
      * @Route("/intunisia/profil", name="profil")
      */
@@ -157,16 +329,17 @@ class UserController extends AbstractController
                 $user->setBan(false);
                 $user->setActive(true);
                 $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
+                $user->setImage('assets/images/avatars/default.jpg');
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $session->clear();
-
-                return $this->redirectToRoute('home');
+                $session->set('user',$user);
+                return $this->redirectToRoute('dashboard');
             }else{
                 $this->addFlash('message',"l'adresse e-mail existe déjà ");
             }
-            }
+        }
 
         return $this->render('pages/user/new.html.twig', [
             'user' => $user,
@@ -340,7 +513,7 @@ class UserController extends AbstractController
 
     }
     /**
-     * @Route("/admin/{filtre}/{valeur}", name="user_filtre")
+     * @Route("/admin/user/{filtre}/{valeur}", name="user_filtre")
      */
     public function filtre($filtre,$valeur,SessionInterface $session,UserRepository $userRepository): Response
     {

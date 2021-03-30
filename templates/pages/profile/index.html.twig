@@ -11,57 +11,60 @@
         <div class="container">
             <div class="member-wrap">
                 {{ include('nav/owner.subtitle.html.twig') }}
-                <form action="#" class="member-profile form-underline">
+                <form action="{{ path('profile_update') }}" method="POST" enctype="multipart/form-data" class="member-profile form-underline">
                     <h3>Avatar</h3>
                     <div class="member-avatar">
-                        <img id="member_avatar" src="{{ asset('assets/images/member-avatar.png') }}" alt="Member Avatar">
+                        <img id="member_avatar" src="{{ asset(user.getImage) }}" alt="Member Avatar">
                         <label for="upload_new">
-                            <input id="upload_new" type="file" name="member_avatar" placeholder="Upload new" value="">
+                            <input id="upload_new" type="file" name="avatar" placeholder="Upload new" value="">
                             Upload new
                         </label>
                     </div>
                     <h3>Basic Info</h3>
                     <div class="field-input">
                         <label for="first_name">First name</label>
-                        <input type="text" name="first_name" placeholder="Invan" id="first_name">
+                        <input type="text" name="first_name" id="first_name" value="{{ user.getNom }}">
+                        {% if (errors is defined) and ('first_name' in errors|keys) %}
+                        <span style="color: red;">{{ errors.first_name }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-input">
                         <label for="last_name">Last name</label>
-                        <input type="text" name="last_name" placeholder="Robent" id="last_name">
+                        <input type="text" name="last_name" id="last_name" value="{{ user.getPrenom }}">
+                        {% if (errors is defined) and ('last_name' in errors|keys) %}
+                        <span style="color: red;">{{ errors.last_name }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-input">
                         <label for="email">Email</label>
-                        <input type="email" name="email" placeholder="invan@gmail.com" id="email">
-                    </div>
-                    <div class="field-input">
-                        <label for="phone">Phone</label>
-                        <input type="tel" name="phone" placeholder="00 2323 323" id="phone">
-                    </div>
-                    <div class="field-input">
-                        <label for="facebook">Facebook</label>
-                        <input type="text" name="facebook" placeholder="invantaa" id="facebook">
-                    </div>
-                    <div class="field-input">
-                        <label for="instagram">Instagram</label>
-                        <input type="text" name="instagram" placeholder="invantaa" id="instagram">
+                        <input type="email" name="email" id="email" value="{{ user.getMail }}" disabled>
                     </div>
                     <div class="field-submit">
                         <input type="submit" value="Update">
                     </div>
                 </form><!-- .member-profile -->
-                <form action="#" class="member-password form-underline">
+                <form action="{{ path('profile_password') }}" method="POST" class="member-password form-underline">
                     <h3>Change Password</h3>
                     <div class="field-input">
                         <label for="old_password">Old password</label>
                         <input type="password" name="old_password" placeholder="Enter old password" id="old_password">
+                        {% if (errors is defined) and ('old_password' in errors|keys) %}
+                        <span style="color: red;">{{ errors.old_password }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-input">
                         <label for="new_password">New password</label>
                         <input type="password" name="new_password" placeholder="Enter new password" id="new_password">
+                        {% if (errors is defined) and ('new_password' in errors|keys) %}
+                        <span style="color: red;">{{ errors.new_password }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-input">
                         <label for="re_new">Re-new password</label>
-                        <input type="password" name="re_new" placeholder="Enter new password" id="re_new">
+                        <input type="password" name="re_password" placeholder="Enter new password" id="re_new">
+                        {% if (errors is defined) and ('re_password' in errors|keys) %}
+                        <span style="color: red;">{{ errors.re_password }}</span>
+                        {% endif %}
                     </div>
                     <div class="field-submit">
                         <input type="submit" value="Save">

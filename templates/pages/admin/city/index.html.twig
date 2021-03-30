@@ -41,6 +41,8 @@
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Country</th>
+                    <th>Image</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -49,6 +51,8 @@
                 <tr>
                   <td data-title="ID">{{ city.getId }}</td>
                   <td data-title="Name">{{ city.getName }}</td>
+                  <td data-title="Country">{{ city.getCountry }}</td>
+                  <td data-title="Image"><img src="{{ asset(city.getImage) }}" alt="Image" style="height: 50px;"></td>
                   <td data-title="" class="place-action">
                     <a href="{{ path('admin_city_edit', {'id': city.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>
                     <a href="{{ path('admin_city_delete', {'id': city.getId}) }}" class="" title=""><i class="la la-trash-alt" style="color: red;"></i></a>

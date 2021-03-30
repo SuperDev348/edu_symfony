@@ -4,6 +4,17 @@
 <title>Blog Detail</title>
 {% endblock %}
 
+{% block stylesheets %}
+<style>
+    .attached-comment {
+        background-color: #23d3d3;
+        border-radius: 50%;
+        color: white;
+        padding: 3px;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <main id="main" class="site-main">
     <div class="blog-banner">
@@ -30,180 +41,124 @@
                             <div class="entry-desc"><img src="{{ asset(blog.getImage) }}" alt="Blog detail 03">
                                 <p>{{ blog.getDiscription }}</p>
                             </div><!-- .entry-desc -->
-                            <div class="entry-author">
-                                <img src="{{ asset('assets/images/avatars/male-1.jpg') }}" alt="Bangkok">
-                                <div class="author-info">
-                                    <div class="author-title">
-                                        <a title="Nitithorn" href="#">Nitithorn</a>
-                                        <ul class="author-social">
-                                            <li>
-                                                <a href="#">
-                                                    <i class="la la-facebook-f"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="la la-twitter"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">	
-                                                    <i class="la la-youtube"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">	
-                                                    <i class="la la-instagram"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="author-desc"><p>I'm a beauty and travel blogger based in Paris. I have two dogs and love drinking coffee in the middle of night.</p></div>
-                                </div>
-                            </div><!-- .entry-author -->
                         </div><!-- .entry-content -->
                         <div class="related-post">
                             <h2>Related Articles</h2>
                             <div class="related-grid columns-3">
+                                {% for blog in relate_blogs %}
                                 <article class="hover__box post">
                                     <div class="post__thumb hover__box__thumb">
-                                        <a title="How to Get Around Rome on the Cheap in 2019" href="#"><img src="{{ asset('assets/images/blog/thumb-07.jpg') }}" alt="How to Get Around Rome on the Cheap in 2019"></a>
+                                        <a title="{{ blog.getTitle }}" href="{{ path('blog_detail', {'id': blog.getId}) }}"><img src="{{ asset(blog.getImage) }}" alt="{{ blog.getTitle }}"></a>
                                     </div>
                                     <div class="post__info">
                                         <ul class="post__category">
-                                            <li><a title="Tips & Tricks" href="#">Tips & Tricks</a></li>
+                                            <li><a title="{{ blog.type.getName }}" href="#">{{ blog.type.getName }}</a></li>
                                         </ul>
-                                        <h3 class="post__title"><a title="How to Get Around Rome on the Cheap in 2019" href="#">How to Get Around Rome on the Cheap in 2019</a></h3>
+                                        <h3 class="post__title"><a title="{{ blog.getTitle }}" href="#">{{ blog.getTitle }}</a></h3>
                                     </div>
                                 </article>
-                                <article class="hover__box post">
-                                    <div class="post__thumb hover__box__thumb">
-                                        <a title="Europe Explained in Fewer than 140 Characters" href="#"><img src="{{ asset('assets/images/blog/thumb-08.jpg') }}" alt="Europe Explained in Fewer than 140 Characters"></a>
-                                    </div>
-                                    <div class="post__info">
-                                        <ul class="post__category">
-                                            <li><a title="Tips & Tricks" href="#">Tips & Tricks</a></li>
-                                        </ul>
-                                        <h3 class="post__title"><a title="Europe Explained in Fewer than 140 Characters" href="#">Europe Explained in Fewer than 140 Characters</a></h3>
-                                    </div>
-                                </article>
-                                <article class="hover__box post">
-                                    <div class="post__thumb hover__box__thumb">
-                                        <a title="Travel: Expectations vs. Reality, Best of 2019" href="#"><img src="{{ asset('assets/images/blog/thumb-09.jpg') }}" alt="Travel: Expectations vs. Reality, Best of 2019"></a>
-                                    </div>
-                                    <div class="post__info">
-                                        <ul class="post__category">
-                                            <li><a title="Take a break" href="#">Take a break</a></li>
-                                        </ul>
-                                        <h3 class="post__title"><a title="Travel: Expectations vs. Reality, Best of 2019" href="#">Travel: Expectations vs. Reality, Best of 2019</a></h3>
-                                    </div>
-                                </article>
+                                {% endfor %}
                             </div>
                         </div><!-- .related-post -->
                         <div class="place__box place__box--reviews entry-comment">
-                            <h3 class="place__title--reviews">3 Comments</h3>
+                            <h3 class="place__title--reviews">{{blog_count}} Comments</h3>
                             <ul class="place__comments">
+                                {% for comment in comments %}
                                 <li>
                                     <div class="place__author">
                                         <div class="place__author__avatar">
-                                            <a title="Sebastian" href="#"><img src="{{ asset('assets/images/avatars/male-2.jpg') }}" alt=""></a>
+                                            {% if comment.attached is defined %}
+                                                {% if comment.attached %}
+                                                <a title="like" href="{{ path('blog_comment_like_detach', {'id': comment.getId}) }}" class="add-wishlist">							
+                                                    <i class="la la-bookmark large attached-comment"></i>
+                                                </a>
+                                                {% else %}
+                                                <a title="like" href="{{ path('blog_comment_like_attach', {'id': comment.getId}) }}" class="add-wishlist">							
+                                                    <i class="la la-bookmark large"></i>
+                                                </a>
+                                                {% endif %}
+                                            {% endif %}
+                                            <a title="{{ comment.user.getPrenom }}" href="#"><img src="{{ asset(comment.user.getImage) }}" alt=""></a>
                                         </div>
                                         <div class="place__author__info">
                                             <h4>
-                                                <a title="Sebastian" href="#">Sebastian</a>
+                                                <a title="{{ comment.user.getPrenom }}" href="#">{{ comment.user.getPrenom }}</a>
                                             </h4>
-                                            <span class="time">October 1, 2019</span>
+                                            <span class="time">{{ comment.getDate.format('M d, Y') }}</span>
                                         </div>
                                     </div>
                                     <div class="place__comments__content">
-                                        <p>Went there last Saturday for the first time to watch my favorite djs (Kungs, Sam Feldet and Watermat) and really had a great experience. </p>
+                                        <p>{{ comment.getDescription }}</p>
                                     </div>
-                                    <a title="Reply" href="#" class="place__comments__reply">							
+                                    <a title="Reply" href="#demo{{comment.getId}}" class="place__comments__reply" data-toggle="collapse">							
                                         <i class="la la-comment-dots"></i>
                                         Reply
                                     </a>
+                                    <div id="demo{{comment.getId}}" class="collapse review-form mt-2">
+                                        <form action="{{ path('blog_comment_reply') }}" method="POST">
+                                            <input type="hidden" name="blog_id" value="{{ blog.getId }}">
+                                            <input type="hidden" name="reply_id" value="{{ comment.getId }}">
+                                            <div class="field-textarea">
+                                                <textarea name="description" placeholder="Write a reply"></textarea>
+                                            </div>
+                                            <div class="field-submit">
+                                                <input type="submit" class="btn" value="Submit" name="submit">
+                                            </div>
+                                        </form>
+                                    </div>
                                     <ul>
+                                        {% for reply in comment.reply %}
                                         <li>
                                             <div class="place__author">
                                                 <div class="place__author__avatar">
-                                                    <a title="Chiemeka" href="#"><img src="{{ asset('assets/images/avatars/male-3.jpg') }}" alt=""></a>
+                                                    {% if reply.attached is defined %}
+                                                        {% if reply.attached %}
+                                                        <a title="like" href="{{ path('blog_comment_like_detach', {'id': reply.getId}) }}" class="add-wishlist">							
+                                                            <i class="la la-bookmark large attached-comment"></i>
+                                                        </a>
+                                                        {% else %}
+                                                        <a title="like" href="{{ path('blog_comment_like_attach', {'id': reply.getId}) }}" class="add-wishlist">							
+                                                            <i class="la la-bookmark large"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    <a title="{{ reply.user.getPrenom }}" href="#"><img src="{{ asset( reply.user.getImage ) }}" alt=""></a>
                                                 </div>
                                                 <div class="place__author__info">
                                                     <h4>
-                                                        <a title="Chiemeka" href="#">Chiemeka</a>
+                                                        <a title="{{ reply.user.getPrenom }}" href="#">{{ reply.user.getPrenom }}</a>
                                                     </h4>
-                                                    <span class="time">October 1, 2019</span>
+                                                    <span class="time">{{ reply.getDate.format('M d, Y') }}</span>
                                                 </div>
                                             </div>
                                             <div class="place__comments__content">
-                                                <p>Thank you for your kind words.It was truly very nice to meet you. I am glad to read you enjoyed the area and the cottage.</p>
+                                                <p>{{ reply.getDescription }}</p>
                                             </div>
                                         </li>
+                                        {% endfor %}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div class="place__author">
-                                        <div class="place__author__avatar">
-                                            <a title="Nitithorn" href="#"><img src="{{ asset('assets/images/avatars/female-2.jpg') }}" alt=""></a>
-                                        </div>
-                                        <div class="place__author__info">
-                                            <h4>
-                                                <a title="Nitithorn" href="#">Nitithorn</a>
-                                            </h4>
-                                            <span class="time">October 1, 2019</span>
-                                        </div>
-                                    </div>
-                                    <div class="place__comments__content">
-                                        <p>Went there last Saturday for the first time to watch my favorite djs (Kungs, Sam Feldet and Watermat) and really had a great experience.</p>
-                                    </div>
-                                    <a title="Reply" href="#" class="place__comments__reply">							
-                                        <i class="la la-comment-dots"></i>
-                                        Reply
-                                    </a>
-                                </li>
+                                {% endfor %}
                             </ul>
+                            {% if app.session.get('user') == null %}
                             <p class="place__login"><a title="Login" href="#">Login </a>to reviews</p>
+                            {% endif %}
+                            <div class="review-form">
+                                <h3>Write a comment</h3>
+                                <form action="{{ path('blog_comment_store') }}" method="POST">
+                                    <input type="hidden" name="blog_id" value="{{ blog.getId }}">
+                                    <div class="field-textarea">
+                                        <textarea name="description" placeholder="Write a review"></textarea>
+                                    </div>
+                                    <div class="field-submit">
+                                        <input type="submit" class="btn" value="Submit" name="submit">
+                                    </div>
+                                </form>
+                            </div>
                         </div><!-- .place__box -->
                     </div><!-- .place__left -->
                 </div>
-                <div class="col-lg-3">
-                    <div class="sidebar sidebar--shop sidebar--border">
-                        <aside class="sidebar--shop__item widget">
-                            <h3 class="sidebar--shop__title">Best seller</h3>
-                            <div class="sidebar--shop__content">
-                                <div class="product-small">
-                                    <div class="product-small__thumb">
-                                        <a title="Mongolia" href="#"><img src="{{ asset('assets/images/shop/product-07.jpg') }}" alt="Mongolia"></a>
-                                    </div>
-                                    <div class="product-small__info">
-                                        <h3><a title="Monggolia Travel Guide" href="#">Monggolia Travel Guide</a></h3>
-                                        <div class="product-small__price">Price: <span>$59</span></div>
-                                    </div>
-                                </div>
-                                <div class="product-small">
-                                    <div class="product-small__thumb">
-                                        <a title="Turkey" href="#"><img src="{{ asset('assets/images/shop/product-05.jpg') }}" alt="Turkey"></a>
-                                    </div>
-                                    <div class="product-small__info">
-                                        <h3><a title="Vietnam Travel Guide" href="#">Vietnam Travel Guide</a></h3>
-                                        <div class="product-small__price">Price: <span>$44</span></div>
-                                    </div>
-                                </div>
-                                <div class="product-small">
-                                    <div class="product-small__thumb">
-                                        <a title="India" href="#"><img src="{{ asset('assets/images/shop/product-02.jpg') }}" alt="India"></a>
-                                    </div>
-                                    <div class="product-small__info">
-                                        <h3><a title="India Travel Guide" href="#">India Travel Guide</a></h3>
-                                        <div class="product-small__price">Price: <span>$35</span></div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </aside><!-- .sidebar--shop__item -->
-                        
-                    </div><!-- .sidebar -->
-                </div>
+                
             </div>
         </div>
     </div><!-- .blog-content -->

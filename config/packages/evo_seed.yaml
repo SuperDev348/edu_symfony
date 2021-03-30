@@ -1,0 +1,3 @@
+evo_seed:
+  directory: 'src\Seeds'
+  namespace: 'App\Seeds'

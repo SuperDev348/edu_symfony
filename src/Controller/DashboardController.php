@@ -67,7 +67,7 @@ class DashboardController extends AbstractController
 
         return $this->render('pages/dashboard/index.html.twig', [
             'page' => 'dashboard',
-            'subtitle' => 'Welcome back! Kevin',
+            'subtitle' => 'Welcome back! ' . $this->session->get('user')->getPrenom(),
             'listing_number' => $listing_number,
             'booking_number' => $booking_number,
             'review_number' => $review_number,

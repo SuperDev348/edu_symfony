@@ -1,0 +1,125 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin Request Create</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Request Add</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Request Add</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+    <div class="row" style="display: flex; justify-content: center; margin: 50px;">
+      <!-- left column -->
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Create New Request</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_request_store') }}" method="POST">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Listing</label>
+                <select class="form-control select2" name="listing_id" style="width: 100%;">
+                  {% for listing in listings %}
+                  <option value="{{ listing.getId }}">{{ listing.getName }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="first_name">First Name</label>
+                {% if (old is defined) and ('first_name' in old|keys) %}
+                <input type="text" class="form-control" name="first_name" id="first_name" value="{{ old.first_name }}">
+                {% else %}
+                <input type="text" class="form-control" name="first_name" id="first_name">
+                {% endif %}
+                {% if (errors is defined) and ('first_name' in errors|keys) %}
+                <span style="color: red;">{{ errors.first_name }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="last_name">Last Name</label>
+                {% if (old is defined) and ('last_name' in old|keys) %}
+                <input type="text" class="form-control" name="last_name" id="last_name" value="{{ old.last_name }}">
+                {% else %}
+                <input type="text" class="form-control" name="last_name" id="last_name">
+                {% endif %}
+                {% if (errors is defined) and ('last_name' in errors|keys) %}
+                <span style="color: red;">{{ errors.last_name }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                {% if (old is defined) and ('email' in old|keys) %}
+                <input type="email" class="form-control" name="email" id="email" value="{{ old.email }}">
+                {% else %}
+                <input type="email" class="form-control" name="email" id="email">
+                {% endif %}
+                {% if (errors is defined) and ('email' in errors|keys) %}
+                <span style="color: red;">{{ errors.email }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                {% if (old is defined) and ('phone_number' in old|keys) %}
+                <input type="text" class="form-control" name="phone_number" id="phone_number" value="{{ old.phone_number }}">
+                {% else %}
+                <input type="text" class="form-control" name="phone_number" id="phone_number">
+                {% endif %}
+                {% if (errors is defined) and ('phone_number' in errors|keys) %}
+                <span style="color: red;">{{ errors.phone_number }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                {% if (old is defined) and ('rate' in old|keys) %}
+                <textarea name="message" id="message" row="8" style="width: 100%;">{{ old.message }}</textarea>
+                {% else %}
+                <textarea name="message" id="message" row="8" style="width: 100%;"></textarea>
+                {% endif %}
+                {% if (errors is defined) and ('message' in errors|keys) %}
+                <span style="color: red;">{{ errors.message }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <input type="hidden" name="user_id" value="1">
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="{{ path('admin_request') }}" class="btn btn-info">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+//Date range picker
+$('#reservationdate').datetimepicker({
+    format: 'L'
+});
+</script>
+{% endblock %}

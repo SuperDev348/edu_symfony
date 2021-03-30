@@ -23,6 +23,11 @@ class Listing
     private $name;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $user_id;
+
+    /**
      * @ORM\Column(type="string", length=20)
      */
     private $price_range;
@@ -43,14 +48,14 @@ class Listing
     private $feature;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $category;
+    private $category_id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $city;
+    private $city_id;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -360,6 +365,18 @@ class Listing
         return $this;
     }
 
+    public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): self
+    {
+        $this->user_id = $user_id;
+
+        return $this;
+    }
+
     public function getPriceRange(): ?string
     {
         return $this->price_range;
@@ -408,26 +425,26 @@ class Listing
         return $this;
     }
 
-    public function getCity(): ?string
+    public function getCityId(): ?string
     {
-        return $this->city;
+        return $this->city_id;
     }
 
-    public function setCity(string $city): self
+    public function setCityId(string $city_id): self
     {
-        $this->city = $city;
+        $this->city_id = $city_id;
 
         return $this;
     }
 
-    public function getCategory(): ?string
+    public function getCategoryId(): ?string
     {
-        return $this->category;
+        return $this->category_id;
     }
 
-    public function setCategory(string $category): self
+    public function setCategoryId(string $category_id): self
     {
-        $this->category = $category;
+        $this->category_id = $category_id;
 
         return $this;
     }

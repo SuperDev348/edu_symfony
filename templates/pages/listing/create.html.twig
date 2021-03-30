@@ -63,9 +63,9 @@
                 </div>
                 <div class="field-group field-select">
                     <label for="category">Category</label>
-                    <select data-placeholder="Select Category" name="category" id="category">
+                    <select data-placeholder="Select Category" name="category_id" id="category">
                         {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        <option value="{{ category.getId }}">{{ category.getName }}</option>
                         {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
@@ -80,9 +80,9 @@
                 </div>
                 <div class="field-group field-select">
                     <label for="city">City</label>
-                    <select data-placeholder="" name="city" id="city">
+                    <select data-placeholder="" name="city_id" id="city">
                         {% for city in cities %}
-                        <option value="{{ city }}">{{ city }}</option>
+                        <option value="{{ city.getId }}">{{ city.getName }}</option>
                         {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>

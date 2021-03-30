@@ -3,10 +3,20 @@
 {% block title %}
 <title>Contact Us</title>
 {% endblock %}
-
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('assets2/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets2/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<style>
+    .select2-selection--single {
+        border: white solid !important;
+        border-bottom: black solid 2px !important;
+        padding-bottom: 5px !important;
+    }
+</style>
+{% endblock %}
 {% block body %}
 <main id="main" class="site-main contact-main">
-    <div class="page-title page-title--small align-left" style="background-image: url(images/bg/bg-about.png);">
+    <div class="page-title page-title--small align-left" style="background-image: url({{ app.request.baseUrl }}/assets/images/bg/bg-about.png);">
         <div class="container">
             <div class="page-title__content">
                 <h1 class="page-title__name">Contact Us</h1>
@@ -37,23 +47,76 @@
                 <div class="col-md-6">
                     <div class="contact-form">
                         <h2>Get in touch with us</h2>
-                        <form action="#" method="POST" class="form-underline">
+                        <form action="{{ path('contactus_store') }}" method="POST" enctype="multipart/form-data" class="form-underline">
+                            <div class="field-group field-select">
+                                <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name="listing_id">
+                                    <option value="0"></option>
+                                    {% for listing in listings %}
+                                    <option value="{{ listing.getId }}">{{ listing.getName }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
                             <div class="field-inline">
                                 <div class="field-input">
+                                    {% if (old is defined) and ('first_name' in old|keys) %}
+                                    <input type="text" name="first_name" value="{{ old.first_name }}" placeholder="First Name">
+                                    {% else %}
                                     <input type="text" name="first_name" value="" placeholder="First Name">
+                                    {% endif %}
+                                    {% if (errors is defined) and ('first_name' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.first_name }}</span>
+                                    {% endif %}
                                 </div>
                                 <div class="field-input">
+                                    {% if (old is defined) and ('last_name' in old|keys) %}
+                                    <input type="text" name="last_name" value="{{ old.last_name }}" placeholder="Last Name">
+                                    {% else %}
                                     <input type="text" name="last_name" value="" placeholder="Last Name">
+                                    {% endif %}
+                                    {% if (errors is defined) and ('last_name' in errors|keys) %}
+                                    <span style="color: red;">{{ errors.last_name }}</span>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="field-input">
+                                {% if (old is defined) and ('email' in old|keys) %}
+                                <input type="email" name="email" value="{{ old.email }}" placeholder="Email">
+                                {% else %}
                                 <input type="email" name="email" value="" placeholder="Email">
+                                {% endif %}
+                                {% if (errors is defined) and ('email' in errors|keys) %}
+                                <span style="color: red;">{{ errors.email }}</span>
+                                {% endif %}
                             </div>
                             <div class="field-input">
-                                <input type="tel" name="tel" value="" placeholder="Phone Number">
+                                {% if (old is defined) and ('phone_number' in old|keys) %}
+                                <input type="tel" name="phone_number" value="{{ old.phone_number }}" placeholder="Phone Number">
+                                {% else %}
+                                <input type="tel" name="phone_number" value="" placeholder="Phone Number">
+                                {% endif %}
+                                {% if (errors is defined) and ('phone_number' in errors|keys) %}
+                                <span style="color: red;">{{ errors.phone_number }}</span>
+                                {% endif %}
                             </div>
                             <div class="field-textarea">
+                                {% if (old is defined) and ('message' in old|keys) %}
+                                <textarea name="message" placeholder="Message">{{ old.message }}</textarea>
+                                {% else %}
                                 <textarea name="message" placeholder="Message"></textarea>
+                                {% endif %}
+                                {% if (errors is defined) and ('message' in errors|keys) %}
+                                <span style="color: red;">{{ errors.message }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="field-group field-file">
+                                <label for="avatar">Avatar</label>
+                                <label for="avatar" class="preview">
+                                    <input type="file" id="avatar" name="avatar" class="upload-file" data-max-size="1024000">
+                                    <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                                    <i class="la la-cloud-upload-alt"></i>
+                                </label>
+                                <div class="field-note">Maximum file size: 1 MB.</div>
                             </div>
                             <div class="field-submit">
                                 <input type="submit" value="Send Message" class="btn">
@@ -65,4 +128,17 @@
         </div>
     </div><!-- .site-content -->
 </main><!-- .site-main -->
+{% endblock %}
+{% block javascripts %}
+<!-- Select2 -->
+<script src="{{ asset('assets2/plugins/select2/js/select2.full.min.js') }}"></script>
+<script>
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+</script>
 {% endblock %}

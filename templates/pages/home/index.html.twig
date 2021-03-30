@@ -18,12 +18,9 @@
                         <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="Ex: fastfood, beer" autocomplete="off">
                         <div class="search-suggestions name-suggestions">
                             <ul>
-                                <li><a href="#"><i class="las la-utensils"></i><span>Restaurant</span></a></li>
-                                <li><a href="#"><i class="las la-spa"></i><span>Beauty</span></a></li>
-                                <li><a href="#"><i class="las la-dumbbell"></i><span>Fitness</span></a></li>
-                                <li><a href="#"><i class="las la-cocktail"></i><span>Nightlight</span></a></li>
-                                <li><a href="#"><i class="las la-shopping-bag"></i><span>Shopping</span></a></li>
-                                <li><a href="#"><i class="las la-film"></i><span>Cinema</span></a></li>
+                                {% for category in categories %}
+                                <li><a href="#"><i class="{{category.getIcon}}"></i><span>{{category.getName}}</span></a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div><!-- .site-banner__search__input -->
@@ -33,7 +30,9 @@
                         <div class="search-suggestions location-suggestions">
                             <ul>
                                 <li><a href="#"><i class="las la-location-arrow"></i><span>Current location</span></a></li>
-                                <li><a href="#"><span>San Francisco, CA</span></a></li>
+                                {% for city in cities %}
+                                <li><a href="#"><span>{{city.getName}}</span></a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div><!-- .site-banner__search__input -->
@@ -49,55 +48,15 @@
             <h2 class="title title-border-bottom align-center offset-item">Browse Businesses by Category</h2>
             <div class="slick-sliders offset-item">
                 <div class="slick-slider business-cat-slider slider-pd30" data-item="6" data-arrows="true" data-itemScroll="6" data-dots="true" data-centerPadding="50" data-tabletitem="3" data-tabletscroll="3" data-smallpcitem="4" data-smallpcscroll="4" data-mobileitem="2" data-mobilescroll="2" data-mobilearrows="false">
-                    <div class="bsn-cat-item rosy-pink">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-utensils"></i>
-                            <span class="title">Restaurant</span>
-                            <span class="place">12 Places</span>
+                    {% for category in categories %}
+                    <div class="{{ category.color }}">
+                        <a href="">
+                            <i class="{{category.getIcon}}"></i>
+                            <span class="title">{{ category.getName }}</span>
+                            <span class="place">{{ category.listing_count }} Places</span>
                         </a>
                     </div>
-                    <div class="bsn-cat-item purple">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-spa"></i>
-                            <span class="title">Beauty</span>
-                            <span class="place">8 Places</span>
-                        </a>
-                    </div>
-                    <div class="bsn-cat-item blue">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-dumbbell"></i>
-                            <span class="title">Fitness</span>
-                            <span class="place">6 Places</span>
-                        </a>
-                    </div>
-                    <div class="bsn-cat-item orange">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-cocktail"></i>
-                            <span class="title">Nightlife</span>
-                            <span class="place">10 Places</span>
-                        </a>
-                    </div>
-                    <div class="bsn-cat-item charcoal-purple">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-shopping-bag"></i>
-                            <span class="title">Shopping</span>
-                            <span class="place">12 Places</span>
-                        </a>
-                    </div>
-                    <div class="bsn-cat-item green">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-film"></i>
-                            <span class="title">Cinema</span>
-                            <span class="place">15 Places</span>
-                        </a>
-                    </div>
-                    <div class="bsn-cat-item rosy-pink">
-                        <a href="ex-half-map-1.html">
-                            <i class="las la-utensils"></i>
-                            <span class="title">Restaurant</span>
-                            <span class="place">12 Places</span>
-                        </a>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">
@@ -126,7 +85,7 @@
                                     </span>                                    
                                 </a>
                                 <a class="entry-category rosy-pink" href="#">
-                                    <i class="las la-utensils"></i><span>{{ listing.getCategory }}</span>
+                                    <i class="las la-utensils"></i><span>{{ listing.category.getName }}</span>
                                 </a>
                                 <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-3.jpg') }}" alt="Author"></a>
                                 {% if listing.getFeature %}
@@ -136,10 +95,10 @@
                             <div class="entry-detail">
                                 <div class="entry-head">
                                     <div class="place-type list-item">
-                                        <span>{{ listing.getCategory }}</span>
+                                        <span>{{ listing.category.getName }}</span>
                                     </div>
                                     <div class="place-city">
-                                        <a href="#">{{ listing.getCity }}</a>
+                                        <a href="#">{{ listing.city.getName }}</a>
                                     </div>
                                 </div>
                                 <h3 class="place-title"><a href="{{ path('listing_detail', {'id': listing.getId}) }}">{{ listing.getName }}</a></h3>
@@ -177,76 +136,22 @@
             <h2 class="title title-border-bottom align-center offset-item">Featured Cities<span>Choose the city you’ll be living in next</span></h2>
             <div class="slick-sliders offset-item">
                 <div class="slick-slider featured-slider slider-pd30" data-item="4" data-arrows="true" data-itemScroll="4" data-dots="true" data-centerPadding="30" data-tabletitem="2" data-tabletscroll="2" data-mobileitem="1" data-mobilescroll="1" data-mobilearrows="false">
+                    {% for city in cities %}
                     <div class="slick-item">
                         <div class="cities__item hover__box">
                             <div class="cities__thumb hover__box__thumb">
-                                <a title="London" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/newyork.jpg') }}" alt="London">
+                                <a title="London" href="">
+                                    <img src="{{ asset(city.getImage) }}" alt="London">
                                 </a>
                             </div>
-                            <h4 class="cities__name">United States</h4>
+                            <h4 class="cities__name">{{ city.getCountry }}</h4>
                             <div class="cities__info">
-                                <h3 class="cities__capital">New York</h3>
-                                <p class="cities__number">80 places</p>
+                                <h3 class="cities__capital">{{ city.getName }}</h3>
+                                <p class="cities__number">{{ city.listing_count }} places</p>
                             </div>
                         </div><!-- .cities__item -->
                     </div>
-                    <div class="slick-item">
-                        <div class="cities__item hover__box">
-                            <div class="cities__thumb hover__box__thumb">
-                                <a title="Rome" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/barca.jpeg') }}" alt="Rome">
-                                </a>
-                            </div>
-                            <h4 class="cities__name">Spain</h4>
-                            <div class="cities__info">
-                                <h3 class="cities__capital">Barcelona</h3>
-                                <p class="cities__number">92 places</p>
-                            </div>
-                        </div><!-- .cities__item -->
-                    </div>
-                    <div class="slick-item">
-                        <div class="cities__item hover__box">
-                            <div class="cities__thumb hover__box__thumb">
-                                <a title="San Fancisco" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/angeles.jpeg') }}" alt="San Francisco">
-                                </a>
-                            </div>
-                            <h4 class="cities__name">United States</h4>
-                            <div class="cities__info">
-                                <h3 class="cities__capital">Los Angeles</h3>
-                                <p class="cities__number">64 places</p>
-                            </div>
-                        </div><!-- .cities__item -->
-                    </div>
-                    <div class="slick-item">
-                        <div class="cities__item hover__box">
-                            <div class="cities__thumb hover__box__thumb">
-                                <a title="Amsterdam" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/amsterdam.jpg') }}" alt="Amsterdam">
-                                </a>
-                            </div>
-                            <h4 class="cities__name">Netherlands</h4>
-                            <div class="cities__info">
-                                <h3 class="cities__capital">Amsterdam</h3>
-                                <p class="cities__number">44 places</p>
-                            </div>
-                        </div><!-- .cities__item -->
-                    </div>
-                    <div class="slick-item">
-                        <div class="cities__item hover__box">
-                            <div class="cities__thumb hover__box__thumb">
-                                <a title="Tokyo" href="city-details-1.html">
-                                    <img src="{{ asset('assets/images/city/tokyo.jpeg') }}" alt="Tokyo">
-                                </a>
-                            </div>
-                            <h4 class="cities__name">Japan</h4>
-                            <div class="cities__info">
-                                <h3 class="cities__capital">Tokyo</h3>
-                                <p class="cities__number">44 places</p>
-                            </div>
-                        </div><!-- .cities__item -->
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="place-slider__nav slick-nav">
                     <div class="place-slider__prev slick-nav__prev">
@@ -312,47 +217,23 @@
                         <h2 class="title title-border-bottom align-center offset-item">From Our Blog</h2>
                         <div class="news__content offset-item">
                             <div class="row">
+                                {% for blog in blogs %}
                                 <div class="col-md-4">
                                     <article class="post hover__box">
                                         <div class="post__thumb hover__box__thumb">
-                                            <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-05.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
+                                            <a title="{{ blog.getTitle }}" href="{{ path('blog_detail', {'id': blog.getId}) }}"><img src="{{ asset(blog.getImage ) }}" alt="{{ blog.getTitle }}"></a>
                                         </div>
                                         <div class="post__info">
                                             <ul class="post__category">
-                                                <li><a title="Food" href="#">Food & Drink</a></li>
+                                                <li><a title="Food" href="{{ path('blog_detail', {'id': blog.getId}) }}">Food & Drink</a></li>
                                             </ul>
-                                            <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">10 Best Classic Diners in Manhattan</a></h3>
+                                            <h3 class="post__title"><a title="{{ blog.getTitle }}" href="{{ path('blog_detail', {'id': blog.getId}) }}">{{ blog.getTitle }}</a></h3>
                                         </div>
                                     </article>
                                 </div>
-                                <div class="col-md-4">
-                                    <article class="post hover__box">
-                                        <div class="post__thumb hover__box__thumb">
-                                            <a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-01.jpg') }}" alt="The 7 Best Restaurants to Try Kobe Beef in London"></a>
-                                        </div>
-                                        <div class="post__info">
-                                            <ul class="post__category">
-                                                <li><a title="Art & Decor" href="#">Lifestyle</a></li>
-                                            </ul>
-                                            <h3 class="post__title"><a title="The 7 Best Restaurants to Try Kobe Beef in London" href="blog-detail.html">The Stepping Razor Barbershop</a></h3>
-                                        </div>
-                                    </article>
-                                </div>
-                                <div class="col-md-4">
-                                    <article class="post hover__box">
-                                        <div class="post__thumb hover__box__thumb">
-                                            <a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html"><img src="{{ asset('assets/images/blog/thumb-10.jpg') }}" alt="The 8 Most Affordable Michelin Restaurants in Paris"></a>
-                                        </div>
-                                        <div class="post__info">
-                                            <ul class="post__category">
-                                                <li><a title="Stay" href="#">Place to Stay</a></li>
-                                            </ul>
-                                            <h3 class="post__title"><a title="The 8 Most Affordable Michelin Restaurants in Paris" href="blog-detail.html">The 9 Best Cheap Hotels in New York City</a></h3>
-                                        </div>
-                                    </article>
-                                </div>
+                                {% endfor %}
                             </div>
-                            <div class="align-center button-wrap"><a href="blog-fullwidth.html" class="btn btn-border">View more</a></div>
+                            <div class="align-center button-wrap"><a href="{{ path('blog') }}" class="btn btn-border">View more</a></div>
                         </div>
                     </div>
                 </div><!-- .blogs -->

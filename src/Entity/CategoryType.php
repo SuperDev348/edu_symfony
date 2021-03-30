@@ -22,6 +22,11 @@ class CategoryType
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $icon;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class CategoryType
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }

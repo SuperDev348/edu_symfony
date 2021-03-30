@@ -64,9 +64,9 @@
                 </div>
                 <div class="field-group field-select">
                     <label for="category">catégorie</label>
-                    <select data-placeholder="Veuillez choisir une catégorie" name="category" id="category" value="{{ listing.getCategory }}">
+                    <select data-placeholder="Veuillez choisir une catégorie" name="category_id" id="category" value="{{ listing.getCategoryId }}">
                         {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        <option value="{{ category.getId }}">{{ category.getName }}</option>
                         {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
@@ -81,9 +81,9 @@
                 </div>
                 <div class="field-group field-select">
                     <label for="city">City</label>
-                    <select data-placeholder="" name="city" id="city" value="{{ listing.getCity }}">
+                    <select data-placeholder="" name="city" id="city_id" value="{{ listing.getCityId }}">
                         {% for city in cities %}
-                        <option value="{{ city }}">{{ city }}</option>
+                        <option value="{{ city.getId }}">{{ city.getName }}</option>
                         {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>

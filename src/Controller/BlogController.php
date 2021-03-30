@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Blog;
 use App\Entity\Blogtype;
+use App\Entity\BlogComment;
+use App\Entity\BlogCommentLike;
+use App\Entity\User;
 
 class BlogController extends AbstractController
 {
@@ -24,10 +27,8 @@ class BlogController extends AbstractController
      */
     public function index(): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
         $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
+        $top_blogs = array_slice($blogs, 0, 5);
         $blogtypes = $this->getDoctrine()->getRepository(Blogtype::class)->findAll();
         foreach($blogtypes as $blogtype) {
             $blogtype->blogs = $this->getDoctrine()->getRepository(Blog::class)->findAllWithType($blogtype->getId());
@@ -37,7 +38,8 @@ class BlogController extends AbstractController
         }
         return $this->render('pages/blog/index.html.twig', [
             'blogtypes' => $blogtypes,
-            'blogs' => $blogs
+            'blogs' => $blogs,
+            'top_blogs' => $top_blogs
         ]);
     }
 
@@ -46,15 +48,68 @@ class BlogController extends AbstractController
      */
     public function detail($id): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
         $blog = $this->getDoctrine()->getRepository(Blog::class)->find($id);
         $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
+        $relate_blogs = $this->relate_blogs($id);
+        $comments_all = $this->getDoctrine()->getRepository(BlogComment::class)->findAllWithBlogId($id);
+        $comments = $this->getDoctrine()->getRepository(BlogComment::class)->findWithBlogId($id, 0);
+        if(is_null($this->session->get('user'))){
+            foreach ($comments as $comment) {
+                $reply = $this->getDoctrine()->getRepository(BlogComment::class)->findWithBlogId($id, $comment->getId());
+                foreach ($reply as $r) {
+                    $r->user = $this->getDoctrine()->getRepository(User::class)->find($r->getUserId());
+                }
+                $comment->user = $this->getDoctrine()->getRepository(User::class)->find($comment->getUserId());
+                $comment->reply = $reply;
+            }
+        }
+        else {
+            $user_id = $this->session->get('user')->getId();
+            $likes = $this->getDoctrine()->getRepository(BlogCommentLike::class)->findWithUser($user_id);
+            $like_ids = [];
+            foreach ($likes as $like) {
+                array_push($like_ids, $like->getBlogcommentId());
+            }
+            foreach ($comments as $comment) {
+                $reply = $this->getDoctrine()->getRepository(BlogComment::class)->findWithBlogId($id, $comment->getId());
+                foreach ($reply as $r) {
+                    $r->user = $this->getDoctrine()->getRepository(User::class)->find($r->getUserId());
+                    if (in_array($r->getId(), $like_ids))
+                        $r->attached = true;
+                    else
+                        $r->attached = false;
+                }
+                $comment->user = $this->getDoctrine()->getRepository(User::class)->find($comment->getUserId());
+                $comment->reply = $reply;
+                if (in_array($comment->getId(), $like_ids))
+                    $comment->attached = true;
+                else
+                    $comment->attached = false;
+            }
+        }
+
         return $this->render('pages/blog/detail.html.twig', [
-            'blog' => $blog
+            'blog' => $blog,
+            'blog_count' => count($comments_all),
+            'relate_blogs' => $relate_blogs,
+            'comments' => $comments
         ]);
     }
+
+    private function relate_blogs($id) {
+        $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
+        foreach ($blogs as $index => $blog) {
+            if ($blog->getId() == $id) {
+                unset($blogs[$index]); 
+                break;
+            }
+        }
+        $blogs = array_slice($blogs, 0, 4);
+        foreach ($blogs as $blog) {
+            $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
+        }
+        return $blogs;
+    } 
 
     /**
      * @Route("/admin/blog", name="admin_blog")

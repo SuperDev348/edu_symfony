@@ -41,6 +41,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Icon</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -49,6 +50,7 @@
                 <tr>
                   <td data-title="ID">{{ categorytype.getId }}</td>
                   <td data-title="Name">{{ categorytype.getName }}</td>
+                  <td data-title="Icon"><i class="{{ categorytype.getIcon }}"></i></td>
                   <td data-title="" class="place-action">
                     <a href="{{ path('admin_categorytype_edit', {'id': categorytype.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>
                     <a href="{{ path('admin_categorytype_delete', {'id': categorytype.getId}) }}" class="" title=""><i class="la la-trash-alt" style="color: red;"></i></a>

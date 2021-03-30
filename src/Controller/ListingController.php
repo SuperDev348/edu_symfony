@@ -15,6 +15,9 @@ use App\Entity\Listing;
 use App\Entity\Review;
 use App\Entity\Setting;
 use App\Entity\Suggestion;
+use App\Entity\User;
+use App\Entity\City;
+use App\Entity\CategoryType;
 
 class ListingController extends AbstractController
 {
@@ -28,9 +31,16 @@ class ListingController extends AbstractController
      */
     public function index(): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        foreach ($listings as $listing) {
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/listing/index.html.twig', [
             'page' => 'listing',
             'subtitle' => 'My Listings',
@@ -45,8 +55,11 @@ class ListingController extends AbstractController
      */
     public function create(): Response
     {
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/listing/create.html.twig', [
             'cities' => $cities,
             'categories' => $categories
@@ -55,18 +68,19 @@ class ListingController extends AbstractController
 
     private function listing_create(Request $request) {
         $listing = new Listing();
+        $listing->setUserId($this->session->get('user')->getId());
         $name = $request->request->get('name');
         $listing->setName($name);
         $price_range = $request->request->get('price_range');
         $listing->setPriceRange($price_range);
         $description = $request->request->get('description');
         $listing->setDescription($description);
-        $category = $request->request->get('category');
-        $listing->setCategory($category);
+        $category_id = $request->request->get('category_id');
+        $listing->setCategoryId($category_id);
         $place_type = $request->request->get('place_type');
         $listing->setPlaceType($place_type);
-        $city = $request->request->get('city');
-        $listing->setCity($city);
+        $city_id = $request->request->get('city_id');
+        $listing->setCityId($city_id);
         $listing->setStatus("pending");
         $listing->setFeature(false);
         $wifi = $request->request->get('wifi');
@@ -230,6 +244,13 @@ class ListingController extends AbstractController
         // save
         $doct = $this->getDoctrine()->getManager();
         $doct->persist($listing);
+        // set the user's type businessowner
+        $user = $doct->getRepository(User::class)->findOneBy([
+            'mail' => $this->session->get('user')->getMail(),
+        ]);
+        if ($this->session->get('user')->getType() == 'client')
+            $user->setType('businessowner');
+        $this->session->set('user', $user);
         $doct->flush();
     }
 
@@ -238,12 +259,17 @@ class ListingController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
-        $categories = $this->getCategoryList();
-        $cities = $this->getCityList();
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
 
         $name = $request->request->get("name");
         $description = $request->request->get("description");
+        $category_id = $request->request->get("category_id");
+        $city_id = $request->request->get("city_id");
         $address = $request->request->get("address");
         $email = $request->request->get("email");
         $La_g = $request->request->get("La_g");
@@ -251,6 +277,8 @@ class ListingController extends AbstractController
         $input = [
             'name' => $name,
             'description' => $description,
+            'category_id' => $category_id,
+            'city_id' => $city_id,
             'address' => $address,
             'email' => $email,
             'La_g' => $La_g,
@@ -259,6 +287,8 @@ class ListingController extends AbstractController
         $constraints = new Assert\Collection([
             'name' => [new Assert\NotBlank],
             'description' => [new Assert\NotBlank],
+            'category_id' => [new Assert\NotBlank],
+            'city_id' => [new Assert\NotBlank],
             'address' => [new Assert\NotBlank],
             'email' => [new Assert\NotBlank, new Assert\Email()],
             'La_g' => [new Assert\NotBlank],
@@ -302,9 +332,12 @@ class ListingController extends AbstractController
      */
     public function edit($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/listing/edit.html.twig', [
             'listing' => $listing,
             'cities' => $cities,
@@ -321,12 +354,12 @@ class ListingController extends AbstractController
         $listing->setPriceRange($price_range);
         $description = $request->request->get('description');
         $listing->setDescription($description);
-        $category = $request->request->get('category');
-        $listing->setCategory($category);
+        $category_id = $request->request->get('category_id');
+        $listing->setCategoryId($category_id);
         $place_type = $request->request->get('place_type');
         $listing->setPlaceType($place_type);
-        $city = $request->request->get('city');
-        $listing->setCity($city);
+        $city_id = $request->request->get('city_id');
+        $listing->setCityId($city_id);
         $listing->setStatus("approved");
         $wifi = $request->request->get('wifi');
         $listing->setWifi($wifi=='true');
@@ -495,8 +528,13 @@ class ListingController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $name = $request->request->get("name");
         $description = $request->request->get("description");
+        $category_id = $request->request->get("category_id");
+        $city_id = $request->request->get("city_id");
         $address = $request->request->get("address");
         $email = $request->request->get("email");
         $La_g = $request->request->get("La_g");
@@ -504,6 +542,8 @@ class ListingController extends AbstractController
         $input = [
             'name' => $name,
             'description' => $description,
+            'category_id' => $category_id,
+            'city_id' => $city_id,
             'address' => $address,
             'email' => $email,
             'La_g' => $La_g,
@@ -512,6 +552,8 @@ class ListingController extends AbstractController
         $constraints = new Assert\Collection([
             'name' => [new Assert\NotBlank],
             'description' => [new Assert\NotBlank],
+            'category_id' => [new Assert\NotBlank],
+            'city_id' => [new Assert\NotBlank],
             'address' => [new Assert\NotBlank],
             'email' => [new Assert\NotBlank, new Assert\Email()],
             'La_g' => [new Assert\NotBlank],
@@ -527,8 +569,12 @@ class ListingController extends AbstractController
                 $violation->getMessage());
             }
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+            $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+            $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
             return $this->render('pages/listing/edit.html.twig', [
                 'listing' => $listing,
+                'cities' => $cities,
+                'categories' => $categories,
                 'errors' => $errorMessages,
                 'old' => $input
             ]);
@@ -545,6 +591,9 @@ class ListingController extends AbstractController
      */
     public function delete($id): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $doct->remove($listing);
@@ -559,15 +608,18 @@ class ListingController extends AbstractController
      */
     public function search(Request $request): Response
     {
-        $category = $request->request->get('category');
-        $city = $request->request->get('city');
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $category_id = $request->request->get('category_id');
+        $city_id = $request->request->get('city_id');
         $id = $request->request->get('id');
         $name = $request->request->get('name');
         $filter = [];
-        if ($category != '0')
-            $filter['category'] = $category;
-        if ($city != '0')
-            $filter['city'] = $city;
+        if ($category_id != '0')
+            $filter['category_id'] = $category_id;
+        if ($city_id != '0')
+            $filter['city_id'] = $city_id;
         if ($id != '')
             $filter['id'] = $id;
         if ($name != '')
@@ -575,8 +627,12 @@ class ListingController extends AbstractController
         
         $doct = $this->getDoctrine()->getManager();
         $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        foreach ($listings as $listing) {
+            $listing->city = $doct->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $doct->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/listing/index.html.twig', [
             'page' => 'listing',
             'subtitle' => 'My Listings',
@@ -587,14 +643,7 @@ class ListingController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/listing/detail/{id}", name="listing_detail")
-     */
-    public function detail($id): Response
-    {
-        $this->visit();
-        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
-        $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
+    private function review($listing) {
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
         $review_rate = 0;
         if (count($reviews) != 0) {
@@ -603,11 +652,38 @@ class ListingController extends AbstractController
             }
             $review_rate = number_format($review_rate/count($reviews), 2);
         }
+        $res = ['reviews' => $reviews, 'review_rate' => $review_rate];
+        return $res;
+    }
+
+    /**
+     * @Route("/listing/detail/{id}", name="listing_detail")
+     */
+    public function detail($id): Response
+    {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
+        $this->visit();
+        $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+        $similar_listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $similar_listings = array_slice($similar_listings, 0, 4);
+        foreach($similar_listings as $similar_listing) {
+            $similar_listing->user = $this->getDoctrine()->getRepository(User::class)->find($similar_listing->getId());
+            $review = $this->review($similar_listing);
+            $similar_listing->review_rate = $review['review_rate'];
+            $similar_listing->review_count = count($review['reviews']);
+        }
+        $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
+        $review = $this->review($listing);
+        $reviews = $review['reviews'];
+        $review_rate = $review['review_rate'];
         return $this->render('pages/listing/detail.html.twig', [
             'listing' => $listing,
+            'similar_listings' => $similar_listings,
             'reviews' => $reviews,
             'review_rate' => $review_rate,
-            'suggestions' => $suggestions
+            'suggestions' => $suggestions,
         ]);
     }
 
@@ -616,6 +692,9 @@ class ListingController extends AbstractController
      */
     public function setStatus($id, Request $request, ValidatorInterface $validator): Response
     {
+        if(is_null($this->session->get('user'))){
+            return $this->redirectToRoute('connexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $status = $request->request->get('status');
@@ -649,25 +728,6 @@ class ListingController extends AbstractController
         return $res;
     }
 
-    private function getCityList() {
-        $res = [
-            "Paris",
-            "New York",
-            "Chicago"
-        ];
-        return $res;
-    }
-
-    private function getCategoryList() {
-        $res = [
-            "Restaurant",
-            "Gym",
-            "Beaty & Spa",
-            "Shopping"
-        ];
-        return $res;
-    }
-
     private function visit() {
         // visit number
         $doct = $this->getDoctrine()->getManager();
@@ -693,9 +753,16 @@ class ListingController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        foreach ($listings as $listing) {
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/admin/listing/index.html.twig', [
             'listings' => $listings,
             'cities' => $cities,
@@ -708,6 +775,9 @@ class ListingController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
         $statuslist = $this->getStatusList();
         return $this->render('pages/admin/listing/edit.html.twig', [
@@ -721,6 +791,9 @@ class ListingController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $doct->remove($listing);
@@ -735,15 +808,18 @@ class ListingController extends AbstractController
      */
     public function admin_search(Request $request): Response
     {
-        $category = $request->request->get('category');
-        $city = $request->request->get('city');
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
+        $category_id = $request->request->get('category_id');
+        $city_id = $request->request->get('city_id');
         $id = $request->request->get('id');
         $name = $request->request->get('name');
         $filter = [];
-        if ($category != '0')
-            $filter['category'] = $category;
-        if ($city != '0')
-            $filter['city'] = $city;
+        if ($category_id != '0')
+            $filter['category_id'] = $category_id;
+        if ($city_id != '0')
+            $filter['city_id'] = $city_id;
         if ($id != '')
             $filter['id'] = $id;
         if ($name != '')
@@ -751,8 +827,12 @@ class ListingController extends AbstractController
         
         $doct = $this->getDoctrine()->getManager();
         $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
-        $cities = $this->getCityList();
-        $categories = $this->getCategoryList();
+        foreach ($listings as $listing) {
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         return $this->render('pages/admin/listing/index.html.twig', [
             'page' => 'listing',
             'subtitle' => 'My Listings',

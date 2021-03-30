@@ -271,13 +271,15 @@ class CategoryController extends AbstractController
             }
             return $this->render('pages/admin/categorytype/create.html.twig', [
                 'errors' => $errorMessages,
-                'old' => $input
+                'old' => $input,
             ]);
         }
         
         $categorytype = new CategoryType();
         $name = $request->request->get('name');
         $categorytype->setName($name);
+        $icon = $this->icon($name);
+        $categorytype->setIcon($icon);
         
         // save
         $doct = $this->getDoctrine()->getManager();
@@ -328,7 +330,7 @@ class CategoryController extends AbstractController
             return $this->render('pages/admin/categorytype/edit.html.twig', [
                 'categorytype' => $categorytype,
                 'errors' => $errorMessages,
-                'old' => $input
+                'old' => $input,
             ]);
         }
         
@@ -336,7 +338,8 @@ class CategoryController extends AbstractController
         $categorytype = $doct->getRepository(CategoryType::class)->find($id);
         $name = $request->request->get('name');
         $categorytype->setName($name);
-        
+        $icon = $this->icon($name);
+        $categorytype->setIcon($icon);
         // update
         $doct->flush();
         return $this->redirectToRoute('admin_categorytype', [
@@ -359,5 +362,29 @@ class CategoryController extends AbstractController
         return $this->redirectToRoute('admin_categorytype', [
             'id' => $categorytype->getId()
         ]);
+    }
+
+    private function icons() {
+        $res = [
+            ["value" =>"las la-utensils", "name" => "restaurant"],
+            ["value" =>"las la-spa", "name" => "beauty"],
+            ["value" =>"las la-dumbbell", "name" => "fitness"],
+            ["value" =>"las la-cocktail", "name" => "nightlight"],
+            ["value" =>"las la-shopping-bag", "name" => "shopping"],
+            ["value" =>"las la-film", "name" => "cinema"],
+        ];
+        return $res;
+    }
+
+    private function icon($name) {
+        $res = "las la-spa";
+        $icons = $this->icons();
+        foreach($icons as $icon) {
+            if(str_contains($icon['name'], strtolower($name)) || str_contains(strtolower($name), $icon['name'])) {
+                $res = $icon['value'];
+                break;
+            }
+        }
+        return $res;
     }
 }

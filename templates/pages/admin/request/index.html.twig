@@ -1,0 +1,137 @@
+{% extends 'layout/admin/app.html.twig' %}
+
+{% block title %}
+<title>Admin Request</title>
+{% endblock %}
+
+{% block body %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Request</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Request</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Request</h3>
+              <a href="{{ path('admin_request_create') }}" class="btn btn-primary" style="float:right">New Request</a>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <form action="{{ path('admin_request_search') }}" method="POST">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="listing_id">
+                      <option value="-1">All listings</option>
+                      <option value="0">None</option>
+                      {% for listing in listings %}
+                        {% if (filter is defined) and ('listing_id' in filter|keys) %}
+                          {% if filter.listing_id == '0' %}
+                          <option value="0" selected>None</option>
+                          {% else %}
+                          <option value="{{ listing.getId }}" selected>{{ listing.getName }}</option>
+                          {% endif %}
+                        {% else %}
+                        <option value="{{ listing.getId }}">{{ listing.getName }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    {% if (filter is defined) and ('name' in filter|keys) %}
+                    <input type="text" id="name" class="form-control" placeholder="Search name" name="name" value="{{ filter.name }}">
+                    {% else %}
+                    <input type="text" id="name" class="form-control" placeholder="Search name" name="name">
+                    {% endif %}
+                  </div>
+                </div>
+                <div style="height: 40px;">
+                  <button class="btn btn-primary" style="float:right">
+                    Search
+                  </button>
+                </div>
+              </form>
+              <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>List name</th>
+                  <th>Avatar</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for request in requests %}
+                <tr>
+                  <td data-title="ID">{{ request.getId }}</td>
+                  <td data-title="List name"><b>{{ request.list_name }}</b></td>
+                  <td data-title="Avatar"><img src="{{ asset(request.getAvatar) }}" alt="Avatar" style="width: 80px; height: 80px;"></td>
+                  <td data-title="First name">{{ request.getFirstName }}</td>
+                  <td data-title="Last name">{{ request.getLastName }}</td>
+                  <td data-title="Email">{{ request.getEmail }}</td>
+                  <td data-title="Phone number">{{ request.getPhoneNumber }}</td>
+                  <td data-title="" class="place-action">
+                    <a href="{{ path('admin_request_edit', {'id': request.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>
+                    <a href="{{ path('admin_request_delete', {'id': request.getId}) }}" class="" title=""><i class="la la-trash-alt" style="color: red;"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- Page specific script -->
+<script>
+  $(function () {
+    // $("#example1").DataTable({
+    //   "responsive": true, "lengthChange": false, "autoWidth": false,
+    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+{% endblock %}

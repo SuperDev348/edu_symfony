@@ -1,7 +1,7 @@
 {% extends 'layout/template.html.twig' %}
 
 {% block title %}
-<title>Blog - Full Width</title>
+<title>Blog - All</title>
 {% endblock %}
 
 {% block body %}
@@ -32,7 +32,7 @@
                         <aside class="widget widget-post">
                             <h3 class="widget-title">Top Article</h3>
                             <div class="widget-content">
-                                {% for blog in blogs %}
+                                {% for blog in top_blogs %}
                                 <article class="post">
                                     <img src="{{ asset(blog.getImage) }}" alt="{{ blog.getTitle }}">
                                     <div class="post__info">
@@ -45,18 +45,6 @@
                                 {% endfor %}
                             </div>
                         </aside><!-- .widget-post -->
-                        <aside class="widget widget-newsletter">
-                            <h3 class="widget-title">Choose your inspirations! <br> Join our newsletter.</h3>
-                            <form action="#" class="newsletterForm">
-                                <div class="field-input">
-                                    <input type="text" value="" name="text" placeholder="Your email">
-                                </div>
-                                <div class="field-button">
-                                    <button type="submit" name="submit">Subscribe</button>
-                                </div>
-                            </form>
-                            <img src="{{ asset('assets/images/illustrations/subcribe.png') }}" alt="Art Work">
-                        </aside><!-- .widget-newsletter -->
                     </div><!-- .sidebar -->
                 </div>
                 <div class="col-lg-8">

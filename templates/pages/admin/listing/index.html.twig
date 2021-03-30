@@ -39,25 +39,25 @@
               <form action="{{ path('admin_listing_search') }}" method="POST">
                 <div class="row">
                   <div class="form-group col-md-3">
-                    <select class="custom-select rounded-0" name="city">
+                    <select class="custom-select rounded-0" name="city_id">
                       <option value="0">All cities</option>
                       {% for city in cities %}
-                        {% if (filter is defined) and ('city' in filter|keys) and (filter.city == city) %}
-                        <option value="{{ city }}" selected>{{ city }}</option>
+                        {% if (filter is defined) and ('city_id' in filter|keys) and (filter.city_id == city.getId) %}
+                        <option value="{{ city.getId }}" selected>{{ city.getName }}</option>
                         {% else %}
-                        <option value="{{ city }}">{{ city }}</option>
+                        <option value="{{ city.getId }}">{{ city.getName }}</option>
                         {% endif %}
                       {% endfor %}
                     </select>
                   </div>
                   <div class="form-group col-md-3">
-                    <select class="custom-select rounded-0" name="category">
-                      <option value="0">All cities</option>
+                    <select class="custom-select rounded-0" name="category_id">
+                      <option value="0">All categories</option>
                       {% for category in categories %}
-                        {% if (filter is defined) and ('category' in filter|keys) and (filter.category == category) %}
-                        <option value="{{ category }}" selected>{{ category }}</option>
+                        {% if (filter is defined) and ('category_id' in filter|keys) and (filter.category_id == category.getId) %}
+                        <option value="{{ category.getId }}" selected>{{ category.getName }}</option>
                         {% else %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        <option value="{{ category.getId }}">{{ category.getName }}</option>
                         {% endif %}
                       {% endfor %}
                     </select>
@@ -99,10 +99,10 @@
                 {% for listing in listings %}
                 <tr>
                   <td data-title="ID">{{ listing.getId }}</td>
-                  <td data-title="Thumb"><img src="{{ asset(listing.getCoverImage) }}" alt="Place Thumb" style="width: 50px; height: 50px;"></td>
+                  <td data-title="Thumb"><img src="{{ asset(listing.getCoverImage) }}" alt="Place Thumb" style="height: 50px;"></td>
                   <td data-title="Place name"><b>{{ listing.getName }}</b></td>
-                  <td data-title="City">{{ listing.city }}</td>
-                  <td data-title="Category">{{ listing.getCategory }}</td>
+                  <td data-title="City">{{ listing.city.getName }}</td>
+                  <td data-title="Category">{{ listing.category.getName }}</td>
                   <td data-title="Status" class="{{ listing.status }}">{{ listing.getStatus }}</td>
                   <td data-title="" class="place-action">
                     <a href="{{ path('listing_edit', {'id': listing.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>

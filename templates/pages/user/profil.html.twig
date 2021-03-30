@@ -107,12 +107,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    {%  if user.getImage is null %}
-            <img src="{{ asset('profil/user.png') }}" alt=""/>
-        {% else %}
-            <img src="{{ asset('profil/'~user.getImage) }}" alt=""/>
-        {% endif %}
-
+                    <img src="{{ asset(user.getImage) }}" alt=""/>
                 </div>
 
                     </div>

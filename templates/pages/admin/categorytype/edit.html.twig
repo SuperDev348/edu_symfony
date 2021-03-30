@@ -47,6 +47,14 @@
                 <span style="color: red;">{{ errors.name }}</span>
                 {% endif %}
               </div>
+              <div class="form-group">
+                <label>Icon</label>
+                <select class="form-control select2" name="icon" style="width: 100%;" value="{{ categorytype.icon }}">
+                  {% for icon in icons %}
+                  <option value="{{ icon }}"><i class="{{ icon }}"></i></option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
             <!-- /.card-body -->
 

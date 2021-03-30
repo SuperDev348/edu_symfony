@@ -40,6 +40,42 @@ class ListingRepository extends ServiceEntityRepository
     /**
      * @return Listing[]
      */
+    public function findWithCategoryId($category_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT listing
+            FROM App\Entity\Listing listing
+            WHERE listing.category_id = " . $category_id . "
+            ORDER BY listing.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Listing[]
+     */
+    public function findWithCityId($city_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT listing
+            FROM App\Entity\Listing listing
+            WHERE listing.city_id = " . $city_id . "
+            ORDER BY listing.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Listing[]
+     */
     public function findWithFilter($filter): array
     {
         $query = $this->createQueryBuilder('listing');

@@ -34,7 +34,7 @@
           </div>
           <!-- /.card-header -->
           <!-- form start -->
-          <form action="{{ path('admin_city_store') }}" method="POST">
+          <form action="{{ path('admin_city_store') }}" method="POST" enctype="multipart/form-data">
             <div class="card-body">
               <div class="form-group">
                 <label for="name">Name</label>
@@ -46,6 +46,27 @@
                 {% if (errors is defined) and ('name' in errors|keys) %}
                 <span style="color: red;">{{ errors.name }}</span>
                 {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="country">Country</label>
+                {% if (old is defined) and ('country' in old|keys) %}
+                <input type="text" class="form-control" name="country" id="country" value="{{ old.country }}">
+                {% else %}
+                <input type="text" class="form-control" name="country" id="country">
+                {% endif %}
+                {% if (errors is defined) and ('country' in errors|keys) %}
+                <span style="color: red;">{{ errors.country }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="customFile">Image</label>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="image" name="image">
+                  <label class="custom-file-label" for="image">Choose image</label>
+                  {% if (errors is defined) and ('image' in errors|keys) %}
+                  <span style="color: red;">{{ errors.image }}</span>
+                  {% endif %}
+                </div>
               </div>
             </div>
             <!-- /.card-body -->

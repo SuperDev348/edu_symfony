@@ -1,7 +1,7 @@
 {% extends 'layout/template.html.twig' %}
 
 {% block title %}
-<title>Owner - Listings</title>
+<title>Owner - Inqueries</title>
 {% endblock %}
 
 {% block body %}
@@ -12,40 +12,20 @@
             <div class="member-place-wrap">
                 {{ include('nav/owner.subtitle.html.twig') }}
                 <div class="member-filter">
-                    <form action="{{ path('listing_search') }}" method="POST" style="width: 100%;">
+                    <form action="{{ path('request_search') }}" method="POST" style="width: 100%;">
                         <div class="row">
                             <div class="field-select col-md-3" style="width: 90% im !important;">
-                                <select name="city_id">
-                                    <option value="0">All cities</option>
-                                    {% for city in cities %}
-                                        {% if (filter is defined) and ('city_id' in filter|keys) and (filter.city_id == city.getId) %}
-                                        <option value="{{ city.getId }}" selected>{{ city.getName }}</option>
+                                <select name="listing_id">
+                                    <option value="0">All listings</option>
+                                    {% for listing in listings %}
+                                        {% if (filter is defined) and ('listing_id' in filter|keys) and (filter.listing_id == listing.getId) %}
+                                        <option value="{{ listing.getId }}" selected>{{ listing.getName }}</option>
                                         {% else %}
-                                        <option value="{{ city.getId }}">{{ city.getName }}</option>
+                                        <option value="{{ listing.getId }}">{{ listing.getName }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
                                 <i class="la la-angle-down"></i>
-                            </div>
-                            <div class="field-select col-md-3" style="width: 90% im !important;">
-                                <select name="category_id">
-                                    <option value="0">All categories</option>
-                                    {% for category in categories %}
-                                        {% if (filter is defined) and ('category_id' in filter|keys) and (filter.category_id == category.getId) %}
-                                        <option value="{{ category.getId }}" selected>{{ category.getName }}</option>
-                                        {% else %}
-                                        <option value="{{ category.getId }}">{{ category.getName }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <i class="la la-angle-down"></i>
-                            </div>
-                            <div class="field-group col-md-3">
-                                {% if (filter is defined) and ('id' in filter|keys) %}
-                                <input type="text" id="id" class="search-input" placeholder="Search id" name="id" value="{{ filter.id }}">
-                                {% else %}
-                                <input type="text" id="id" class="search-input" placeholder="Search id" name="id">
-                                {% endif %}
                             </div>
                             <div class="field-group col-md-3">
                                 {% if (filter is defined) and ('name' in filter|keys) %}
@@ -74,16 +54,17 @@
                                 </div>
                             </th>
                             <th>ID</th>
-                            <th>Thumb</th>
-                            <th>Name</th>
-                            <th>City</th>
-                            <th>Category</th>
-                            <th>Status</th>
+                            <th>List name</th>
+                            <th>Avatar</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for listing in listings %}
+                        {% for request in requests %}
                         <tr>
                             <td data-title="">
                                 <div class="field-check">
@@ -95,16 +76,15 @@
                                     </label>
                                 </div>
                             </td>
-                            <td data-title="ID">{{ listing.getId }}</td>
-                            <td data-title="Thumb"><img src="{{ asset(listing.getCoverImage) }}" alt="Place Thumb"></td>
-                            <td data-title="Place name"><b>{{ listing.getName }}</b></td>
-                            <td data-title="City">{{ listing.city.getName }}</td>
-                            <td data-title="Category">{{ listing.category.getName }}</td>
-                            <td data-title="Status" class="{{ listing.status }}">{{ listing.getStatus }}</td>
+                            <td data-title="ID">{{ request.getId }}</td>
+                            <td data-title="List Name">{{ request.list_name }}</td>
+                            <td data-title="Avatar"><img src="{{ asset(request.getAvatar) }}" alt="Avatar"></td>
+                            <td data-title="First name">{{ request.getFirstName }}</td>
+                            <td data-title="Last Name">{{ request.getLastName }}</td>
+                            <td data-title="Email">{{ request.getEmail }}</td>
+                            <td data-title="Phone Number">{{ request.getPhoneNumber }}</td>
                             <td data-title="" class="place-action">
-                                <a href="{{ path('listing_edit', {'id': listing.getId}) }}" class="edit" title="Edit"><i class="las la-edit"></i></a>
-                                <a href="{{ path('listing_detail', {'id': listing.getId}) }}" class="view" title="View"><i class="la la-eye"></i></a>
-                                <a href="{{ path('listing_delete', {'id': listing.getId}) }}" class="" title=""><i class="la la-trash-alt"></i></a>
+                                <a href="{{ path('request_delete', {'id': request.getId}) }}" class="" title=""><i class="la la-trash-alt"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
