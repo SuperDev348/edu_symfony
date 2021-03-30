@@ -59,17 +59,14 @@ class GoogleController extends AbstractController
                     $entityManager->flush();
                     $session->set('user', $googleuser);
 
-                    return $this->redirectToRoute('connecter', array('id' => $googleuser->getId()));
+                    return $this->redirectToRoute('dashboard');
                 } elseif ($googleuser->getType() == "admin") {
                     $session->set('user', $googleuser);
-                    return $this->redirectToRoute('user_admin');
+                    return $this->redirectToRoute('admin_dashboard');
                 }
             }
-
-
-
         } catch (IdentityProviderException $e) {
-            return $this->redirectToRoute('user_inscription');
+            return $this->redirectToRoute('home');
         }
 
     }
