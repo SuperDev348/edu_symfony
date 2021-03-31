@@ -38,12 +38,12 @@ class CategoryController extends AbstractController
             $city = $this->getDoctrine()->getRepository(City::class)->find($category->getCityId());
             $category->city = $city->getName();
         }
-        $category_types = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $types = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $active_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
         return $this->render('pages/admin/category/index.html.twig', [
             'categories' => $categories,
-            'category_types' => $category_types,
+            'types' => $types,
             'cities' => $cities,
             'active_types' => $active_types,
         ]);

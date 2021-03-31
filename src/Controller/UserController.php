@@ -513,7 +513,7 @@ class UserController extends AbstractController
 
     }
     /**
-     * @Route("/admin/user/{filtre}/{valeur}", name="user_filtre")
+     * @Route("/admin/filter/{filtre}/{valeur}", name="user_filtre")
      */
     public function filtre($filtre,$valeur,SessionInterface $session,UserRepository $userRepository): Response
     {

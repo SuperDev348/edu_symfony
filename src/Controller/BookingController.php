@@ -159,17 +159,22 @@ class BookingController extends AbstractController
         $doct->persist($booking);
         $doct->flush();
         // send message
-        $sender = $this->getParameter('twilio_number');
-        $sid = $this->getParameter('twilio_sid');
-        $token = $this->getParameter('twilio_token');
-        $client = new Client($sid, $token);
-        $message = $client->messages->create(
-            $listing->getPhone(), // Text this number
-            [
-                'from' => $sender, // From a valid Twilio number
-                'body' => 'You have received a new reservation for your listing: ' . $listing->getName()
-            ]
-        );
+        try {
+            $sender = $this->getParameter('twilio_number');
+            $sid = $this->getParameter('twilio_sid');
+            $token = $this->getParameter('twilio_token');
+            $client = new Client($sid, $token);
+            $message = $client->messages->create(
+                $listing->getPhone(), // Text this number
+                [
+                    'from' => $sender, // From a valid Twilio number
+                    'body' => 'You have received a new reservation for your listing: ' . $listing->getName()
+                ]
+            );
+        } catch (Exception $e) {
+            
+        }
+        
         // dd($message->sid);
         return $this->redirectToRoute('booking');
     }

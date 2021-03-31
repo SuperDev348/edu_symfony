@@ -10,6 +10,7 @@ use App\Entity\Booking;
 use App\Entity\Listing;
 use App\Entity\Setting;
 use App\Entity\Message;
+use App\Entity\City;
 use \DateTime;
 
 class DashboardController extends AbstractController
@@ -59,12 +60,14 @@ class DashboardController extends AbstractController
         $new_reviews = $this->getDoctrine()->getRepository(Review::class)->findLatest();
         foreach ($new_reviews as $new_review) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($new_review->getListingId());
-            $new_review->city = $listing->getCity();
+            $city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $new_review->city = $city->getName();
         }
         $new_bookings = $this->getDoctrine()->getRepository(Booking::class)->findLatest();
         foreach ($new_bookings as $new_booking) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($new_booking->getListingId());
-            $new_booking->city = $listing->getCity();
+            $city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $new_booking->city = $city->getName();
         }
         $messages = $this->getDoctrine()->getRepository(Message::class)->findLatest();
         foreach ($messages as $message) {

@@ -56,7 +56,7 @@ class HomeController extends AbstractController
     }
 
     private function categoryColor($val) {
-        $colors = ['bsn-cat-item rosy-pink', 'bsn-cat-item purple', 'bsn-cat-item blue', 'bsn-cat-item orange', 'bsn-cat-item charcoal-purple', 'bsn-cat-item green'];
+        $colors = ['explore-item dark-sky-blue', 'explore-item dodger-blue', 'explore-item yellow', 'explore-item rosy-pink', 'explore-item dark-sky-blue', 'explore-item dodger-blue'];
         return $colors[$val%6];
     }
 }
