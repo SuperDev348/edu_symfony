@@ -16,9 +16,15 @@
             <div class="place-slider__item bd"><a title="Place Slider Image" href="#"><img src="{{ asset('assets/images/listing/gallery-06.jpg') }}" alt="slider-06"></a></div>
         </div><!-- .page-title -->
         <div class="place-share">
-                <a title="Save" href="#" class="add-wishlist">							
+                {% if attached %}
+                <a style="background-color: #23d3d3;" title="Save" href="{{ path('wishlist_attach', {'id': listing.getId}) }}" class="add-wishlist">							
                     <i class="la la-bookmark large"></i>
                 </a>
+                {% else %}
+                <a title="Save" href="{{ path('wishlist_attach', {'id': listing.getId}) }}" class="add-wishlist">							
+                    <i class="la la-bookmark large"></i>
+                </a>
+                {% endif %}
                 <a title="Share" href="#" class="share">									
                     <i class="la la-share-square la-24"></i>
                 </a>
@@ -58,7 +64,7 @@
                                 </div>
                                 <div class="place__currency">{{ listing.getPriceRange }}</div>
                                 <div class="place__category">
-                                    <a title="{{ listing.getCategory }}" href="#">{{ listing.getCategory }}</a>
+                                    <a title="{{ listing.category.getName }}" href="#">{{ listing.category.getName }}</a>
                                 </div>
                             </div><!-- .place__meta -->
                         </div><!-- .place__box -->
@@ -522,17 +528,17 @@
                                         </span>
                                     </a>
                                     <a class="entry-category purple" href="#">
-                                        <i class="las la-spa"></i><span>{{ similar_listing.getCategory }}</span>
+                                        <i class="las la-spa"></i><span>{{ similar_listing.category.getName }}</span>
                                     </a>
                                     <a href="#" class="author" title="Author"><img src="{{ asset(similar_listing.user.getImage) }}" alt="Author"></a>
                                 </div>       
                                 <div class="entry-detail">
                                     <div class="entry-head">
                                         <div class="place-type list-item">
-                                            <span>{{ similar_listing.getCategory }}</span>
+                                            <span>{{ similar_listing.category.getName }}</span>
                                         </div>
                                         <div class="place-city">
-                                            <a href="#">{{ similar_listing.getCity }}</a>
+                                            <a href="#">{{ similar_listing.city.getName }}</a>
                                         </div>
                                     </div>
                                     <h3 class="place-title"><a href="{{ path('listing_detail', {'id': similar_listing.getId}) }}">{{ similar_listing.getName }}</a></h3>

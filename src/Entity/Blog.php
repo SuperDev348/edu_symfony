@@ -34,6 +34,16 @@ class Blog
     private $type_id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $user_id;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=false)
@@ -74,6 +84,30 @@ class Blog
     public function setTypeId(int $type_id): self
     {
         $this->type_id = $type_id;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): self
+    {
+        $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

@@ -36,6 +36,51 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+              <form action="{{ path('admin_category_search') }}" method="POST">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="city_id">
+                      <option value="0">All cities</option>
+                      {% for city in cities %}
+                        {% if (filter is defined) and ('city_id' in filter|keys) and (filter.city_id == city.getId) %}
+                        <option value="{{ city.getId }}" selected>{{ city.getName }}</option>
+                        {% else %}
+                        <option value="{{ city.getId }}">{{ city.getName }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="type_id">
+                      <option value="0">All category types</option>
+                      {% for type in types %}
+                        {% if (filter is defined) and ('type_id' in filter|keys) and (filter.type_id == type.getId) %}
+                        <option value="{{ type.getId }}" selected>{{ type.getName }}</option>
+                        {% else %}
+                        <option value="{{ type.getId }}">{{ type.getName }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="active_type_id">
+                      <option value="0">All active types</option>
+                      {% for active_type in active_types %}
+                        {% if (filter is defined) and ('active_type_id' in filter|keys) and (filter.active_type_id == active_type.getId) %}
+                        <option value="{{ active_type.getId }}" selected>{{ active_type.getName }}</option>
+                        {% else %}
+                        <option value="{{ active_type.getId }}">{{ active_type.getName }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div style="height: 40px;">
+                  <button class="btn btn-primary" style="float:right">
+                    Search
+                  </button>
+                </div>
+              </form>
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                   <tr>

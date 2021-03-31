@@ -33,10 +33,10 @@
                             <h1>{{ blog.getTitle }}</h1>
                             <ul class="entry-meta">
                                 <li>
-                                    by <a title="Ben Cobb" href="#">Ben Cobb</a>
+                                    by <a title="{{ blog.user.getNom }}" href="#">{{ blog.user.getNom }}</a>
                                 </li>
-                                <li>22 July 2019</li>
-                                <li>3 comments</li>
+                                <li>{{ blog.getDate.format('M d, Y') }}</li>
+                                <li>{{comment_count}} comments</li>
                             </ul>
                             <div class="entry-desc"><img src="{{ asset(blog.getImage) }}" alt="Blog detail 03">
                                 <p>{{ blog.getDiscription }}</p>
@@ -61,7 +61,7 @@
                             </div>
                         </div><!-- .related-post -->
                         <div class="place__box place__box--reviews entry-comment">
-                            <h3 class="place__title--reviews">{{blog_count}} Comments</h3>
+                            <h3 class="place__title--reviews">{{comment_count}} Comments</h3>
                             <ul class="place__comments">
                                 {% for comment in comments %}
                                 <li>

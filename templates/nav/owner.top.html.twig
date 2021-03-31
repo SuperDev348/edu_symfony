@@ -33,6 +33,11 @@
             {% else %}
             <li><a href="{{ path('review') }}">Review</a></li>
             {% endif %}
+            {% if page == 'request' %}
+            <li class="active"><a href="{{ path('request') }}">Inqueries</a></li>
+            {% else %}
+            <li><a href="{{ path('request') }}">Inqueries</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>

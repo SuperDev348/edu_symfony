@@ -71,10 +71,11 @@
                     <i class="la la-angle-down"></i>
                 </div>
                 <div class="field-group field-select">
-                    <label for="place_type">Place Type</label>
-                    <select data-placeholder="Veuillez choisir un type" name="place_type" id="place_type">
-                        <option value="Bar">Bar</option>
-                        <option value="Sea Food">Sea Food</option>
+                    <label for="place_type_id">Place Type</label>
+                    <select data-placeholder="Veuillez choisir un type" name="place_type_id" id="place_type_id">
+                        {% for placetype in placetypes %}
+                        <option value="{{ placetype.getId }}">{{ placetype.getName }}</option>
+                        {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
                 </div>

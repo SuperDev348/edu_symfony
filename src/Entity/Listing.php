@@ -58,9 +58,9 @@ class Listing
     private $city_id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="integer")
      */
-    private $place_type;
+    private $place_type_id;
 
     /**
      * @ORM\Column(type="boolean")
@@ -449,14 +449,14 @@ class Listing
         return $this;
     }
 
-    public function getPlaceType(): ?string
+    public function getPlaceTypeId(): ?int
     {
-        return $this->place_type;
+        return $this->place_type_id;
     }
 
-    public function setPlaceType(string $place_type): self
+    public function setPlaceTypeId(int $place_type_id): self
     {
-        $this->place_type = $place_type;
+        $this->place_type_id = $place_type_id;
 
         return $this;
     }

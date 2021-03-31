@@ -38,8 +38,14 @@ class CategoryController extends AbstractController
             $city = $this->getDoctrine()->getRepository(City::class)->find($category->getCityId());
             $category->city = $city->getName();
         }
+        $category_types = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $active_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
         return $this->render('pages/admin/category/index.html.twig', [
-            'categories' => $categories
+            'categories' => $categories,
+            'category_types' => $category_types,
+            'cities' => $cities,
+            'active_types' => $active_types,
         ]);
     }
 
@@ -216,6 +222,47 @@ class CategoryController extends AbstractController
         $doct->flush();
         return $this->redirectToRoute('admin_category', [
             'id' => $category->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/category/search", name="admin_category_search")
+     */
+    public function admin_search(Request $request): Response
+    {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
+        $type_id = $request->request->get('type_id');
+        $city_id = $request->request->get('city_id');
+        $active_type_id = $request->request->get('active_type_id');
+        $filter = [];
+        if ($type_id != '0')
+            $filter['type_id'] = $type_id;
+        if ($city_id != '0')
+            $filter['city_id'] = $city_id;
+        if ($active_type_id != '0')
+            $filter['active_type_id'] = $active_type_id;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $categories = $doct->getRepository(Category::class)->findWithFilter($filter);
+        foreach($categories as $category) {
+            $categorytype = $this->getDoctrine()->getRepository(CategoryType::class)->find($category->getTypeId());
+            $category->type = $categorytype->getName();
+            $activetype = $this->getDoctrine()->getRepository(ActiveType::class)->find($category->getActiveTypeId());
+            $category->activetype = $activetype->getName();
+            $city = $this->getDoctrine()->getRepository(City::class)->find($category->getCityId());
+            $category->city = $city->getName();
+        }
+        $types = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $active_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        return $this->render('pages/admin/category/index.html.twig', [
+            'categories' => $categories,
+            'filter' => $filter,
+            'types' => $types,
+            'cities' => $cities,
+            'active_types' => $active_types,
         ]);
     }
 

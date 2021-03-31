@@ -9,6 +9,8 @@ use App\Entity\Review;
 use App\Entity\Booking;
 use App\Entity\Listing;
 use App\Entity\Setting;
+use App\Entity\Message;
+use \DateTime;
 
 class DashboardController extends AbstractController
 {
@@ -64,6 +66,25 @@ class DashboardController extends AbstractController
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($new_booking->getListingId());
             $new_booking->city = $listing->getCity();
         }
+        $messages = $this->getDoctrine()->getRepository(Message::class)->findLatest();
+        foreach ($messages as $message) {
+            $now = new DateTime();
+            $interval = date_diff($message->getDate(), $now);
+            $time_message = "";
+            if ($interval->y != 0)
+                $time_message = $interval->y . " year ago";
+            else if ($interval->m != 0)
+                $time_message = $interval->m . " month ago";
+            else if ($interval->d != 0)
+                $time_message = $interval->d . " day ago";
+            else if ($interval->h != 0)
+                $time_message = $interval->h . " hour ago";
+            else if ($interval->i != 0)
+                $time_message = $interval->i . " minute ago";
+            else if ($interval->s != 0)
+                $time_message = $interval->s . " second ago";
+            $message->time_message = $time_message;
+        }
 
         return $this->render('pages/dashboard/index.html.twig', [
             'page' => 'dashboard',
@@ -76,7 +97,8 @@ class DashboardController extends AbstractController
             'review_per_booking' => $review_per_booking,
             'percentage' => $percentage,
             'new_bookings' => $new_bookings,
-            'new_reviews' => $new_reviews
+            'new_reviews' => $new_reviews,
+            'messages' => $messages,
         ]);
     }
 

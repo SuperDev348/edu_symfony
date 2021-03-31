@@ -36,12 +36,34 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+              <form action="{{ path('admin_blog_search') }}" method="POST">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <select class="custom-select rounded-0" name="type_id">
+                      <option value="0">All blogtypes</option>
+                      {% for type in types %}
+                        {% if (filter is defined) and ('type_id' in filter|keys) and (filter.type_id == type.getId) %}
+                        <option value="{{ type.getId }}" selected>{{ type.getName }}</option>
+                        {% else %}
+                        <option value="{{ type.getId }}">{{ type.getName }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div style="height: 40px;">
+                  <button class="btn btn-primary" style="float:right">
+                    Search
+                  </button>
+                </div>
+              </form>
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Image</th>
                     <th>Title</th>
+                    <th>User</th>
                     <th>Type</th>
                     <th>Action</th>
                   </tr>
@@ -52,6 +74,7 @@
                   <td data-title="ID">{{ blog.getId }}</td>
                   <td data-title="Image"><img src="{{ asset(blog.getImage) }}" alt="Place Thumb" style="height: 50px;"></td>
                   <td data-title="Title"><b>{{ blog.getTitle }}</b></td>
+                  <td data-title="User">{{ blog.user.getNom }}</td>
                   <td data-title="Type">{{ blog.type }}</td>
                   <td data-title="" class="place-action">
                     <a href="{{ path('admin_blog_edit', {'id': blog.getId}) }}" class="edit mr-3" title="Edit"><i class="las la-edit"></i></a>

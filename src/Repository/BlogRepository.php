@@ -37,6 +37,24 @@ class BlogRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @return Category[]
+     */
+    public function findWithFilter($filter): array
+    {
+        $query = $this->createQueryBuilder('blog');
+        foreach ($filter as $key => $value)
+        {
+            $query->andWhere($query->expr()->andX(
+                $query->expr()->like("blog.".$key, ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$value.'%');
+        }
+        return $query->orderBy('blog.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+    }
+
     // /**
     //  * @return Blog[] Returns an array of Blog objects
     //  */

@@ -150,31 +150,17 @@
                         <div class="col-lg-4">
                             <div class="ob-item">
                                 <div class="ob-head">
-                                    <h3>Notifications <span>(5)</span></h3>
+                                    <h3>Notifications <span>({{ messages|length }})</span></h3>
                                     <a href="#" class="clear-all" title="Clear All">Clear all</a>
                                 </div>
                                 <div class="ob-content">
                                     <ul>
+                                        {% for message in messages %}
                                         <li class="noti-item unread">
-                                            <p>You have got a new booking <br> Booking ID: #123434</p>
-                                            <span>1d ago</span><a href="#" class="delete-noti" title="Delete">Delete</a>
+                                            <p>{{ message.getDescription }}<br> Listing ID: #{{ message.getId }}</p>
+                                            <span>{{ message.time_message }}</span><a href="#" class="delete-noti" title="Delete">Delete</a>
                                         </li>
-                                        <li class="noti-item read">
-                                            <p>You have got a new booking <br> Booking ID: #123434</p>
-                                            <span>1d ago</span><a href="#" class="delete-noti" title="Delete">Delete</a>
-                                        </li>
-                                        <li class="noti-item read">
-                                            <p>You have got a new booking <br> Booking ID: #123434</p>
-                                            <span>1d ago</span><a href="#" class="delete-noti" title="Delete">Delete</a>
-                                        </li>
-                                        <li class="noti-item read">
-                                            <p>You have got a new booking <br> Booking ID: #123434</p>
-                                            <span>1d ago</span><a href="#" class="delete-noti" title="Delete">Delete</a>
-                                        </li>
-                                        <li class="noti-item read">
-                                            <p>You have got a new booking <br> Booking ID: #123434</p>
-                                            <span>1d ago</span><a href="#" class="delete-noti" title="Delete">Delete</a>
-                                        </li>
+                                        {% endfor %}
                                     </ul>
                                 </div>
                             </div>

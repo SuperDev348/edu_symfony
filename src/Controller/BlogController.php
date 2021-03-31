@@ -14,6 +14,7 @@ use App\Entity\Blogtype;
 use App\Entity\BlogComment;
 use App\Entity\BlogCommentLike;
 use App\Entity\User;
+use \DateTime;
 
 class BlogController extends AbstractController
 {
@@ -35,6 +36,7 @@ class BlogController extends AbstractController
         }
         foreach($blogs as $blog) {
             $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
+            $blog->user = $this->getDoctrine()->getRepository(User::class)->find($blog->getUserId());
         }
         return $this->render('pages/blog/index.html.twig', [
             'blogtypes' => $blogtypes,
@@ -50,6 +52,7 @@ class BlogController extends AbstractController
     {
         $blog = $this->getDoctrine()->getRepository(Blog::class)->find($id);
         $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
+        $blog->user = $this->getDoctrine()->getRepository(User::class)->find($blog->getUserId());
         $relate_blogs = $this->relate_blogs($id);
         $comments_all = $this->getDoctrine()->getRepository(BlogComment::class)->findAllWithBlogId($id);
         $comments = $this->getDoctrine()->getRepository(BlogComment::class)->findWithBlogId($id, 0);
@@ -90,7 +93,7 @@ class BlogController extends AbstractController
 
         return $this->render('pages/blog/detail.html.twig', [
             'blog' => $blog,
-            'blog_count' => count($comments_all),
+            'comment_count' => count($comments_all),
             'relate_blogs' => $relate_blogs,
             'comments' => $comments
         ]);
@@ -123,9 +126,12 @@ class BlogController extends AbstractController
         foreach($blogs as $blog) {
             $blogtype = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
             $blog->type = $blogtype->getName();
+            $blog->user = $this->getDoctrine()->getRepository(User::class)->find($blog->getUserId());
         }
+        $types = $this->getDoctrine()->getRepository(Blogtype::class)->findAll();
         return $this->render('pages/admin/blog/index.html.twig', [
-            'blogs' => $blogs
+            'blogs' => $blogs,
+            'types' => $types
         ]);
     }
 
@@ -193,6 +199,9 @@ class BlogController extends AbstractController
         $blog->setTypeId($type_id);
         $discription = $request->request->get('discription');
         $blog->setDiscription($discription);
+        $blog->setUserId($this->session->get('user')->getId());
+        $date = new DateTime();
+        $blog->setDate($date);
         $image_file = $request->files->get('image');
         if ($image_file) {
             $originalFilename = pathinfo($image_file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -296,6 +305,9 @@ class BlogController extends AbstractController
         $blog->setTypeId($type_id);
         $discription = $request->request->get('discription');
         $blog->setDiscription($discription);
+        $blog->setUserId($this->session->get('user')->getId());
+        $date = new DateTime();
+        $blog->setDate($date);
         $image_file = $request->files->get('image');
         if ($image_file) {
             $originalFilename = pathinfo($image_file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -350,6 +362,34 @@ class BlogController extends AbstractController
         $doct->flush();
         return $this->redirectToRoute('admin_blog', [
             'id' => $blog->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/blog/search", name="admin_blog_search")
+     */
+    public function admin_search(Request $request): Response
+    {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return $this->redirectToRoute('deconnexion');
+        }
+        $type_id = $request->request->get('type_id');
+        $filter = [];
+        if ($type_id != '0')
+            $filter['type_id'] = $type_id;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $blogs = $doct->getRepository(Blog::class)->findWithFilter($filter);
+        foreach($blogs as $blog) {
+            $blogtype = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
+            $blog->type = $blogtype->getName();
+            $blog->user = $this->getDoctrine()->getRepository(User::class)->find($blog->getUserId());
+        }
+        $types = $doct->getRepository(Blogtype::class)->findAll();
+        return $this->render('pages/admin/blog/index.html.twig', [
+            'blogs' => $blogs,
+            'filter' => $filter,
+            'types' => $types
         ]);
     }
 

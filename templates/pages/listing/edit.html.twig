@@ -23,7 +23,7 @@
     </div><!-- .listing-nav -->
     <div class="listing-content">
         <h2>Ajouter une annonce</h2>
-        <form action="{{ path('listing_update', {'id': listing.getId}) }}" class="upload-form" id="add_listng_from" method="POST" enctype="multipart/form-data">
+        <form action="{{ path('listing_update', {'id': listing.getId}) }}" class="listing-form" id="add_listng_from" method="POST" enctype="multipart/form-data">
             <div class="listing-box" id="genaral">
                 <h3>Informations générales</h3>
                 <div class="field-inline">
@@ -73,15 +73,16 @@
                 </div>
                 <div class="field-group field-select">
                     <label for="place_type">Type d'annonce</label>
-                    <select data-placeholder="Veuillez choisir un type" name="place_type" id="place_type" value="{{ listing.getPlaceType }}">
-                        <option value="Bar">Bar</option>
-                        <option value="Sea Food">Sea Food</option>
+                    <select data-placeholder="Veuillez choisir un type" name="place_type_id" id="place_type_id" value="{{ listing.getPlaceTypeId }}">
+                        {% for placetype in placetypes %}
+                        <option value="{{ placetype.getId }}">{{ placetype.getName }}</option>
+                        {% endfor %}
                     </select>
                     <i class="la la-angle-down"></i>
                 </div>
                 <div class="field-group field-select">
                     <label for="city">City</label>
-                    <select data-placeholder="" name="city" id="city_id" value="{{ listing.getCityId }}">
+                    <select data-placeholder="" name="city_id" id="city_id" value="{{ listing.getCityId }}">
                         {% for city in cities %}
                         <option value="{{ city.getId }}">{{ city.getName }}</option>
                         {% endfor %}
@@ -171,7 +172,7 @@
                         </div>
                     </div>
                     <div class="field-map">
-                        <input id="pac-input" class="address-input" type="text" placeholder="Search Box">
+                        <input id="pac-input" class="address-input" type="text" placeholder="Search Box" name="googlemap_address" value="{{ listing.getGooglemapAddress }}">
                         <input type="hidden" id="La_g" name="La_g" value="{{ listing.getLaG }}">
                         <input type="hidden" id="La_i" name="La_i" value="{{ listing.getLaI }}">
                         <input type="hidden" id="Ra_g" name="Ra_g" value="{{ listing.getRaG }}">
@@ -849,7 +850,7 @@
                     <label for="cover_image">Cover image</label>
                     <label for="cover_image" class="preview">
                         <input type="file" id="cover_image" name="cover_image" class="upload-file" data-max-size="1024000">
-                        <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                        <img class="img_preview" src="{{ asset(listing.getCoverImage) }}" alt="" />
                         <i class="la la-cloud-upload-alt"></i>
                     </label>
                     <div class="field-note">Maximum file size: 1 MB.</div>
@@ -858,7 +859,7 @@
                     <label for="gallery_image">Gallery Images (optional)</label>
                     <label for="gallery_image" class="preview">
                         <input type="file" id="gallery_image" name="gallery_image" class="upload-file" data-max-size="1024000">
-                        <img class="img_preview" src="{{ asset('assets/images/no-image.png') }}" alt="" />
+                        <img class="img_preview" src="{{ asset(listing.getGalleryImage) }}" alt="" />
                         <i class="la la-cloud-upload-alt"></i>
                     </label>
                     <div class="field-note">Maximum file size: 1 MB.</div>
@@ -884,6 +885,8 @@
     var laI = {{listing.getLaI}};
     var raG = {{listing.getRaG}};
     var raI = {{listing.getRaI}};
+    var lat = {{listing.getLat}};
+    var lng = {{listing.getLng}};
     var markers = [];
     var map;
 
@@ -981,7 +984,12 @@
           new google.maps.LatLng(raG, laG),
           new google.maps.LatLng(raI, laI));
         map.fitBounds(defaultBounds);
-        
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            title: 'Snazzy!'
+        });
+
         var input = document.getElementById('pac-input');
 
         var searchBox = new google.maps.places.SearchBox(input, {

@@ -18,6 +18,10 @@ use App\Entity\Suggestion;
 use App\Entity\User;
 use App\Entity\City;
 use App\Entity\CategoryType;
+use App\Entity\ActiveType;
+use App\Entity\Wishlist;
+use App\Entity\Message;
+use \DateTime;
 
 class ListingController extends AbstractController
 {
@@ -60,9 +64,11 @@ class ListingController extends AbstractController
         }
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $placetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
         return $this->render('pages/listing/create.html.twig', [
             'cities' => $cities,
-            'categories' => $categories
+            'categories' => $categories,
+            'placetypes' => $placetypes
         ]);
     }
 
@@ -77,8 +83,8 @@ class ListingController extends AbstractController
         $listing->setDescription($description);
         $category_id = $request->request->get('category_id');
         $listing->setCategoryId($category_id);
-        $place_type = $request->request->get('place_type');
-        $listing->setPlaceType($place_type);
+        $place_type_id = $request->request->get('place_type_id');
+        $listing->setPlaceTypeId($place_type_id);
         $city_id = $request->request->get('city_id');
         $listing->setCityId($city_id);
         $listing->setStatus("pending");
@@ -191,10 +197,6 @@ class ListingController extends AbstractController
         $listing->setSundayStartTime($sunday_start_time);
         $sunday_end_time = $request->request->get('sunday_end_time');
         $listing->setSundayEndTime($sunday_end_time);
-        $cover_image = $request->request->get('cover_image');
-        $listing->setCoverImage($cover_image);
-        $gallery_image = $request->request->get('gallery_image');
-        $listing->setGalleryImage($gallery_image);
         $video = $request->request->get('video');
         $listing->setVideo($video);
         
@@ -252,6 +254,14 @@ class ListingController extends AbstractController
             $user->setType('businessowner');
         $this->session->set('user', $user);
         $doct->flush();
+        $message = new Message();
+        $date = new DateTime();
+        $message->setDate($date);
+        $message->setIsShow(true);
+        $description = "New listing (" . $name . ") is created.";
+        $message->setDescription($description);
+        $doct->persist($message);
+        $doct->flush();
     }
 
     /**
@@ -265,6 +275,7 @@ class ListingController extends AbstractController
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        $placetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
 
         $name = $request->request->get("name");
         $description = $request->request->get("description");
@@ -309,7 +320,8 @@ class ListingController extends AbstractController
                 'errors' => $errorMessages,
                 'old' => $input,
                 'categories' => $categories,
-                'cities' => $cities
+                'cities' => $cities,
+                'placetypes' => $placetypes
             ]);
         }
         $cover_image_file = $request->files->get('cover_image');
@@ -320,7 +332,8 @@ class ListingController extends AbstractController
                 'errors' => $errorMessages,
                 'old' => $input,
                 'categories' => $categories,
-                'cities' => $cities
+                'cities' => $cities,
+                'placetypes' => $placetypes
             ]);
         }
         $this->listing_create($request);
@@ -338,14 +351,16 @@ class ListingController extends AbstractController
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $placetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
         return $this->render('pages/listing/edit.html.twig', [
             'listing' => $listing,
             'cities' => $cities,
-            'categories' => $categories
+            'categories' => $categories,
+            'placetypes' => $placetypes
         ]);
     }
 
-    private function listing_edit(Request $request) {
+    private function listing_edit($id, Request $request) {
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $name = $request->request->get('name');
@@ -356,8 +371,8 @@ class ListingController extends AbstractController
         $listing->setDescription($description);
         $category_id = $request->request->get('category_id');
         $listing->setCategoryId($category_id);
-        $place_type = $request->request->get('place_type');
-        $listing->setPlaceType($place_type);
+        $place_type_id = $request->request->get('place_type_id');
+        $listing->setPlaceTypeId($place_type_id);
         $city_id = $request->request->get('city_id');
         $listing->setCityId($city_id);
         $listing->setStatus("approved");
@@ -469,10 +484,6 @@ class ListingController extends AbstractController
         $listing->setSundayStartTime($sunday_start_time);
         $sunday_end_time = $request->request->get('sunday_end_time');
         $listing->setSundayEndTime($sunday_end_time);
-        $cover_image = $request->request->get('cover_image');
-        $listing->setCoverImage($cover_image);
-        $gallery_image = $request->request->get('gallery_image');
-        $listing->setGalleryImage($gallery_image);
         $video = $request->request->get('video');
         $listing->setVideo($video);
 
@@ -571,18 +582,19 @@ class ListingController extends AbstractController
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
             $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
             $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+            $placetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
             return $this->render('pages/listing/edit.html.twig', [
                 'listing' => $listing,
                 'cities' => $cities,
                 'categories' => $categories,
+                'placetypes' => $placetypes,
                 'errors' => $errorMessages,
                 'old' => $input
             ]);
         }
-        $this->listing_edit($request);
+        $this->listing_edit($id, $request);
         
         return $this->redirectToRoute('listing', [
-            'id' => $listing->getId()
         ]);
     }
 
@@ -665,11 +677,25 @@ class ListingController extends AbstractController
             return $this->redirectToRoute('connexion');
         }
         $this->visit();
+        $attached = false;
+        $wishlists = $this->getDoctrine()->getRepository(Wishlist::class)->findAll();
+        $ids = [];
+        foreach ($wishlists as $wishlist) {
+            array_push($ids, $wishlist->getListingId());
+        }
+        if (in_array($id, $ids)) {
+            $attached = true;
+        }
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
+        $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
         $similar_listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         $similar_listings = array_slice($similar_listings, 0, 4);
         foreach($similar_listings as $similar_listing) {
             $similar_listing->user = $this->getDoctrine()->getRepository(User::class)->find($similar_listing->getId());
+            $similar_listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($similar_listing->getCategoryId());
+            $similar_listing->city = $this->getDoctrine()->getRepository(City::class)->find($similar_listing->getCityId());
+            $similar_listing->user = $this->getDoctrine()->getRepository(User::class)->find($similar_listing->getUserId());
             $review = $this->review($similar_listing);
             $similar_listing->review_rate = $review['review_rate'];
             $similar_listing->review_count = count($review['reviews']);
@@ -684,6 +710,7 @@ class ListingController extends AbstractController
             'reviews' => $reviews,
             'review_rate' => $review_rate,
             'suggestions' => $suggestions,
+            'attached' => $attached
         ]);
     }
 
