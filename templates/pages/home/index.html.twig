@@ -18,26 +18,28 @@
             <div class="site-banner__content">
                 <h1 class="site-banner__title">France</h1>
                 <p>Explore France Like a Local</p>
-                <form action="#" class="site-banner__search layout-02">
+                <form action="{{path('listing_searchall')}}" method="POST" class="site-banner__search layout-02">
                     <div class="field-input">
                         <label for="s">Find</label>
-                        <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="Ex: fastfood, beer" autocomplete="off">
+                        <input class="site-banner__search__input open-suggestion" id="s" type="text" name="" placeholder="Ex: fastfood, beer" autocomplete="off">
+                        <input class="open-suggestion-data" type="hidden" name="category_id">
                         <div class="search-suggestions name-suggestions">
                             <ul>
                                 {% for category in categories %}
-                                <li><a href="#"><i class="{{category.getIcon}}"></i><span>{{category.getName}}</span></a></li>
+                                <li><a href="#"><i class="{{category.getIcon}}"></i><span data-id="{{category.getId}}">{{category.getName}}</span></a></li>
                                 {% endfor %}
                             </ul>
                         </div>
                     </div><!-- .site-banner__search__input -->
                     <div class="field-input">
                         <label for="loca">Where</label>
-                        <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="where" placeholder="Your city" autocomplete="off">
+                        <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="" placeholder="Your city" autocomplete="off">
+                        <input class="open-suggestion-data" type="hidden" name="city_id">
                         <div class="search-suggestions location-suggestions">
                             <ul>
-                                <li><a href="#"><i class="las la-location-arrow"></i><span>Current location</span></a></li>
+                                <li><a href="#"><i class="las la-location-arrow"></i><span data-id="0">Current location</span></a></li>
                                 {% for city in cities %}
-                                <li><a href="#"><span>{{city.getName}}</span></a></li>
+                                <li><a href="#"><span data-id="{{ city.getId }}">{{city.getName}}</span></a></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -58,10 +60,10 @@
                     <div class="slick-item">
                         <div class="explore-item {{ category.color }}">
                             <div class="explore-thumb">
-                                <a href=""><img src="{{ asset('assets/images/explore-05.jpg') }}" alt=""></a>
+                                <a href="{{ path('listing_filter', {'filter': 'category_id', 'id': category.getId}) }}"><img src="{{ asset('assets/images/explore-05.jpg') }}" alt=""></a>
                             </div>
                             <div class="explore-info">
-                                <h3><a href="">{{ category.getName }}</a></h3>
+                                <h3><a href="{{ path('listing_filter', {'filter': 'category_id', 'id': category.getId}) }}">{{ category.getName }}</a></h3>
                                 <span>{{ category.listing_count }} places</span>
                             </div>
                         </div>
@@ -95,9 +97,9 @@
                                     </span>                                    
                                 </a>       
                                 <a class="entry-category rosy-pink" href="#">
-                                    <i class="las la-utensils"></i><span>{{ listing.category.getName }}</span>
+                                    <i class="{{listing.category.getIcon}}"></i><span>{{ listing.category.getName }}</span>
                                 </a>
-                                <a href="#" class="author" title="Author"><img src="{{ asset('assets/images/avatars/male-3.jpg') }}" alt="Author"></a>
+                                <a href="#" class="author" title="Author"><img src="{{ asset(listing.user.getImage) }}" alt="Author"></a>
                                 {% if listing.getFeature %}
                                 <div class="feature">Featured</div>
                                 {% endif %}
@@ -116,10 +118,10 @@
                                 <div class="entry-bottom">
                                     <div class="place-preview">
                                         <div class="place-rating">
-                                            <span>5.0</span>
+                                            <span>{{ listing.review_rate }}</span>
                                             <i class="la la-star"></i>
                                         </div>
-                                        <span class="count-reviews">(2 Reviews)</span>
+                                        <span class="count-reviews">({{ listing.review_number }} Reviews)</span>
                                     </div>
                                     <div class="place-price">
                                         <span>{{ listing.getPriceRange }}</span>
@@ -150,7 +152,7 @@
                     <div class="slick-item">
                         <div class="cities__item hover__box">
                             <div class="cities__thumb hover__box__thumb">
-                                <a title="Singapo" href="city-details-1.html">
+                                <a title="Singapo" href="{{ path('listing_filter', {'filter': 'city_id', 'id': city.getId}) }}">
                                     <img src="{{ asset(city.getImage) }}" alt="Singapo">
                                 </a>
                             </div>

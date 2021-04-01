@@ -58,17 +58,22 @@ class DashboardController extends AbstractController
     {
         if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
-        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
+        $reviews = [];
+        $bookings = [];
+        $visit_number = 0;
+        foreach ($listings as $listing) {
+            $reviews_tmp = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+            $reviews = array_merge($reviews, $reviews_tmp);
+            $bookings_tmp = $this->getDoctrine()->getRepository(Booking::class)->findWithListingId($listing->getId());
+            $bookings = array_merge($bookings, $bookings_tmp);
+            $visit_number = $visit_number + $listing->getVisitNumber();
+        }
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();
-        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAllActive();
-        $listing_number = count($listings);
+        $active_listings = $this->getDoctrine()->getRepository(Listing::class)->findAllActiveWithUser($this->session->get('user')->getId());
+        $listing_number = count($active_listings);
         $booking_number = count($bookings);
         $review_number = count($reviews);
-        if(count($settings) == 0)
-            $visit_number = 0;
-        else
-            $visit_number = $settings[0]->getVisitNumber();
         if ($visit_number == 0)
             $booking_per_visit = 'N/A';
         else
@@ -87,19 +92,19 @@ class DashboardController extends AbstractController
             $percentage = number_format($tmp/$review_number, 2);
         }
 
-        $new_reviews = $this->getDoctrine()->getRepository(Review::class)->findLatest();
+        $new_reviews = $this->getDoctrine()->getRepository(Review::class)->findLatest($listings);
         foreach ($new_reviews as $new_review) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($new_review->getListingId());
             $city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
             $new_review->city = $city->getName();
         }
-        $new_bookings = $this->getDoctrine()->getRepository(Booking::class)->findLatest();
+        $new_bookings = $this->getDoctrine()->getRepository(Booking::class)->findLatest($listings);
         foreach ($new_bookings as $new_booking) {
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($new_booking->getListingId());
             $city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
             $new_booking->city = $city->getName();
         }
-        $messages = $this->getDoctrine()->getRepository(Message::class)->findLatest();
+        $messages = $this->getDoctrine()->getRepository(Message::class)->findLatest($listings);
         foreach ($messages as $message) {
             $now = new DateTime();
             $interval = date_diff($message->getDate(), $now);
@@ -149,6 +154,34 @@ class DashboardController extends AbstractController
         $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
         $blog_comments = $this->getDoctrine()->getRepository(BlogComment::class)->findAll();
         $requets = $this->getDoctrine()->getRepository(UserRequest::class)->findAll();
+        $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
+        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
+        $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAllActive();
+        $listing_number = count($listings);
+        $booking_number = count($bookings);
+        $review_number = count($reviews);
+        if (count($settings) == 0)
+            $visit_number = 0;
+        else
+            $visit_number = $settings[0]->getVisitNumber();
+        if ($visit_number == 0)
+            $booking_per_visit = 'N/A';
+        else
+            $booking_per_visit = number_format($booking_number/$visit_number, 2);
+        if ($booking_number == 0)
+            $review_per_booking = 'N/A';
+        else
+            $review_per_booking = number_format($review_number/$booking_number, 2);
+        if ($review_number == 0)
+            $percentage = 0;
+        else {
+            $tmp =0;
+            foreach ($reviews as $review) {
+                $tmp = $tmp + $review->getRate();
+            }
+            $percentage = number_format($tmp/$review_number, 2);
+        }
         
         return $this->render('pages/admin/dashboard/index.html.twig', [
             'cities_number' => count($cities),
@@ -157,7 +190,14 @@ class DashboardController extends AbstractController
             'user_number' => count($users),
             'blog_number' => count($blogs),
             'blogcomment_number' => count($blog_comments),
-            'request_number' => count($requets)
+            'request_number' => count($requets),
+            'listing_number' => $listing_number,
+            'booking_number' => $booking_number,
+            'review_number' => $review_number,
+            'visit_number' => $visit_number,
+            'booking_per_visit' => $booking_per_visit,
+            'review_per_booking' => $review_per_booking,
+            'percentage' => $percentage
         ]);
     }
 }

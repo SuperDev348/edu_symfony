@@ -50,6 +50,11 @@ class Listing
     /**
      * @ORM\Column(type="integer")
      */
+    private $visit_number;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
     private $category_id;
 
     /**
@@ -433,6 +438,18 @@ class Listing
     public function setCityId(string $city_id): self
     {
         $this->city_id = $city_id;
+
+        return $this;
+    }
+
+    public function getVisitNumber(): ?string
+    {
+        return $this->visit_number;
+    }
+
+    public function setVisitNumber(string $visit_number): self
+    {
+        $this->visit_number = $visit_number;
 
         return $this;
     }

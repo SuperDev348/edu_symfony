@@ -97,7 +97,7 @@
                                             <p class="date"><b>Date:</b>{{ booking.getDate.format('M d Y') }}</p>
                                             <p class="place"><b>Place:</b>{{ booking.city }}</p>
                                             <p class="status"><b>Status:</b><span>{{ booking.getStatus }}</span></p>
-                                            <a href="#" title="More" class="more"><i class="las la-angle-right"></i></a>
+                                            <a href="{{ path('booking') }}" title="More" class="more"><i class="las la-angle-right"></i></a>
                                         </li>
                                         {% endfor %}
                                     </ul>

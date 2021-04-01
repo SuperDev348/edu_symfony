@@ -32,6 +32,11 @@ class Message
      */
     private $is_show;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $listing_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Message
     public function setIsShow(bool $is_show): self
     {
         $this->is_show = $is_show;
+
+        return $this;
+    }
+
+    public function getListingId(): ?int
+    {
+        return $this->listing_id;
+    }
+
+    public function setListingId(int $listing_id): self
+    {
+        $this->listing_id = $listing_id;
 
         return $this;
     }

@@ -5,12 +5,12 @@
                 <div class="site">
                     <div class="site__menu">
                         <a title="Menu Icon" href="#" class="site__menu__icon">
-                            <i class="las la-bars la-24-white"></i>
+                            <i class="las la-bars la-24-black"></i>
                         </a>
                         <div class="popup-background"></div>
                         <div class="popup popup--left">
                             <a title="Close" href="#" class="popup__close">
-                                <i class="las la-times la-24-white"></i>
+                                <i class="las la-times la-24-black"></i>
                             </a><!-- .popup__close -->
                             <div class="popup__content">
                                 <div class="popup__user popup__box open-form">
@@ -22,14 +22,14 @@
                                         <li>
                                             <a title="Destinations" href="#">Destinations </a>
                                             <ul class="sub-menu">
-                                                <li><a href="city-details-1.html" title="Tokyo">Tokyo</a></li>
-                                                <li><a href="city-details-1.html" title="New York">New York</a></li>
-                                                <li><a href="city-details-1.html" title="Barcelona">Barcelona</a></li>
-                                                <li><a href="city-details-1.html" title="Amsterdam">Amsterdam</a></li>
-                                                <li><a href="city-details-1.html" title="Los Angeles">Los Angeles</a></li>
-                                                <li><a href="city-details-1.html" title="London">London</a></li>
-                                                <li><a href="city-details-1.html" title="Bangkok">Bangkok</a></li>
-                                                <li><a href="city-details-1.html" title="Paris">Paris</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Tokyo">Tokyo</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="New York">New York</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Barcelona">Barcelona</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Amsterdam">Amsterdam</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Los Angeles">Los Angeles</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="London">London</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Bangkok">Bangkok</a></li>
+                                                <li><a href="{{ path('citydetail2') }}" title="Paris">Paris</a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -58,9 +58,9 @@
                                                 <li>
                                                     <a href="#" title="City Layout">City Layout</a>
                                                     <ul class="sub-menu">
-                                                        <li><a href="city-details-1.html" title="Half Map – Left Filter">Half Map – Left Filter</a></li>
-                                                        <li><a href="city-details-2.html" title="Half Map – Top Filter">Half Map – Top Filter</a></li>
-                                                        <li><a href="city-details-3.html" title="Without Map">Without Map</a></li>
+                                                        <li><a href="{{ path('citydetail2') }}" title="Half Map – Left Filter">Half Map – Left Filter</a></li>
+                                                        <li><a href="{{ path('citydetail2') }}" title="Half Map – Top Filter">Half Map – Top Filter</a></li>
+                                                        <li><a href="{{ path('citydetail3') }}" title="Without Map">Without Map</a></li>
                                                     </ul>
                                                 </li>
                                                 <li>
@@ -85,14 +85,14 @@
                                         <li>
                                             <a title="Page" href="#">Page</a>
                                             <ul class="sub-menu">
-                                                <li><a title="About" href="about-us.html">About Us</a></li>
-                                                <li><a title="FAQ's" href="faqs.html">FAQ's</a></li>
-                                                <li><a title="App Landing" href="app-landing.html">App Landing</a></li>
-                                                <li><a title="Contacts" href="contact-us.html">Contacts</a></li>
-                                                <li><a title="Ajouter une annonce" href="add-place.html">Ajouter une annonce</a></li>
+                                                <li><a title="About" href="{{ path('aboutus') }}">About Us</a></li>
+                                                <li><a title="FAQ's" href="">FAQ's</a></li>
+                                                <li><a title="App Landing" href="{{ path('app') }}">App Landing</a></li>
+                                                <li><a title="Contacts" href="{{ path('contactus') }}">Contacts</a></li>
+                                                <li><a title="Add Listing" href="add-place.html">Add Listing</a></li>
                                                 <li><a title="Pricing" href="">Pricing</a>
                                                     <ul class="sub-menu">
-                                                        <li><a title="Pricing Plan" href="pricing-plan.html">Pricing Plan</a></li>
+                                                        <li><a title="Pricing Plan" href="{{ path('pricing') }}">Pricing Plan</a></li>
                                                         <li><a title="Pricing Plan Checkout" href="pricing-checkout.html">Pricing Checkout</a></li>
                                                     </ul>
                                                 </li>
@@ -106,19 +106,18 @@
                                                 <li>
                                                     <a title="Page" href="#">Blog</a>
                                                     <ul class="sub-menu">
-                                                        <li><a title="Fullwidth" href="blog-fullwidth.html">Fullwidth</a></li>
+                                                        <li><a title="Fullwidth" href="{{ path('blog') }}">Fullwidth</a></li>
                                                         <li><a title="Right Sidebar" href="blog-right-sidebar.html">Right Sidebar</a></li>
-                                                        <li><a title="Blog Detail" href="blog-detail.html">Blog Detail</a></li>
+                                                        <li><a title="Blog Detail" href="">Blog Detail</a></li>
                                                     </ul>
                                                 </li>
-                                                <li><a title="Owner Dashboard" href="owner-dashboard.html">Owner Dashboard</a></li>
-                                                <li><a title="Owner Single" href="owner-page.html">Owner Single</a></li>
-                                                <li><a title="Construction" href="construction.html">Construction</a></li>
-                                                <li><a title="Coming Soon" href="coming-soon.html">Coming Soon </a></li>
+                                                <li><a title="Owner Dashboard" href="{{ path('dashboard') }}">Owner Dashboard</a></li>
+                                                <li><a title="Owner Single" href="{{ path('single') }}">Owner Single</a></li>
+                                                <li><a title="Construction" href="">Construction</a></li>
+                                                <li><a title="Coming Soon" href="{{ path('comingsoon') }}">Coming Soon </a></li>
                                                 <li><a title="404" href="404.html">404 Page</a></li>
                                             </ul>
                                         </li>
-                                        
                                     </ul>
                                 </div><!-- .popup__menu -->
                             </div><!-- .popup__content -->
@@ -131,7 +130,7 @@
                         </div><!-- .popup -->
                     </div><!-- .site__menu -->
                     <div class="site__brand">
-                        <a title="Logo" href="home-restaurant.html" class="site__brand__logo"><img src="{{asset('assets/images/assets/logo.png') }}" alt="Golo"></a>
+                        <a title="Logo" href="home-restaurant.html" class="site__brand__logo"><img src="{{ asset('assets/images/assets/logo.png') }}" alt="Golo"></a>
                     </div><!-- .site__brand -->
 
                         <div class="site__search layout-02">
@@ -140,7 +139,7 @@
                         </a><!-- .search__close -->
                         <form action="#" class="site-banner__search layout-02">
                             <div class="field-input">
-                                <label for="s">Quoi?</label>
+                                <label for="s">What?</label>
                                 <input class="site-banner__search__input open-suggestion" id="s" type="text" name="s" placeholder="What?" autocomplete="off">
                                 <div class="search-suggestions name-suggestions">
                                     <ul>
@@ -154,7 +153,7 @@
                                 </div>
                             </div><!-- .site-banner__search__input -->
                             <div class="field-input">
-                                <label for="loca">Où?</label>
+                                <label for="loca">Where?</label>
                                 <input class="site-banner__search__input open-suggestion" id="loca" type="text" name="where" placeholder="Where?" autocomplete="off">
                                 <div class="search-suggestions location-suggestions">
                                     <ul>
@@ -176,22 +175,101 @@
                     <nav class="main-menu">
                         <ul>
                             <li>
-                                <a href="#" title="Demos">Accueil</a>
-
+                                <a href="#" title="Demos">Demos</a>
+                                <ul class="sub-menu">
+                                    <li><a href="home-restaurant.html" title="Restaurant Listing">Restaurant Listing</a></li>
+                                    <li><a href="home-business.html" title="Business Listing">Business Listing</a></li>
+                                    <li><a href="home-countryguide.html" title="Country Travel Guide">Country Travel Guide</a></li>
+                                    <li><a href="home-cityguide.html" title="City Travel Guide">City Travel Guide</a></li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="#" title="Listings">Annonces</a>
-
+                                <a href="#" title="Listings">Listings</a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="#" title="Search Layout">Search Layout</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="ex-half-map-1.html" title="Half Map – Left Filter">Half Map – Left Filter</a></li>
+                                            <li><a href="ex-half-map-2.html" title="Half Map – Top Filter">Half Map – Top Filter</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="City Layout">City Layout</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{{ path('citydetail2') }}" title="Half Map – Left Filter">Half Map – Left Filter</a></li>
+                                            <li><a href="{{ path('citydetail2') }}" title="Half Map – Top Filter">Half Map – Top Filter</a></li>
+                                            <li><a href="{{ path('citydetail3') }}" title="Without Map">Without Map</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Listing Detail">Single Layout</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="single-1.html" title="Carousel">Default - Carousel</a></li>
+                                            <li><a href="single-2.html" title="Image">Default - Image</a></li>
+                                            <li><a href="single-3.html" title="Restaurant">Restaurant Type</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Booking Type">Booking Type</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="bk-booking-form.html" title="Appointment Booking">Appointment Booking</a></li>
+                                            <li><a href="bk-enquiry-form.html" title="Enquiry Form">Enquiry Form</a></li>
+                                            <li><a href="bk-affiliate-link.html" title="Affiliate Link">Affiliate Link</a></li>
+                                            <li><a href="bk-banner-ads.html" title="Affiliate Banner">Affiliate Banner</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a title="Page" href="#">Reclamations</a>
-
+                                <a title="Page" href="#">Page</a>
+                                <ul class="sub-menu">
+                                    <li><a title="About" href="{{ path('aboutus') }}">About Us</a></li>
+                                    <li><a title="FAQ's" href="">FAQ's</a></li>
+                                    <li><a title="App Landing" href="{{ path('app') }}">App Landing</a></li>
+                                    <li><a title="Contacts" href="{{ path('contactus') }}">Contacts</a></li>
+                                    <li><a title="Add Listing" href="add-place.html">Add Listing</a></li>
+                                    <li><a title="Pricing" href="">Pricing</a>
+                                        <ul class="sub-menu">
+                                            <li><a title="Pricing Plan" href="{{ path('pricing') }}">Pricing Plan</a></li>
+                                            <li><a title="Pricing Plan Checkout" href="pricing-checkout.html">Pricing Checkout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a title="Page" href="#">Shop</a>
+                                        <ul class="sub-menu">
+                                            <li><a title="Products" href="shop.html">Products</a></li>
+                                            <li><a title="Product Detail" href="shop-detail.html">Product Detail</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a title="Page" href="#">Blog</a>
+                                        <ul class="sub-menu">
+                                            <li><a title="Fullwidth" href="{{ path('blog') }}">Fullwidth</a></li>
+                                            <li><a title="Right Sidebar" href="blog-right-sidebar.html">Right Sidebar</a></li>
+                                            <li><a title="Blog Detail" href="">Blog Detail</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a title="Owner Dashboard" href="{{ path('dashboard') }}">Owner Dashboard</a></li>
+                                    <li><a title="Owner Single" href="{{ path('single') }}">Owner Single</a></li>
+                                    <li><a title="Construction" href="">Construction</a></li>
+                                    <li><a title="Coming Soon" href="{{ path('comingsoon') }}">Coming Soon </a></li>
+                                    <li><a title="404" href="{{ path('error_404') }}">404 Page</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </nav>
+                    {% if app.session.get('user') %}
+                    <div class="right-header__out">
+                        <a title="Logout" class="open-logout" href="{{path('deconnexion')}}">Logout</a>
+                    </div><!-- .right-header__out -->
+                    {% else %}
                     <div class="right-header__login">
-                        <a title="Login" class="open-login" href="#">Login</a>
+                        <a title="Login" class="open-login" href="{{path('connexion')}}">Login</a>
                     </div><!-- .right-header__login -->
+                    <div class="right-header__register">
+                        <a title="Register" class="open-register" href="{{path('user_new')}}">Register</a>
+                    </div><!-- .right-header__register -->
+                    {% endif %}
                     <div class="popup popup-form">
                         <a title="Close" href="#" class="popup__close">
                             <i class="las la-times la-24-black"></i>
@@ -260,9 +338,9 @@
                         </div><!-- .site__search -->
                     </div>
                     <div class="right-header__button btn">
-                        <a title="Add place" href="add-place.html">
+                        <a title="Add place" href="{{ path('listing_create') }}">
                             <i class="las la-plus la-24-white"></i>
-                            <span>Ajouter une annonce</span>
+                            <span>Add Listing</span>
                         </a>
                     </div><!-- .right-header__button -->
                 </div><!-- .right-header -->

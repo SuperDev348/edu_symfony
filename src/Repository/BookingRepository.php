@@ -22,12 +22,20 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * @return Booking[]
      */
-    public function findLatest(int $num = 5): array
+    public function findLatest($listings, int $num = 5): array
     {
-        $entityManager = $this->getEntityManager();
+        if (count($listings) == 0)
+            return [];
+        $query = $this->createQueryBuilder('booking');
+        foreach ($listings as $key => $listing)
+        {
+            $query->orWhere($query->expr()->orX(
+                $query->expr()->like("booking.listing_id", ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$listing->getId().'%');
+        }
 
-        return $this->createQueryBuilder('booking')
-            ->orderBy('booking.id', 'DESC')
+        return $query->orderBy('booking.id', 'DESC')
             ->setMaxResults($num)
             ->getQuery()
             ->getResult()

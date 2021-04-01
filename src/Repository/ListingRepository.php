@@ -40,6 +40,25 @@ class ListingRepository extends ServiceEntityRepository
     /**
      * @return Listing[]
      */
+    public function findAllActiveWithUser($user_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT listing
+            FROM App\Entity\Listing listing
+            WHERE listing.status = :status AND listing.user_id = :user_id
+            ORDER BY listing.id ASC'
+        )->setParameter('status', "approved")
+        ->setParameter('user_id', $user_id);
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Listing[]
+     */
     public function findWithCategoryId($category_id): array
     {
         $entityManager = $this->getEntityManager();

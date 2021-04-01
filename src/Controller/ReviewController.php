@@ -52,6 +52,8 @@ class ReviewController extends AbstractController
     {
         if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
+        if ($this->session->get('user')->getType() == 'client')
+            return $this->redirectToRoute('dashboard');
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
         $reviews = [];
         foreach ($listings as $listing) {

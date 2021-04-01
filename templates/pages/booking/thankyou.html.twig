@@ -1,0 +1,27 @@
+{% extends 'layout/template.html.twig' %}
+
+{% block title %}
+<title>Thank you</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main">
+    <div class="page-title page-title--small align-left" style="background-image: url(images/bg/bg-404.png);">
+        <div class="container">
+            <div class="page-title__content">
+                <h1 class="page-title__name">Thank you</h1>
+                <p class="page-title__slogan">thank you for your booking</p>
+            </div>
+        </div>	
+    </div><!-- .page-title -->
+    <div class="site-content">
+        <div class="container">
+            <div class="error-wrap">
+                <h2>Thank you for your booking!</h2>
+                <b>You will receive a confirmation SMS soon.</b>
+                <p>We can't find the page or studio you're looking for. <br> Make sure you've typed in the URL correctly or try go <a href="{{path('home')}}" title="Homepage">Homepage</a></p>
+            </div>
+        </div>
+    </div><!-- .site-content -->
+</main><!-- .site-main -->
+{% endblock %}

@@ -1041,12 +1041,12 @@
                 $("#lng").val(place.geometry.location.lng());
             });
             map.fitBounds(bounds);
-
+            console.log(bounds);
             // set input
             $("#La_g").val(bounds.La.g);
             $("#La_i").val(bounds.La.i);
-            $("#Ra_g").val(bounds.Ra.g);
-            $("#Ra_i").val(bounds.Ra.i);
+            $("#Ra_g").val(bounds.Ta.g);
+            $("#Ra_i").val(bounds.Ta.i);
         });
     }
 

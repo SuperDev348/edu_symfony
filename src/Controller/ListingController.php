@@ -61,7 +61,9 @@ class ListingController extends AbstractController
     {
         if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        if ($this->session->get('user')->getType() == 'client')
+            return $this->redirectToRoute('dashboard');
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
         foreach ($listings as $listing) {
             $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
             $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
@@ -221,6 +223,7 @@ class ListingController extends AbstractController
         $listing->setSundayEndTime($sunday_end_time);
         $video = $request->request->get('video');
         $listing->setVideo($video);
+        $listing->setVisitNumber(0);
         
         $cover_image_file = $request->files->get('cover_image');
         if ($cover_image_file) {
@@ -280,6 +283,7 @@ class ListingController extends AbstractController
         $date = new DateTime();
         $message->setDate($date);
         $message->setIsShow(true);
+        $message->setListingId($listing->getId());
         $description = "New listing (" . $name . ") is created.";
         $message->setDescription($description);
         $doct->persist($message);
@@ -645,6 +649,7 @@ class ListingController extends AbstractController
         $id = $request->request->get('id');
         $name = $request->request->get('name');
         $filter = [];
+        $filter['user_id'] = $this->session->get('user')->getId();
         if ($category_id != '0')
             $filter['category_id'] = $category_id;
         if ($city_id != '0')
@@ -673,29 +678,103 @@ class ListingController extends AbstractController
     }
 
     /**
+     * @Route("/listing/all", name="listing_all")
+     */
+    public function all(): Response
+    {
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
+        foreach ($listings as $listing) {
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+            $review = $this->review($listing);
+            $listing->reviews = $review['reviews'];
+            $listing->review_rate = $review['review_rate'];
+            $listing->user = $this->getDoctrine()->getRepository(User::class)->find($listing->getUserId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $place_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        $price_ranges = ['$', '$$', '$$$', '$$$$'];
+        return $this->render('pages/listing/all.html.twig', [
+            'listings' => $listings,
+            'cities' => $cities,
+            'categories' => $categories,
+            'place_types' => $place_types,
+            'price_ranges' => $price_ranges
+        ]);
+    }
+
+    /**
+     * @Route("/listing/searchall", name="listing_searchall")
+     */
+    public function searchall(Request $request): Response
+    {
+        $category_id = $request->request->get('category_id');
+        $city_id = $request->request->get('city_id');
+        $place_type_id = $request->request->get('place_type_id');
+        $price_range = $request->request->get('price_range');
+        $filter = [];
+        if ($category_id != '0')
+            $filter['category_id'] = $category_id;
+        if ($city_id != '0')
+            $filter['city_id'] = $city_id;
+        if ($place_type_id != '0')
+            $filter['place_type_id'] = $place_type_id;
+        if ($price_range != '0')
+            $filter['price_range'] = $price_range;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
+        foreach ($listings as $listing) {
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+            $review = $this->review($listing);
+            $listing->reviews = $review['reviews'];
+            $listing->review_rate = $review['review_rate'];
+            $listing->user = $this->getDoctrine()->getRepository(User::class)->find($listing->getUserId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $place_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        $price_ranges = ['$', '$$', '$$$', '$$$$'];
+        return $this->render('pages/listing/all.html.twig', [
+            'listings' => $listings,
+            'filter' => $filter,
+            'cities' => $cities,
+            'categories' => $categories,
+            'place_types' => $place_types,
+            'price_ranges' => $price_ranges
+        ]);
+    }
+
+    /**
      * @Route("/listing/filter/{filter}/{id}", name="listing_filter")
      */
     public function filter($filter, $id): Response
     {
-        if (!$this->isAuth())
-            return $this->redirectToRoute('connexion');
         $filter = [$filter => $id];
         
         $doct = $this->getDoctrine()->getManager();
         $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
         foreach ($listings as $listing) {
-            $listing->city = $doct->getRepository(City::class)->find($listing->getCityId());
-            $listing->category = $doct->getRepository(CategoryType::class)->find($listing->getCategoryId());
+            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
+            $review = $this->review($listing);
+            $listing->reviews = $review['reviews'];
+            $listing->review_rate = $review['review_rate'];
+            $listing->user = $this->getDoctrine()->getRepository(User::class)->find($listing->getUserId());
         }
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
-        return $this->render('pages/listing/index.html.twig', [
-            'page' => 'listing',
-            'subtitle' => 'My Listings',
+        $place_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        $price_ranges = ['$', '$$', '$$$', '$$$$'];
+        return $this->render('pages/listing/all.html.twig', [
             'listings' => $listings,
             'filter' => $filter,
             'cities' => $cities,
-            'categories' => $categories
+            'categories' => $categories,
+            'place_types' => $place_types,
+            'price_ranges' => $price_ranges
         ]);
     }
 
@@ -719,7 +798,7 @@ class ListingController extends AbstractController
     {
         if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        $this->visit();
+        $this->visit($id);
         $attached = false;
         $wishlists = $this->getDoctrine()->getRepository(Wishlist::class)->findWithUserId($this->session->get('user')->getId());
         $ids = [];
@@ -797,24 +876,13 @@ class ListingController extends AbstractController
         return $res;
     }
 
-    private function visit() {
+    private function visit($id) {
         // visit number
         $doct = $this->getDoctrine()->getManager();
-        $settings = $doct->getRepository(Setting::class)->findAll();
-        if (count($settings) == 0) {
-            $visit_number = 1;
-            $setting = new Setting();
-            $setting->setVisitNumber($visit_number);
-            $setting->setBookingBlock(false);
-            $doct->persist($setting);
-            $doct->flush();
-        }
-        else {
-            $setting = $settings[0];
-            $visit_number = $setting->getVisitNumber() + 1;
-            $setting->setVisitNumber($visit_number);
-            $doct->flush();
-        }
+        $listing = $doct->getRepository(Listing::class)->find($id);
+        $visit_number = $listing->getVisitNumber();
+        $listing->setVisitNumber($visit_number + 1);
+        $doct->flush();
     }
 
     /**

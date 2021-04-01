@@ -22,12 +22,20 @@ class MessageRepository extends ServiceEntityRepository
     /**
      * @return Message[]
      */
-    public function findLatest(int $num = 5): array
+    public function findLatest($listings, int $num = 5): array
     {
-        $entityManager = $this->getEntityManager();
+        if (count($listings) == 0)
+            return [];
+        $query = $this->createQueryBuilder('message');
+        foreach ($listings as $key => $listing)
+        {
+            $query->orWhere($query->expr()->orX(
+                $query->expr()->like("message.listing_id", ":keyword_".$key)               
+            ));
+            $query->setParameter("keyword_".$key, '%'.$listing->getId().'%');
+        }
 
-        return $this->createQueryBuilder('message')
-            ->orderBy('message.id', 'DESC')
+        return $query->orderBy('message.id', 'DESC')
             ->setMaxResults($num)
             ->getQuery()
             ->getResult()

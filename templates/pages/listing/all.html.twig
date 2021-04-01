@@ -1,0 +1,674 @@
+{% extends 'layout/app.html.twig' %}
+
+{% block title %}
+<title>All - Listings</title>
+{% endblock %}
+
+{% block body %}
+<main id="main" class="site-main">
+    <div class="filter-group filter-business">
+        <div class="container">
+            <div class="filter layout-02">
+                <div class="member-filter" style="width: 100%;">
+                    <form action="{{ path('listing_searchall') }}" method="POST" style="width: 100%;">
+                        <div class="row">
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="city_id">
+                                    <option value="0">All cities</option>
+                                    {% for city in cities %}
+                                        {% if (filter is defined) and ('city_id' in filter|keys) and (filter.city_id == city.getId) %}
+                                        <option value="{{ city.getId }}" selected>{{ city.getName }}</option>
+                                        {% else %}
+                                        <option value="{{ city.getId }}">{{ city.getName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="category_id">
+                                    <option value="0">All categories</option>
+                                    {% for category in categories %}
+                                        {% if (filter is defined) and ('category_id' in filter|keys) and (filter.category_id == category.getId) %}
+                                        <option value="{{ category.getId }}" selected>{{ category.getName }}</option>
+                                        {% else %}
+                                        <option value="{{ category.getId }}">{{ category.getName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="place_type_id">
+                                    <option value="0">All placeTypes</option>
+                                    {% for place_type in place_types %}
+                                        {% if (filter is defined) and ('place_type_id' in filter|keys) and (filter.place_type_id == place_type.getId) %}
+                                        <option value="{{ place_type.getId }}" selected>{{ place_type.getName }}</option>
+                                        {% else %}
+                                        <option value="{{ place_type.getId }}">{{ place_type.getName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                            <div class="field-select col-md-3" style="width: 90% im !important;">
+                                <select name="price_range">
+                                    <option value="0">All Price</option>
+                                    {% for price_range in price_ranges %}
+                                        {% if (filter is defined) and ('price_range' in filter|keys) and (filter.price_range == price_range) %}
+                                        <option value="{{ price_range }}" selected>{{ price_range }}</option>
+                                        {% else %}
+                                        <option value="{{ price_range }}">{{ price_range }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <i class="la la-angle-down"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="search-button" style="margin-right: 120px">
+                            Search
+                        </button>
+                    </form>
+                </div><!-- .member-filter -->
+                
+                <!-- <div class="show-map">
+                    <span>Map</span>
+                    <a href="#" class="icon-toggle"></a>
+                </div> -->
+            </div><!-- .filter -->
+        </div>
+    </div><!-- .filter-group -->
+    <div class="archive-city layout-02">
+        <div class="col-left">
+            <div class="main-primary">
+                <div class="filter-mobile">
+                    <ul>
+                        <li><a class="mb-filter mb-open" href="#filterForm">Filter</a></li>
+                        <li><a class="mb-sort mb-open" href="#sortForm">Sort</a></li>
+                    </ul>
+                    <div class="mb-maps"><a class="mb-maps" href="#"><i class="las la-map-marked-alt"></i></a></div>
+                </div>
+                <div class="top-area top-area-filter">
+                    <div class="filter-left">
+                        <span class="result-count"><span class="count">{{ listings|length }}</span> results</span>
+                    </div>
+                    <div class="filter-center">
+                        <div class="place-layout">
+                            <a class="active" href="#" data-layout="layout-grid"><i class="las la-border-all icon-large"></i></a>
+                            <a class="" href="#" data-layout="layout-list"><i class="las la-list icon-large"></i></a>
+                        </div>
+                    </div>
+                    <div class="filter-right">
+                        <div class="select-box">
+                            <select name="sort_by" class="sort-by">
+                                <option value="">Sort by</option>
+                                <option value="newest">Newest</option>
+                                <option value="rating">Average rating</option>
+                                <option value="featured">Featured</option>
+                            </select>
+                            <div class="filter-control" tabindex="0">
+                                <span class="current">Sort by</span>
+                                <ul class="list">
+                                    <li data-value="" class="option selected focus">Sort by</li>
+                                    <li data-value="newest" class="option">Newest</li>
+                                    <li data-value="rating" class="option">Average rating</li>
+                                    <li data-value="featured" class="option">Featured</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="area-places layout-3col">
+                    {% for listing in listings %}
+                    <div class="place-item layout-02 place-hover" data-maps_name="mattone_restaurant">
+                        <div class="place-inner">
+                            <div class="place-thumb">
+                                <a class="entry-thumb" href="{{ path('listing_detail', {'id': listing.getId}) }}"><img src="{{ asset(listing.getCoverImage) }}" alt=""></a>
+                                <a href="#" class="golo-add-to-wishlist btn-add-to-wishlist " data-place-id="185">
+                                    <span class="icon-heart">
+                                        <i class="la la-bookmark large"></i>
+                                    </span>                                    
+                                </a>       
+                                <a class="entry-category rosy-pink" href="#">
+                                    <i class="{{ listing.category.getIcon }}"></i><span>{{ listing.category.getName }}</span>
+                                </a>
+                                <a href="#" class="author" title="Author"><img src="{{ asset(listing.user.getImage) }}" alt="Author"></a>
+                            </div>       
+                            <div class="entry-detail">
+                                <div class="entry-head">
+                                    <div class="place-type list-item">
+                                        <span>{{ listing.category.getName }}</span>
+                                       </div>
+                                    <div class="place-city">
+                                        <a href="#">{{ listing.city.getName }}</a>
+                                    </div>
+                                </div>
+                                <h3 class="place-title"><a href="{{ path('listing_detail', {'id': listing.getId}) }}">{{ listing.getName }}</a></h3>
+                                <div class="open-now"><i class="las la-door-open"></i>Open now</div>
+                                <div class="entry-bottom">
+                                    <div class="place-preview">
+                                        <div class="place-rating">
+                                            <span>{{ listing.review_rate }}</span>
+                                            <i class="la la-star"></i>
+                                        </div>
+                                        <span class="count-reviews">({{ listing.reviews|length }} Reviews)</span>
+                                    </div>
+                                    <div class="place-price">
+                                        <span>{{ listing.getPriceRange }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="pagination">
+                    <div class="pagination__numbers">
+                        <span>1</span>
+                        <a title="2" href="#">2</a>
+                        <a title="3" href="#">3</a>
+                        <a title="Next" href="#">
+                            <i class="la la-angle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- .main-primary -->
+        </div><!-- .col-left -->
+        <div class="col-right">
+            <!-- <div class="filter-head">
+                <h2>Maps</h2>
+                <a href="#" class="close-maps">Close</a>
+            </div>
+            <div class="entry-map">
+                <div id="place-map-filter"></div>
+            </div> -->
+        </div><!-- .col-right -->
+    </div><!-- .archive-city -->
+</main><!-- .site-main -->
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var markers = [];
+	    function initMap() {
+	        var map = new google.maps.Map(document.getElementById('place-map-filter'), {
+	        	mapTypeControl: false,
+	          zoom: 6,
+	          center: {lat: -30.9, lng: 151.2},
+	          styles: [
+			    {
+			        "featureType": "landscape",
+			        "elementType": "labels",
+			        "stylers": [
+			            {
+			                "visibility": "off"
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "transit",
+			        "elementType": "labels",
+			        "stylers": [
+			            {
+			                "visibility": "off"
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "poi",
+			        "elementType": "labels",
+			        "stylers": [
+			            {
+			                "visibility": "off"
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "water",
+			        "elementType": "labels",
+			        "stylers": [
+			            {
+			                "visibility": "on"
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "road",
+			        "elementType": "labels.icon",
+			        "stylers": [
+			            {
+			                "visibility": "off"
+			            }
+			        ]
+			    },
+			    {
+			        "stylers": [
+			            {
+			                "hue": "#00aaff"
+			            },
+			            {
+			                "saturation": -100
+			            },
+			            {
+			                "gamma": 2.15
+			            },
+			            {
+			                "lightness": 12
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "road",
+			        "elementType": "labels.text.fill",
+			        "stylers": [
+			            {
+			                "visibility": "on"
+			            },
+			            {
+			                "lightness": 24
+			            }
+			        ]
+			    },
+			    {
+			        "featureType": "road",
+			        "elementType": "geometry",
+			        "stylers": [
+			            {
+			                "lightness": 57
+			            }
+			        ]
+			    }
+			],
+
+	        });
+
+	        setMarkers(map);
+	    }
+
+	    var mattone_restaurant = '<div class="places-item" id="mattone_restaurant">'+
+            '<img src="{{ asset('assets/images/listing/01.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Restaurant</span>' +
+            '<h3>Mattone Restaurant</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+        var retro_fitness = '<div class="places-item" id="retro_fitness">'+
+            '<img src="{{ asset('assets/images/listing/02.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Gym</span>' +
+            '<h3>Retro Fitness</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+        var body_spa = '<div class="places-item" id="body_spa">'+
+            '<img src="{{ asset('assets/images/listing/03.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Beaty & Spa</span>' +
+            '<h3>Body Spa</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+        var antoinette = '<div class="places-item" id="antoinette">'+
+            '<img src="{{ asset('assets/images/listing/04.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Shop</span>' +
+            '<h3>Antoinette</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+        var vago_restaurant = '<div class="places-item" id="vago_restaurant">'+
+            '<img src="{{ asset('assets/images/listing/05.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">See & Doo</span>' +
+            '<h3>Vago Restaurant</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+       
+            
+        var kathay_cinema = '<div class="places-item" id="kathay_cinema">'+
+            '<img src="{{ asset('assets/images/listing/06.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Cinema</span>' +
+            '<h3>Kathay Cinema</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+        var jardin_club = '<div class="places-item" id="jardin_club">'+
+            '<img src="{{ asset('assets/images/listing/07.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Nightlife</span>' +
+            '<h3>Jardin Club</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>'; 
+
+        var vivi = '<div class="places-item" id="vivi">'+
+            '<img src="{{ asset('assets/images/listing/08.jpg') }}" alt="">'+
+            '<div class="places-item__info">'+
+            '<span class="places-item__category">Massage</span>' +
+            '<h3>Vivi Body Spa</h3>' +
+            '<div class="places-item__meta">' +
+            '<div class="places-item__reviews">' +
+            '<span class="places-item__number">' +
+            '4.8<i class="la la-star"></i>' +
+            '<span class="places-item__count">(9 reviews)</span>' +
+            '</span>'+
+            '</div>'+
+            '<div class="places-item__currency">$$</div>' +
+            '</div>'+
+            '</div>'+
+            '</div>';               
+
+	    var beaches = [
+	        ['mattone_restaurant', mattone_restaurant, -30.143205, 150.131925, 1],
+	        ['retro_fitness', retro_fitness, -31.261533, 150.244157, 2],
+	        ['body_spa', body_spa, -32.261533, 152.320614, 3],
+	        ['antoinette', antoinette, -32.261533, 151.459052, 4],
+	        ['vago_restaurant', vago_restaurant, -31.261533, 151.557560, 5],
+	        ['kathay_cinema', kathay_cinema, -30.261533, 150.631968, 6],
+	        ['jardin_club', jardin_club, -30.261533, 151.731976, 7],
+	        ['vivi', vivi, -31.461533, 150.831984, 8],
+	        
+	        
+	    ];
+
+	    var beaches_hover = [
+	        ['mattone_restaurant', mattone_restaurant, -30.143205, 150.131925, 1],
+	        ['retro_fitness', retro_fitness, -31.261533, 150.244157, 2],
+	        ['body_spa', body_spa, -32.261533, 152.320614, 3],
+	        ['antoinette', antoinette, -32.261533, 151.459052, 4],
+	        ['vago_restaurant', vago_restaurant, -31.261533, 151.557560, 5],
+	        ['kathay_cinema', kathay_cinema, -30.261533, 150.631968, 6],
+	        ['jardin_club', jardin_club, -30.261533, 151.731976, 7],
+	        ['vivi', vivi, -31.461533, 150.831984, 8],
+	    ];
+
+	    function setMarkers(map) {
+
+	    	var restaurant_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/restaurant.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+
+	        var restaurant_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/restaurant.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(46, 46),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+	        var gym_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/gym.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+
+	        var gym_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/gym.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(46, 46),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+	        var beauty_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/beauty.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+
+	        var beauty_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/beauty.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(40, 40),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+	        var shop_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/shop.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+
+	        var shop_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/shop.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(46, 46),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+	        var cinema_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/cinema.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+
+	        var cinema_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/cinema.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(46, 46),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+	        var nightlife_mapker = {
+	          	url: "{{ asset('assets/images/icons/mapker/nightlife.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(36, 36),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 36).
+	          	anchor: new google.maps.Point(0, 36)
+	        };
+	        var nightlife_mapker_hover = {
+	          	url: "{{ asset('assets/images/icons/mapker/nightlife.svg') }}",
+	          	// This marker is 36 pixels wide by 36 pixels high.
+	          	scaledSize: new google.maps.Size(46, 46),
+	          	// The origin for this image is (0, 0).
+	          	origin: new google.maps.Point(0, 0),
+	          	// The anchor for this image is the base of the flagpole at (0, 46).
+	          	anchor: new google.maps.Point(0, 46)
+	        };
+
+
+
+	        var mapker_icon = [];
+	        mapker_icon.push(restaurant_mapker);
+	        mapker_icon.push(gym_mapker);
+	        mapker_icon.push(beauty_mapker);
+	        mapker_icon.push(shop_mapker);
+	        mapker_icon.push(restaurant_mapker);
+	        mapker_icon.push(cinema_mapker);
+	        mapker_icon.push(nightlife_mapker);
+	        mapker_icon.push(beauty_mapker);
+
+	        var mapker_icon_hover = [];
+	        mapker_icon_hover.push(restaurant_mapker_hover);
+	        mapker_icon_hover.push(gym_mapker_hover);
+	        mapker_icon_hover.push(beauty_mapker_hover);
+	        mapker_icon_hover.push(shop_mapker_hover);
+	        mapker_icon_hover.push(restaurant_mapker_hover);
+	        mapker_icon_hover.push(cinema_mapker_hover);
+	        mapker_icon_hover.push(nightlife_mapker_hover);
+	        mapker_icon_hover.push(beauty_mapker_hover);
+
+	        for (var i = 0; i < beaches.length; i++) {
+	        	beaches[ i ].push( mapker_icon[i] );
+	        }
+
+	        for (var i = 0; i < beaches_hover.length; i++) {
+	        	beaches_hover[ i ].push( mapker_icon_hover[i] );
+	        }
+
+	        var shape = {
+	          	coords: [1, 1, 1, 20, 18, 20, 18, 1],
+	          	type: 'poly'
+	        };
+
+	        var elements = document.querySelectorAll(".place-hover");
+
+	        var mk = '';
+
+	        for (var i = 0; i < beaches.length; i++) {
+	          	var beach = beaches[i];
+	          	var contentString = '<div class="places-item" data-title="Mattone Restaurant" data-lat="-33.843205" data-lng="150.831925" data-index="1">'+
+		            '<img src="{{ asset('assets/images/listing/01.jpg') }}" alt="">'+
+		            '<div class="places-item__info">'+
+		            '<span class="places-item__category">Restaurant</span>' +
+		            '<h3>Mattone Restaurant</h3>' +
+		            '<div class="places-item__meta">' +
+		            '<div class="places-item__reviews">' +
+		            '<span class="places-item__number">' +
+		            '4.8<i class="la la-star"></i>' +
+		            '<span class="places-item__count">(9 reviews)</span>' +
+		            '</span>'+
+		            '</div>'+
+		            '<div class="places-item__currency">$$</div>' +
+		            '</div>'+
+		            '</div>'+
+		            '</div>';
+
+		        var infowindow = new google.maps.InfoWindow({
+		          	content: contentString
+		        });
+	          	var marker = new google.maps.Marker({
+		            position: {lat: beach[2], lng: beach[3]},
+		            map: map,
+		            icon: beach[5],
+		            shape: shape,
+		            title: beach[0],
+		            zIndex: beach[4]
+	          	});
+	          	marker.data = beaches[i];
+	          	marker.addListener('click', function() {
+		          	infowindow.setContent("<div id='infowindow'>"+ this.data[1] +"</div>");
+			        infowindow.open(map, this);
+		        });
+
+		        markers[marker.title] = marker;
+
+		        mk = marker.title;
+		        
+	        }
+
+			elements.forEach(function(element) {
+			    element.addEventListener("mouseenter", function() {
+		        	for (var i = 0; i < beaches_hover.length; i++) {
+		        		var bh = beaches_hover[i];
+		        		if (element.dataset.maps_name == bh[0]) {
+				          	markers[element.dataset.maps_name].setIcon(bh[5]);
+				        }
+			        }
+		        	
+		        });
+		        element.addEventListener("mouseleave", function() {
+		        	for (var i = 0; i < beaches.length; i++) {
+		        		var b = beaches[i];
+		        		if (element.dataset.maps_name == b[0]) {
+				          	markers[element.dataset.maps_name].setIcon(b[5]);
+				        }
+			        }
+		        	// closeLastOpenedInfoWindow();
+		        });
+			});
+	    }
+</script> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-2mhVoLX7oIOgRQ-6bxlJt4TF5k0xhWc&callback=initMap" async defer></script>
+{% endblock %}

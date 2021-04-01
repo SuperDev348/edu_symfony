@@ -57,6 +57,8 @@ class BookingController extends AbstractController
     {
         if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
+        if ($this->session->get('user')->getType() == 'client')
+            return $this->redirectToRoute('dashboard');
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
         $bookings = [];
         foreach ($listings as $listing) {
@@ -199,13 +201,16 @@ class BookingController extends AbstractController
                 ]
             );
         } catch (Exception $e) {
-            return $this->redirectToRoute('booking');
+            return $this->render('pages/booking/thankyou.html.twig', [
+            ]);
         }  finally {
-            return $this->redirectToRoute('booking');
+            return $this->render('pages/booking/thankyou.html.twig', [
+            ]);
         }
         
         // dd($message->sid);
-        return $this->redirectToRoute('booking');
+        return $this->render('pages/booking/thankyou.html.twig', [
+        ]);
     }
 
     /**
