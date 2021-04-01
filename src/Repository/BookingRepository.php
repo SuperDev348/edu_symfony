@@ -37,6 +37,24 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * @return Booking[]
      */
+    public function findWithListingId($listing_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT booking
+            FROM App\Entity\Booking booking
+            WHERE booking.listing_id = " . $listing_id . "
+            ORDER BY booking.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Booking[]
+     */
     public function findWithFilter($filter): array
     {
         $query = $this->createQueryBuilder('booking');

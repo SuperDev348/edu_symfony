@@ -30,14 +30,37 @@ class ListingController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/listing", name="listing")
      */
     public function index(): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         foreach ($listings as $listing) {
             $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
@@ -59,9 +82,8 @@ class ListingController extends AbstractController
      */
     public function create(): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $placetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
@@ -269,9 +291,8 @@ class ListingController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
@@ -345,9 +366,8 @@ class ListingController extends AbstractController
      */
     public function edit($id): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
@@ -539,9 +559,8 @@ class ListingController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $name = $request->request->get("name");
         $description = $request->request->get("description");
         $category_id = $request->request->get("category_id");
@@ -603,9 +622,8 @@ class ListingController extends AbstractController
      */
     public function delete($id): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $doct->remove($listing);
@@ -620,9 +638,8 @@ class ListingController extends AbstractController
      */
     public function search(Request $request): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $category_id = $request->request->get('category_id');
         $city_id = $request->request->get('city_id');
         $id = $request->request->get('id');
@@ -636,6 +653,33 @@ class ListingController extends AbstractController
             $filter['id'] = $id;
         if ($name != '')
             $filter['name'] = $name;
+        
+        $doct = $this->getDoctrine()->getManager();
+        $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
+        foreach ($listings as $listing) {
+            $listing->city = $doct->getRepository(City::class)->find($listing->getCityId());
+            $listing->category = $doct->getRepository(CategoryType::class)->find($listing->getCategoryId());
+        }
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        return $this->render('pages/listing/index.html.twig', [
+            'page' => 'listing',
+            'subtitle' => 'My Listings',
+            'listings' => $listings,
+            'filter' => $filter,
+            'cities' => $cities,
+            'categories' => $categories
+        ]);
+    }
+
+    /**
+     * @Route("/listing/filter/{filter}/{id}", name="listing_filter")
+     */
+    public function filter($filter, $id): Response
+    {
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
+        $filter = [$filter => $id];
         
         $doct = $this->getDoctrine()->getManager();
         $listings = $doct->getRepository(Listing::class)->findWithFilter($filter);
@@ -673,12 +717,11 @@ class ListingController extends AbstractController
      */
     public function detail($id): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $this->visit();
         $attached = false;
-        $wishlists = $this->getDoctrine()->getRepository(Wishlist::class)->findAll();
+        $wishlists = $this->getDoctrine()->getRepository(Wishlist::class)->findWithUserId($this->session->get('user')->getId());
         $ids = [];
         foreach ($wishlists as $wishlist) {
             array_push($ids, $wishlist->getListingId());
@@ -719,9 +762,8 @@ class ListingController extends AbstractController
      */
     public function setStatus($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $status = $request->request->get('status');
@@ -780,9 +822,8 @@ class ListingController extends AbstractController
      */
     public function admin_index(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         foreach ($listings as $listing) {
             $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
@@ -802,9 +843,8 @@ class ListingController extends AbstractController
      */
     public function admin_edit($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $listing = $this->getDoctrine()->getRepository(Listing::class)->find($id);
         $statuslist = $this->getStatusList();
         return $this->render('pages/admin/listing/edit.html.twig', [
@@ -818,9 +858,8 @@ class ListingController extends AbstractController
      */
     public function admin_delete($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $listing = $doct->getRepository(Listing::class)->find($id);
         $doct->remove($listing);
@@ -835,9 +874,8 @@ class ListingController extends AbstractController
      */
     public function admin_search(Request $request): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $category_id = $request->request->get('category_id');
         $city_id = $request->request->get('city_id');
         $id = $request->request->get('id');

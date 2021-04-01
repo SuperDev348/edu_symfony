@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Review;
 use App\Entity\Listing;
+use App\Entity\User;
 use \DateTime;
 
 class ReviewController extends AbstractController
@@ -20,18 +21,47 @@ class ReviewController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/review", name="review")
      */
     public function index(): Response
     {
-        $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
-        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
-        $rates = [1, 2, 3, 4, 5];
-        foreach ($reviews as $review) {
-            $listing = $this->getDoctrine()->getRepository(Listing::class)->find($review->getListingId());
-            $review->list_name = $listing->getName();
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
+        $reviews = [];
+        foreach ($listings as $listing) {
+            $tmp = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
+            foreach ($tmp as $r) {
+                $r->list_name = $listing->getName();
+            }
+            $reviews = array_merge($reviews, $tmp);
         }
+        $rates = [1, 2, 3, 4, 5];
         return $this->render('pages/review/index.html.twig', [
             'page' => 'review',
             'subtitle' => 'Reviews',
@@ -83,11 +113,8 @@ class ReviewController extends AbstractController
             }
             $listing = $this->getDoctrine()->getRepository(Listing::class)->find($listing_id);
             $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
-            return $this->render('pages/listing/detail.html.twig', [
-                'listing' => $listing,
-                'reviews' => $reviews,
-                'errors' => $errorMessages,
-                'old' => $input
+            return $this->redirectToRoute('listing_detail', [
+                'id' => $listing_id,
             ]);
         }
 
@@ -243,6 +270,8 @@ class ReviewController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         $rates = [1, 2, 3, 4, 5];
@@ -262,6 +291,8 @@ class ReviewController extends AbstractController
      */
     public function admin_create(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         return $this->render('pages/admin/review/create.html.twig', [
             'listings' => $listings
@@ -273,6 +304,8 @@ class ReviewController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $rate = $request->request->get("rate");
         $description = $request->request->get("description");
         $feature = $request->request->get('feature');
@@ -331,6 +364,8 @@ class ReviewController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $review = $this->getDoctrine()->getRepository(Review::class)->find($id);
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         return $this->render('pages/admin/review/edit.html.twig', [
@@ -344,6 +379,8 @@ class ReviewController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $rate = $request->request->get("rate");
         $description = $request->request->get("description");
         $input = [
@@ -403,6 +440,8 @@ class ReviewController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $doct = $this->getDoctrine()->getManager();
         $review = $doct->getRepository(Review::class)->find($id);
         $doct->remove($review);
@@ -417,6 +456,8 @@ class ReviewController extends AbstractController
      */
     public function admin_search(Request $request): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $listing_id = $request->request->get('listing_id');
         $rate = $request->request->get('rate');
         $user_name = $request->request->get('user_name');

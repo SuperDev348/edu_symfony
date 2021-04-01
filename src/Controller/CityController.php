@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\City;
+use App\Entity\User;
 
 class CityController extends AbstractController
 {
@@ -17,6 +18,30 @@ class CityController extends AbstractController
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
+    }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
     }
     /**
      * @Route("/citydetail2", name="citydetail2")
@@ -41,6 +66,8 @@ class CityController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
         return $this->render('pages/admin/city/index.html.twig', [
             'cities' => $cities
@@ -52,6 +79,8 @@ class CityController extends AbstractController
      */
     public function admin_create(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         return $this->render('pages/admin/city/create.html.twig', [
         ]);
     }
@@ -61,6 +90,8 @@ class CityController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $name = $request->request->get("name");
         $country = $request->request->get("country");
         $input = [
@@ -134,6 +165,8 @@ class CityController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $city = $this->getDoctrine()->getRepository(City::class)->find($id);
         return $this->render('pages/admin/city/edit.html.twig', [
             'city' => $city,
@@ -145,6 +178,8 @@ class CityController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -208,6 +243,8 @@ class CityController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $doct = $this->getDoctrine()->getManager();
         $city = $doct->getRepository(City::class)->find($id);
         $doct->remove($city);

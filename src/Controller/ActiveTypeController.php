@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\ActiveType;
+use App\Entity\User;
 
 class ActiveTypeController extends AbstractController
 {
@@ -18,14 +19,37 @@ class ActiveTypeController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/admin/activetype", name="admin_activetype")
      */
     public function admin_index(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $activetypes = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
         return $this->render('pages/admin/activetype/index.html.twig', [
             'activetypes' => $activetypes
@@ -37,9 +61,8 @@ class ActiveTypeController extends AbstractController
      */
     public function admin_create(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         return $this->render('pages/admin/activetype/create.html.twig', [
         ]);
     }
@@ -49,9 +72,8 @@ class ActiveTypeController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -90,9 +112,8 @@ class ActiveTypeController extends AbstractController
      */
     public function admin_edit($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $activetype = $this->getDoctrine()->getRepository(ActiveType::class)->find($id);
         return $this->render('pages/admin/activetype/edit.html.twig', [
             'activetype' => $activetype,
@@ -104,9 +125,8 @@ class ActiveTypeController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -148,9 +168,8 @@ class ActiveTypeController extends AbstractController
      */
     public function admin_delete($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $activetype = $doct->getRepository(ActiveType::class)->find($id);
         $doct->remove($activetype);

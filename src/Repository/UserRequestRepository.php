@@ -37,6 +37,24 @@ class UserRequestRepository extends ServiceEntityRepository
     /**
      * @return UserRequest[]
      */
+    public function findWithListingId($listing_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT user_request
+            FROM App\Entity\UserRequest user_request
+            WHERE user_request.listing_id = " . $listing_id . "
+            ORDER BY user_request.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return UserRequest[]
+     */
     public function findWithFilter($filter): array
     {
         $query = $this->createQueryBuilder('user_request');

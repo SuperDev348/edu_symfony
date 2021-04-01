@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Blog;
 use App\Entity\BlogComment;
+use App\Entity\User;
 use \DateTime;
 
 class BlogCommentController extends AbstractController
@@ -21,14 +22,36 @@ class BlogCommentController extends AbstractController
         $this->session = $session;
     }
 
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/blogcomment/store", name="blog_comment_store")
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $description = $request->request->get("description");
         $blog_id = $request->request->get("blog_id");
         $input = [
@@ -73,9 +96,8 @@ class BlogCommentController extends AbstractController
      */
     public function reply(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $description = $request->request->get("description");
         $blog_id = $request->request->get("blog_id");
         $reply_id = $request->request->get("reply_id");

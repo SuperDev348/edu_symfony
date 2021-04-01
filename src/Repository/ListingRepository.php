@@ -76,6 +76,24 @@ class ListingRepository extends ServiceEntityRepository
     /**
      * @return Listing[]
      */
+    public function findWithUserId($user_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT listing
+            FROM App\Entity\Listing listing
+            WHERE listing.user_id = " . $user_id . "
+            ORDER BY listing.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Listing[]
+     */
     public function findWithFilter($filter): array
     {
         $query = $this->createQueryBuilder('listing');

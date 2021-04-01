@@ -29,6 +29,12 @@ class UserController extends AbstractController
         $this->session = $session;
     }
     
+    public function isBan() {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId);
+        if ($user->getBan())
+            $this->session->clear();
+    }
+
     /**
      * @Route("/user/profile", name="profile")
      */
@@ -495,7 +501,6 @@ class UserController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('admin_user');
-
     }
     /**
      * @Route("/admin/user/restaurer/{iduser}", name="user_restaurer")

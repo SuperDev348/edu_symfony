@@ -6,29 +6,61 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\UserRequest;
 use App\Entity\Listing;
+use App\Entity\User;
 use \DateTime;
 
 class UserRequestController extends AbstractController
 {
+    protected $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/request", name="request")
      */
     public function index(): Response
     {
-        $requests_tmp = $this->getDoctrine()->getRepository(UserRequest::class)->findAll();
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
         $requests = [];
-        foreach ($requests_tmp as $request) {
-            if ($request->getListingId() != '0') {
-                $listing = $this->getDoctrine()->getRepository(Listing::class)->find($request->getListingId());
-                $request->list_name = $listing->getName();
-                array_push($requests, $request);
+        foreach ($listings as $listing) {
+            $tmp = $this->getDoctrine()->getRepository(UserRequest::class)->findWithListingId($listing->getId());
+            foreach ($tmp as $r) {
+                $r->list_name = $listing->getName();
             }
+            $requests = array_merge($requests, $tmp);
         }
-        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         return $this->render('pages/request/index.html.twig', [
             'page' => 'request',
             'subtitle' => 'My Inqueries',
@@ -193,6 +225,8 @@ class UserRequestController extends AbstractController
      */
     public function delete($id): Response
     {
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
         $doct = $this->getDoctrine()->getManager();
         $user_request = $doct->getRepository(UserRequest::class)->find($id);
         $doct->remove($user_request);
@@ -207,6 +241,8 @@ class UserRequestController extends AbstractController
      */
     public function search(Request $request): Response
     {
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
         $listing_id = $request->request->get('listing_id');
         $name = $request->request->get('name');
         $filter = [];
@@ -240,6 +276,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_index(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $requests = $this->getDoctrine()->getRepository(UserRequest::class)->findAll();
         foreach ($requests as $request) {
             if ($request->getListingId() == '0')
@@ -261,6 +299,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_create(): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         return $this->render('pages/admin/request/create.html.twig', [
             'listings' => $listings
@@ -272,6 +312,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $first_name = $request->request->get("first_name");
         $last_name = $request->request->get("last_name");
         $email = $request->request->get("email");
@@ -335,6 +377,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_edit($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $user_request = $this->getDoctrine()->getRepository(UserRequest::class)->find($id);
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
         return $this->render('pages/admin/request/edit.html.twig', [
@@ -348,6 +392,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $first_name = $request->request->get("first_name");
         $last_name = $request->request->get("last_name");
         $email = $request->request->get("email");
@@ -412,6 +458,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_delete($id): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $doct = $this->getDoctrine()->getManager();
         $user_request = $doct->getRepository(UserRequest::class)->find($id);
         $doct->remove($user_request);
@@ -426,6 +474,8 @@ class UserRequestController extends AbstractController
      */
     public function admin_search(Request $request): Response
     {
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $listing_id = $request->request->get('listing_id');
         $name = $request->request->get('name');
         $filter = [];

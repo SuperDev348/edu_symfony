@@ -5,12 +5,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Entity\City;
+use App\Entity\CategoryType;
+use App\Entity\ActiveType;
+use App\Entity\User;
+use App\Entity\Blog;
+use App\Entity\BlogComment;
+use App\Entity\UserRequest;
 use App\Entity\Review;
 use App\Entity\Booking;
-use App\Entity\Listing;
 use App\Entity\Setting;
+use App\Entity\Listing;
 use App\Entity\Message;
-use App\Entity\City;
+use App\Controller\UserController;
 use \DateTime;
 
 class DashboardController extends AbstractController
@@ -20,14 +27,37 @@ class DashboardController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/dashboard", name="dashboard")
      */
     public function index(): Response
     {
-        if(is_null($this->session->get('user'))){
+        if (!$this->isAuth())
             return $this->redirectToRoute('connexion');
-        }
         $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();
@@ -110,46 +140,24 @@ class DashboardController extends AbstractController
      */
     public function admin_index(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
-        $reviews = $this->getDoctrine()->getRepository(Review::class)->findAll();
-        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
-        $settings = $this->getDoctrine()->getRepository(Setting::class)->findAll();
-        $listings = $this->getDoctrine()->getRepository(Listing::class)->findAllActive();
-        $listing_number = count($listings);
-        $booking_number = count($bookings);
-        $review_number = count($reviews);
-        if (count($settings) == 0)
-            $visit_number = 0;
-        else
-            $visit_number = $settings[0]->getVisitNumber();
-        if ($visit_number == 0)
-            $booking_per_visit = 'N/A';
-        else
-            $booking_per_visit = number_format($booking_number/$visit_number, 2);
-        if ($booking_number == 0)
-            $review_per_booking = 'N/A';
-        else
-            $review_per_booking = number_format($review_number/$booking_number, 2);
-        if ($review_number == 0)
-            $percentage = 0;
-        else {
-            $tmp =0;
-            foreach ($reviews as $review) {
-                $tmp = $tmp + $review->getRate();
-            }
-            $percentage = number_format($tmp/$review_number, 2);
-        }
-
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $category_types = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
+        $active_types = $this->getDoctrine()->getRepository(ActiveType::class)->findAll();
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
+        $blog_comments = $this->getDoctrine()->getRepository(BlogComment::class)->findAll();
+        $requets = $this->getDoctrine()->getRepository(UserRequest::class)->findAll();
+        
         return $this->render('pages/admin/dashboard/index.html.twig', [
-            'listing_number' => $listing_number,
-            'booking_number' => $booking_number,
-            'review_number' => $review_number,
-            'visit_number' => $visit_number,
-            'booking_per_visit' => $booking_per_visit,
-            'review_per_booking' => $review_per_booking,
-            'percentage' => $percentage
+            'cities_number' => count($cities),
+            'category_number' => count($category_types),
+            'placetype_number' => count($active_types),
+            'user_number' => count($users),
+            'blog_number' => count($blogs),
+            'blogcomment_number' => count($blog_comments),
+            'request_number' => count($requets)
         ]);
     }
 }

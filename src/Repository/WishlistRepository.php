@@ -20,6 +20,24 @@ class WishlistRepository extends ServiceEntityRepository
         parent::__construct($registry, Wishlist::class);
     }
 
+    /**
+     * @return Wishlist[]
+     */
+    public function findWithUserId($user_id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            "SELECT wishlist
+            FROM App\Entity\Wishlist wishlist
+            WHERE wishlist.user_id = " . $user_id . "
+            ORDER BY wishlist.id ASC"
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Wishlist[] Returns an array of Wishlist objects
     //  */

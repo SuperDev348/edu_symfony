@@ -1153,6 +1153,8 @@
             e.preventDefault();
             var text = $( this ).find( 'span' ).text();
             $( this ).parents( '.field-input' ).find( 'input' ).val(text);
+            var id = $( this ).find( 'span' ).attr('data-id');
+            $( this ).parents( '.field-input' ).find( '.open-suggestion-data' ).val(id);
             $( this ).parents( '.search-suggestions' ).fadeOut();
         });
 

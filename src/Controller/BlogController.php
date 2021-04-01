@@ -23,6 +23,30 @@ class BlogController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/blog", name="blog")
      */
@@ -119,9 +143,8 @@ class BlogController extends AbstractController
      */
     public function admin_index(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
         foreach($blogs as $blog) {
             $blogtype = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
@@ -140,9 +163,8 @@ class BlogController extends AbstractController
      */
     public function admin_create(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
         $blogtypes = $this->getDoctrine()->getRepository(Blogtype::class)->findAll();
         return $this->render('pages/admin/blog/create.html.twig', [
@@ -156,9 +178,8 @@ class BlogController extends AbstractController
      */
     public function admin_store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $title = $request->request->get("title");
         $type_id = $request->request->get("type_id");
         $image = $request->request->get("image");
@@ -245,9 +266,8 @@ class BlogController extends AbstractController
      */
     public function admin_edit($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $blog = $this->getDoctrine()->getRepository(Blog::class)->find($id);
         $blogtypes = $this->getDoctrine()->getRepository(Blogtype::class)->findAll();
         return $this->render('pages/admin/blog/edit.html.twig', [
@@ -261,9 +281,8 @@ class BlogController extends AbstractController
      */
     public function admin_update($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $title = $request->request->get("title");
         $type_id = $request->request->get("type_id");
         $image = $request->request->get("image");
@@ -353,9 +372,8 @@ class BlogController extends AbstractController
      */
     public function admin_delete($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $blog = $doct->getRepository(Blog::class)->find($id);
         $doct->remove($blog);
@@ -370,9 +388,8 @@ class BlogController extends AbstractController
      */
     public function admin_search(Request $request): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $type_id = $request->request->get('type_id');
         $filter = [];
         if ($type_id != '0')
@@ -398,9 +415,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_index(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $blogtypes = $this->getDoctrine()->getRepository(BlogType::class)->findAll();
         return $this->render('pages/admin/blogtype/index.html.twig', [
             'blogtypes' => $blogtypes
@@ -412,9 +428,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_create(): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         return $this->render('pages/admin/blogtype/create.html.twig', [
         ]);
     }
@@ -424,9 +439,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -465,9 +479,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_edit($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $blogtype = $this->getDoctrine()->getRepository(Blogtype::class)->find($id);
         return $this->render('pages/admin/blogtype/edit.html.twig', [
             'blogtype' => $blogtype,
@@ -479,9 +492,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_update($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $name = $request->request->get("name");
         $input = [
             'name' => $name,
@@ -523,9 +535,8 @@ class BlogController extends AbstractController
      */
     public function admin_type_delete($id): Response
     {
-        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+        if (!$this->isAdmin())
             return $this->redirectToRoute('deconnexion');
-        }
         $doct = $this->getDoctrine()->getManager();
         $blogtype = $doct->getRepository(Blogtype::class)->find($id);
         $doct->remove($blogtype);

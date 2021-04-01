@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Suggestion;
+use App\Entity\User;
 
 class SuggestionController extends AbstractController
 {
@@ -18,14 +19,38 @@ class SuggestionController extends AbstractController
     {
         $this->session = $session;
     }
+
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @Route("/admin/suggestion", name="suggestion")
      */
     public function index(): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $suggestions = $this->getDoctrine()->getRepository(Suggestion::class)->findAll();
         return $this->render('pages/admin/suggestion/index.html.twig', [
             'suggestions' => $suggestions
@@ -37,9 +62,8 @@ class SuggestionController extends AbstractController
      */
     public function create(): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         return $this->render('pages/admin/suggestion/create.html.twig', [
         ]);
     }
@@ -49,9 +73,8 @@ class SuggestionController extends AbstractController
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $name = $request->request->get("name");
         $input = [
             'name' => $name
@@ -90,9 +113,8 @@ class SuggestionController extends AbstractController
      */
     public function edit($id): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $suggestion = $this->getDoctrine()->getRepository(Suggestion::class)->find($id);
         return $this->render('pages/admin/suggestion/edit.html.twig', [
             'suggestion' => $suggestion
@@ -104,9 +126,8 @@ class SuggestionController extends AbstractController
      */
     public function update($id, Request $request, ValidatorInterface $validator): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $name = $request->request->get("name");
         $input = [
             'name' => $name
@@ -146,9 +167,8 @@ class SuggestionController extends AbstractController
      */
     public function delete($id): Response
     {
-        if(is_null($this->session->get('user'))){
-            return $this->redirectToRoute('connexion');
-        }
+        if (!$this->isAdmin())
+            return $this->redirectToRoute('deconnexion');
         $doct = $this->getDoctrine()->getManager();
         $suggestion = $doct->getRepository(Suggestion::class)->find($id);
         $doct->remove($suggestion);
