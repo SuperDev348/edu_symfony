@@ -186,11 +186,11 @@ class BookingController extends AbstractController
         $doct->persist($booking);
         $doct->flush();
         // send message
+        $sender = $this->getParameter('twilio_number');
+        $sid = $this->getParameter('twilio_sid');
+        $token = $this->getParameter('twilio_token');
+        $client = new Client($sid, $token);
         try {
-            $sender = $this->getParameter('twilio_number');
-            $sid = $this->getParameter('twilio_sid');
-            $token = $this->getParameter('twilio_token');
-            $client = new Client($sid, $token);
             $message = $client->messages->create(
                 $listing->getPhone(), // Text this number
                 [
@@ -199,7 +199,9 @@ class BookingController extends AbstractController
                 ]
             );
         } catch (Exception $e) {
-            
+            return $this->redirectToRoute('booking');
+        }  finally {
+            return $this->redirectToRoute('booking');
         }
         
         // dd($message->sid);
@@ -343,14 +345,19 @@ class BookingController extends AbstractController
             $sid = $this->getParameter('twilio_sid');
             $token = $this->getParameter('twilio_token');
             $client = new Client($sid, $token);
-            $message = $client->messages->create(
-                $booking->getPhoneNumber(), // Text this number
-                [
-                    'from' => $sender, // From a valid Twilio number
-                    'body' => 'Your booking for "' . $listing->getName() . '" is now confirmed.'
-                ]
-            );
-            // dd($message->sid);
+            try {
+                $message = $client->messages->create(
+                    $booking->getPhoneNumber(), // Text this number
+                    [
+                        'from' => $sender, // From a valid Twilio number
+                        'body' => 'Your booking for "' . $listing->getName() . '" is now confirmed.'
+                    ]
+                );
+            } catch (Exception $e) {
+                return $this->redirectToRoute('booking');
+            }  finally {
+                return $this->redirectToRoute('booking');
+            }
         }
         return $this->redirectToRoute('booking', [
             'id' => $booking->getId()
