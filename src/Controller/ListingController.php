@@ -267,7 +267,7 @@ class ListingController extends AbstractController
             // instead of its contents
             $listing->setGalleryImage('upload/images/'.$newFilename);
         }
-                 
+
         // save
         $doct = $this->getDoctrine()->getManager();
         $doct->persist($listing);

@@ -5,7 +5,7 @@ namespace App\Seeds;
 use Evotodi\SeedBundle\Command\Seed;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-        
+
 use App\Entity\Setting;
 
 class SettingSeed extends Seed

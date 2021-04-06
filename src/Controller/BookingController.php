@@ -145,7 +145,7 @@ class BookingController extends AbstractController
                 'suggestions' => $suggestions
             ]);
         }
-        
+
         $doct = $this->getDoctrine()->getManager();
         $settings = $doct->getRepository(Setting::class)->findAll();
         $setting = $settings[0];
