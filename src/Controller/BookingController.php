@@ -297,11 +297,6 @@ class BookingController extends AbstractController
         $time = $request->request->get('time');
         $booking->setTime($time);
         
-        // validate
-        $errors = $validator->validate($booking);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
         // update
         $doct->flush();
         return $this->redirectToRoute('booking', [
