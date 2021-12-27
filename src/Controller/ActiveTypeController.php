@@ -19,6 +19,8 @@ class ActiveTypeController extends AbstractController
     {
         $this->session = $session;
     }
+    protected $item;
+    protected $worker;
 
     private function isAuth() {
         if(is_null($this->session->get('user'))){
