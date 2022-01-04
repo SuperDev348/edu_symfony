@@ -8,10 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-// use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\ActiveType;
 use App\Entity\User;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+
 class ActiveTypeController extends AbstractController
 {
     protected $session;
