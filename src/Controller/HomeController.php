@@ -58,10 +58,6 @@ class HomeController extends AbstractController
         foreach ($blogs as $blog) {
             $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
         }
-        foreach ($cities as $index => $city) {
-            $tmp = $this->getDoctrine()->getRepository(Listing::class)->findWithCityId($city->getId());
-            $city->listing_count = count($tmp);
-        }
         return $this->render('pages/home/index.html.twig', [
             'listings' => $listings,
             'reviews' => $reviews,
