@@ -16,7 +16,6 @@ use App\Entity\Review;
 use App\Entity\Setting;
 use App\Entity\Suggestion;
 use App\Entity\User;
-use Twilio\Rest\Client;
 
 class BookingController extends AbstractController
 {
