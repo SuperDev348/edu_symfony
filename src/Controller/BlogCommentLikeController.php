@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-// use App\Entity\User;
-// use App\Entity\BlogCommentLike;
-// use App\Entity\BlogComment;
+use App\Entity\User;
+use App\Entity\BlogCommentLike;
+use App\Entity\BlogComment;
 
 class BlogCommentLikeController extends AbstractController
 {
