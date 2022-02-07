@@ -9,8 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use App\Entity\City;
-use App\Entity\User;
+// use App\Entity\City;
+// use App\Entity\User;
 
 class CityController extends AbstractController
 {
