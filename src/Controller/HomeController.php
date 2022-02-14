@@ -53,11 +53,6 @@ class HomeController extends AbstractController
             if ($review->getFeature())
                 array_push($reviews, $review);
         }
-        $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
-        $blogs = array_slice($blogs, 0, 3);
-        foreach ($blogs as $blog) {
-            $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
-        }
         return $this->render('pages/home/index.html.twig', [
             'listings' => $listings,
             'reviews' => $reviews,
