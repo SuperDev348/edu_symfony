@@ -4,8 +4,6 @@ namespace App\Form;
 
 use App\Entity\Businessowner;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BusinessownerType extends AbstractType
 {
