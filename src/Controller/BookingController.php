@@ -10,8 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use App\Entity\Booking;
-use App\Entity\Listing;
 use App\Entity\User;
 use Twilio\Rest\Client;
 
