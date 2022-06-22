@@ -45,6 +45,32 @@ class BlogCommentLikeController extends AbstractController
         return true;
     }
 
+    /**
+     * @Route("/blogcomment/like/attach/{id}", name="blog_comment_like_attach")
+     */
+    public function attach($id): Response
+    {
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
+        $user_id = $this->session->get('user')->getId();
+        $likes = $this->getDoctrine()->getRepository(BlogCommentLike::class)->findWithUser($user_id);
+        $ids = [];
+        foreach ($likes as $like) {
+            array_push($ids, $like->getBlogcommentId());
+        }
+        if (!in_array($id, $ids)) {
+            $like = new BlogCommentLike();
+            $like->setBlogcommentId($id);
+            $like->setUserId($user_id);
+            $doct = $this->getDoctrine()->getManager();
+            $doct->persist($like);
+            $doct->flush();
+        }
+        $blogcomment = $this->getDoctrine()->getRepository(BlogComment::class)->find($id);
+        return $this->redirectToRoute('blog_detail', [
+            'id' => $blogcomment->getBlogId()
+        ]);
+    }
 
     /**
      * @Route("/blogcomment/like/detach/{id}", name="blog_comment_like_detach")
