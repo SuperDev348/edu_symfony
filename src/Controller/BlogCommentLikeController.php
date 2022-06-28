@@ -72,23 +72,4 @@ class BlogCommentLikeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/blogcomment/like/detach/{id}", name="blog_comment_like_detach")
-     */
-    public function detach($id): Response
-    {
-        $likes = $this->getDoctrine()->getRepository(BlogCommentLike::class)->findAll();
-        foreach ($likes as $like) {
-            if ($id == $like->getBlogcommentId()) {
-                $doct = $this->getDoctrine()->getManager();
-                $like = $doct->getRepository(BlogCommentLike::class)->find($like->getId());
-                $doct->remove($like);
-                $doct->flush();
-            }
-        }
-        $blogcomment = $this->getDoctrine()->getRepository(BlogComment::class)->find($id);
-        return $this->redirectToRoute('blog_detail', [
-            'id' => $blogcomment->getBlogId()
-        ]);
-    }
 }
