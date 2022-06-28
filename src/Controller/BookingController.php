@@ -46,7 +46,36 @@ class BookingController extends AbstractController
         }
         return true;
     }
-    
+
+    /**
+     * @Route("/booking", name="booking")
+     */
+    public function index(): Response
+    {
+        if (!$this->isAuth())
+            return $this->redirectToRoute('connexion');
+        if ($this->session->get('user')->getType() == 'client')
+            return $this->redirectToRoute('dashboard');
+        $listings = $this->getDoctrine()->getRepository(Listing::class)->findWithUserId($this->session->get('user')->getId());
+        $bookings = [];
+        foreach ($listings as $listing) {
+            $tmp = $this->getDoctrine()->getRepository(Booking::class)->findWithListingId($listing->getId());
+            foreach ($tmp as $b) {
+                $b->list_name = $listing->getName();
+            }
+            $bookings = array_merge($bookings, $tmp);
+        }
+        // var_dump($bookings);
+        $statusList = $this->getStatusList();
+        return $this->render('pages/booking/index.html.twig', [
+            'page' => 'booking',
+            'subtitle' => 'Bookings',
+            'bookings' => $bookings,
+            'listings' => $listings,
+            'statues' => $statusList
+        ]);
+    }
+
     /**
      * @Route("/booking/create", name="booking_create")
      */
