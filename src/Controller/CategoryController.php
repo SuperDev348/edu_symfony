@@ -10,6 +10,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\Category;
+use App\Entity\City;
+use App\Entity\ActiveType;
+use App\Entity\CategoryType;
+use App\Entity\User;
 
 class CategoryController extends AbstractController
 {
