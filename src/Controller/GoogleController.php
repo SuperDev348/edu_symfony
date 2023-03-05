@@ -41,7 +41,29 @@ class GoogleController extends AbstractController
 
         try {
             /** @var \League\OAuth2\Client\Provider\googleUser $user */
-            
+            $user = $client->fetchUser();
+            $googleuser=new User();
+            $googleuser=$this->getDoctrine()->getRepository(User::class)->findOneBy(array('mail'=>$user->getEmail()));
+            if (is_null($googleuser)){
+                return $this->render('pages/user/message.html.twig',['message'=>'compte introuvable']);
+            }
+            else if($googleuser->getBan()) {
+                return $this->render('pages/user/message.html.twig',['message'=>'Vous avez été banni ']);
+
+            }else {
+
+                if ($googleuser->getType() == "client" || $googleuser->getType() == "businessowner") {
+                    $googleuser->setActive(true);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->flush();
+                    $session->set('user', $googleuser);
+
+                    return $this->redirectToRoute('dashboard');
+                } elseif ($googleuser->getType() == "admin") {
+                    $session->set('user', $googleuser);
+                    return $this->redirectToRoute('admin_dashboard');
+                }
+            }
         } catch (IdentityProviderException $e) {
             return $this->redirectToRoute('home');
         }
