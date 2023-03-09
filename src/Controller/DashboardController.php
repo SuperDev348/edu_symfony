@@ -22,7 +22,6 @@ use \DateTime;
 
 class DashboardController extends AbstractController
 {
-    protected $session;
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
