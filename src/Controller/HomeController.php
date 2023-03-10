@@ -46,13 +46,6 @@ class HomeController extends AbstractController
             $tmp = $this->getDoctrine()->getRepository(Listing::class)->findWithCityId($city->getId());
             $city->listing_count = count($tmp);
         }
-        $reviews_init = $this->getDoctrine()->getRepository(Review::class)->findAll();
-        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
-        $reviews = [];
-        foreach ($reviews_init as $review) {
-            if ($review->getFeature())
-                array_push($reviews, $review);
-        }
         $blogs = $this->getDoctrine()->getRepository(Blog::class)->findAll();
         $blogs = array_slice($blogs, 0, 3);
         foreach ($blogs as $blog) {
