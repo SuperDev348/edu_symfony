@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Listing;
 use App\Entity\Review;
 use App\Entity\CategoryType;
+use App\Entity\City;
 use App\Entity\Blog;
 use App\Entity\Blogtype;
 use App\Entity\User;
