@@ -15,7 +15,6 @@ use App\Entity\UserRequest;
 use App\Entity\Review;
 use App\Entity\Booking;
 use App\Entity\Setting;
-use App\Entity\Listing;
 use App\Entity\Message;
 use App\Controller\UserController;
 use \DateTime;
