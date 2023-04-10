@@ -20,21 +20,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $listings = $this->getDoctrine()->getRepository(Listing::class)->findAll();
-        foreach ($listings as $listing) {
-            $listing->category = $this->getDoctrine()->getRepository(CategoryType::class)->find($listing->getCategoryId());
-            $listing->city = $this->getDoctrine()->getRepository(City::class)->find($listing->getCityId());
-            $listing->user = $this->getDoctrine()->getRepository(User::class)->find($listing->getUserId());
-            $reviews = $this->getDoctrine()->getRepository(Review::class)->findAllWithListingId($listing->getId());
-            $rate = 0;
-            foreach ($reviews as $review) {
-                $rate = $rate + $review->getRate();
-            }
-            if (count($reviews) == 0)
-                $listing->review_rate = 0;
-            else
-                $listing->review_rate = $rate/count($reviews);
-            $listing->review_number = count($reviews);
-        }
+        
         $categories = $this->getDoctrine()->getRepository(CategoryType::class)->findAll();
         foreach ($categories as $index => $category) {
             $tmp = $this->getDoctrine()->getRepository(Listing::class)->findWithCategoryId($category->getId());
