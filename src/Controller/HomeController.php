@@ -58,6 +58,13 @@ class HomeController extends AbstractController
         foreach ($blogs as $blog) {
             $blog->type = $this->getDoctrine()->getRepository(Blogtype::class)->find($blog->getTypeId());
         }
+        return $this->render('pages/home/index.html.twig', [
+            'listings' => $listings,
+            'reviews' => $reviews,
+            'categories' => $categories,
+            'cities' => $cities,
+            'blogs' => $blogs
+        ]);
     }
 
     private function categoryColor($val) {
