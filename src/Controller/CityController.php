@@ -20,6 +20,18 @@ class CityController extends AbstractController
         $this->session = $session;
     }
 
+    private function isAuth() {
+        if(is_null($this->session->get('user'))){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
+
     private function isAdmin() {
         if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
             return false;
