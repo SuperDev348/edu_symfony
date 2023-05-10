@@ -10,4 +10,9 @@ class NotificationController extends AbstractController
     /**
      * @Route("/notification", name="notification")
      */
+    public function index(): Response
+    {
+        return $this->render('pages/notification/index.html.twig', [
+        ]);
+    }
 } 
