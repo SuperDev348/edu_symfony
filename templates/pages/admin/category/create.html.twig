@@ -26,7 +26,51 @@
   <div class="container-fluid">
     <div class="row" style="display: flex; justify-content: center; margin: 50px;">
       <!-- left column -->
-      
+      <div class="col-md-6 col-md-offset-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Create New Category</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form action="{{ path('admin_category_store') }}" method="POST">
+            <div class="card-body">
+              <div class="form-group">
+                <label>City</label>
+                <select class="form-control select2" name="city_id" style="width: 100%;">
+                  {% for city in cities %}
+                  <option value="{{ city.getId }}">{{ city.getName }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Type</label>
+                <select class="form-control select2" name="type_id" style="width: 100%;">
+                  {% for categorytype in categorytypes %}
+                  <option value="{{ categorytype.getId }}">{{ categorytype.getName }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Active Type</label>
+                <select class="form-control select2" name="active_type_id" style="width: 100%;">
+                  {% for activetype in activetypes %}
+                  <option value="{{ activetype.getId }}">{{ activetype.getName }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="{{ path('admin_category') }}" class="btn btn-info">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
     </div>
   </div>
 </div>
