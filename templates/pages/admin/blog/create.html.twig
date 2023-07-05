@@ -48,14 +48,6 @@
                 {% endif %}
               </div>
               <div class="form-group">
-                <label>Type</label>
-                <select class="form-control select2" name="type_id" style="width: 100%;">
-                  {% for blogtype in blogtypes %}
-                  <option value="{{ blogtype.getId }}">{{ blogtype.getName }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="form-group">
                 <label for="discription">Discription</label>
                 {% if (old is defined) and ('discription' in old|keys) %}
                 <textarea name="discription" id="discription" rows="8" style="width: 100%;">{{ old.discription }}</textarea>
