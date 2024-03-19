@@ -17,18 +17,6 @@ class BusinessownerController extends AbstractController
 {
 
     /**
-     * @Route("/admin", name="businessowner_index", methods={"GET"})
-     */
-    public function index(BusinessownerRepository $businessownerRepository,SessionInterface $session): Response
-    {if(is_null($session->get('user'))||$session->get('user')->getType()!="admin"){
-        return $this->redirectToRoute('deconnexion');
-    }
-        return $this->render('pages/businessowner/index.html.twig', [
-            'businessowners' => $businessownerRepository->findAll(),
-        ]);
-    }
-
-    /**
      * @Route("/inscription/{id}", name="businessowner_new", methods={"GET","POST"})
      */
     public function new(Request $request,$id): Response
