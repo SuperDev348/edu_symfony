@@ -20,6 +20,7 @@ class ActiveTypeController extends AbstractController
         $this->session = $session;
     }
 
+
     private function isAdmin() {
         if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
             return false;
