@@ -34,6 +34,17 @@ class BlogCommentController extends AbstractController
         return true;
     }
 
+    private function isAdmin() {
+        if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
+            return false;
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->session->get('user')->getId());
+        if ($user->getBan()) {
+            $this->session->clear();
+            return false;
+        }
+        return true;
+    }
     /**
      * @Route("/blogcomment/store", name="blog_comment_store")
      */
